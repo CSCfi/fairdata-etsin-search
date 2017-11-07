@@ -10,7 +10,7 @@ AMOUNT_OF_DATASETS = "amount_of_datasets"
 
 def main():
 
-    instructions = """\nRun the program as etsin-user with pyenv activated using 'python load_test_data.py 
+    instructions = """\nRun the program as etsin-user with pyenv activated using 'python load_test_data.py
     amount_of_datasets=Y, where Y is a positive integer for the amount of datasets to load into the search index"""
 
     run_args = dict([arg.split('=', maxsplit=1) for arg in sys.argv[1:]])

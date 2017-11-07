@@ -24,6 +24,8 @@ ignore =
     E128
     # module imported but unused
     F401
+    # invalid syntax
+    E999
 
 # often contains "unused" imports
 # exclude = 

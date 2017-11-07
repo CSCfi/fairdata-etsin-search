@@ -13,12 +13,12 @@ RECREATE_INDEX = "recreate_index"
 
 def main():
 
-    instructions = """\nRun the program as etsin-user with pyenv activated using 'python reindex.py recreate_index=X 
+    instructions = """\nRun the program as etsin-user with pyenv activated using 'python reindex.py recreate_index=X
     where X = yes or X = no"""
 
     run_args = dict([arg.split('=', maxsplit=1) for arg in sys.argv[1:]])
 
-    if not RECREATE_INDEX in run_args:
+    if RECREATE_INDEX not in run_args:
         print(instructions)
         log.error(instructions)
         sys.exit(1)

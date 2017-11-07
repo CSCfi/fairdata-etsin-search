@@ -49,7 +49,7 @@ expected_es_metax_agent_output = {
         'telephone': ['+234234'],
         'agent_type': 'Organization',
         'homepage': {
-            'title':{
+            'title': {
                 'en': 'Publisher parent website',
                 'fi': 'Julkaisijan yläorganisaation kotisivu'
             },
