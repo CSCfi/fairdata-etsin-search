@@ -1,0 +1,1 @@
+import etsin_finder_search.rabbitmq.rabbitmq_client
