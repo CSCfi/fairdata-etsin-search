@@ -4,7 +4,7 @@ setup(
     name='etsin_finder_search',
     description='Etsin finder search index related scripts',
     author='CSC - IT Center for Science Ltd.',
-    packages=find_packages(exclude=['scripts']),
+    packages=find_packages(),
     setup_requires=[
         'pytest-runner'
     ]
