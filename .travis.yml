@@ -26,8 +26,8 @@ install:
 - pip install -r requirements.txt
 
 before_script:
-- sudo mkdir /var/log/etsin_finder
-- sudo chown -R $USER:$USER /var/log/etsin_finder
+- sudo mkdir /var/log/etsin_finder_search
+- sudo chown -R $USER:$USER /var/log/etsin_finder_search
 
 # Add the below to the script after python tests once the frontend tests are in place
 #cd $TRAVIS_BUILD_DIR/etsin_finder/frontend && npm run test

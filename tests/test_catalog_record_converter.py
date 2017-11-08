@@ -62,5 +62,4 @@ expected_es_metax_agent_output = {
 def test_get_es_person_or_org_common_data_from_metax_obj():
     converter = CRConverter()
     output = converter.get_converted_single_org_or_person_es_model(test_metax_agent_obj)
-    print(output)
     assert output == expected_es_metax_agent_output

@@ -1,5 +1,6 @@
 import json
 import yaml
+import os
 
 
 def get_config_from_file():
@@ -39,3 +40,10 @@ def write_json_to_file(json_data, filename):
 def write_string_to_file(string, filename):
     with open(filename, "w") as output_file:
         print(f"{string}", file=output_file)
+
+
+def executing_travis():
+    """
+    Returns True whenever code is being executed by travis
+    """
+    return True if os.getenv('TRAVIS', False) else False
