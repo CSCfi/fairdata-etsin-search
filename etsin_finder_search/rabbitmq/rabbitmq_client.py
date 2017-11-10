@@ -77,10 +77,9 @@ class MetaxConsumer():
                 if reindex_success:
                     ch.basic_ack(delivery_tag=method.delivery_tag)
                 else:
-                    log.info('Failed to reindex %s', json.loads(
+                    self.log.info('Failed to reindex %s', json.loads(
                         body).get('urn_identifier', 'unknown identifier'))
                     ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
-
 
         def callback_delete(ch, method, properties, body):
             delete_success = False
@@ -92,7 +91,7 @@ class MetaxConsumer():
                 if delete_success:
                     ch.basic_ack(delivery_tag=method.delivery_tag)
                 else:
-                    log.info('Failed to delete %s', json.loads(
+                    self.log.info('Failed to delete %s', json.loads(
                         body).get('urn_identifier', 'unknown identifier'))
                     # TODO: If delete fails because there's no such id in index,
                     # no need to requeue
@@ -102,7 +101,6 @@ class MetaxConsumer():
         self.channel.basic_consume(callback_reindex, queue=queue_1)
         self.channel.basic_consume(callback_reindex, queue=queue_2)
         self.channel.basic_consume(callback_delete, queue=queue_3)
-
 
     def run(self):
         self.log.info('[*] RabbitMQ client started')
