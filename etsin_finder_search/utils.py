@@ -1,6 +1,7 @@
 import json
 import yaml
 import os
+import subprocess
 
 
 def get_config_from_file():
@@ -47,3 +48,34 @@ def executing_travis():
     Returns True whenever code is being executed by travis
     """
     return True if os.getenv('TRAVIS', False) else False
+
+
+def stop_rabbitmq_consumer():
+    """
+    Stop rabbitmq-consumer systemd service. Waits for exit or raises an error
+    :return:
+    """
+    try:
+        subprocess.check_call("sudo service rabbitmq-consumer stop".split())
+        return True
+    except subprocess.CalledProcessError as e:
+        return False
+
+
+def start_rabbitmq_consumer():
+    """
+    Start rabbitmq-consumer systemd service.
+    :return:
+    """
+    try:
+        subprocess.check_call("sudo service rabbitmq-consumer start".split())
+        return True
+    except subprocess.CalledProcessError as e:
+        return False
+
+
+def rabbitmq_consumer_is_running():
+    output = str(subprocess.check_output(['ps', 'aux']))
+    if 'run_rabbitmq_consumer.py' in output:
+        return True
+    return False

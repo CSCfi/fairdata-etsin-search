@@ -7,6 +7,7 @@ log = get_logger(__name__)
 class CRConverter:
 
     def convert_metax_cr_urn_ids_to_es_data_model(self, urn_identifiers_in_metax, metax_api):
+        log.info("Converting {0} Metax catalog records to Elasticsearch documents..".format(len(urn_identifiers_in_metax)))
         es_dataset_data_models = []
         for urn_id_in_metax in urn_identifiers_in_metax:
             es_data_model = self._convert_metax_cr_urn_id_to_es_data_model(urn_id_in_metax, metax_api)
