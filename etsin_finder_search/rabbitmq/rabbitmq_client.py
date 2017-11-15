@@ -15,6 +15,7 @@ Press CTRL+C to exit script.
 import json
 import pika
 import time
+import os
 
 from elasticsearch.exceptions import RequestError
 
@@ -35,6 +36,8 @@ class MetaxConsumer():
         # If these raise errors, let consumer init fail
         rabbit_settings = get_metax_rabbit_mq_config()
         es_settings = get_elasticsearch_config()
+
+        is_local_dev = True if os.path.isdir("/etsin/ansible") else False
 
         if not rabbit_settings or not es_settings:
             self.log.error("Unable to load RabbitMQ configuration or Elasticsearch configuration")
@@ -75,11 +78,9 @@ class MetaxConsumer():
 
         self.channel = connection.channel()
         self.exchange = rabbit_settings['EXCHANGE']
-        self.create_queue = 'etsin-create'
-        self.update_queue = 'etsin-update'
-        self.delete_queue = 'etsin-delete'
 
-        self._create_and_bind_queues()
+        self._set_queue_names(is_local_dev)
+        self._create_and_bind_queues(is_local_dev)
 
         def callback_reindex(ch, method, properties, body):
             self.indexing_operation_complete = False
@@ -179,10 +180,51 @@ class MetaxConsumer():
         self.channel.basic_cancel(consumer_tag=self.update_consumer_tag)
         self.channel.basic_cancel(consumer_tag=self.delete_consumer_tag)
 
-    def _create_and_bind_queues(self):
-        self.channel.queue_declare(self.create_queue, durable=True)
-        self.channel.queue_declare(self.update_queue, durable=True)
-        self.channel.queue_declare(self.delete_queue, durable=True)
+    def _set_queue_names(self, is_local_dev):
+        self.create_queue = 'etsin-create'
+        self.update_queue = 'etsin-update'
+        self.delete_queue = 'etsin-delete'
+
+        if is_local_dev:
+            # The point of this section is to give unique names to the queues created in local dev env
+            # This is done to prevent the target rabbitmq server from having multiple consumers consuming the same
+            # queue (this would result in round-robin type of delivering of messages).
+            #
+            # Below, also a time-to-live for a local dev queue is set to automatically delete the queues from the
+            # target rabbitmq server after a set period of time so as not to make the rabbitmq virtual host to be
+            # filled with local dev queues. Cf. http://www.rabbitmq.com/ttl.html#queue-ttl
+
+            import json
+            if os.path.isfile('/srv/etsin/rabbitmq_queues.json'):
+                with open('/srv/etsin/rabbitmq_queues.json') as json_data:
+                    queues = json.load(json_data)
+                    self.create_queue = queues.get('create', None)
+                    self.update_queue = queues.get('update', None)
+                    self.delete_queue = queues.get('delete', None)
+            else:
+                import time
+                timestamp = str(time.time())
+
+                self.create_queue += '-' + timestamp
+                self.update_queue += '-' + timestamp
+                self.delete_queue += '-' + timestamp
+
+                queues = {'create': self.create_queue,
+                          'update': self.update_queue,
+                          'delete': self.delete_queue}
+
+                with open('/srv/etsin/rabbitmq_queues.json', 'w') as outfile:
+                    json.dump(queues, outfile)
+
+    def _create_and_bind_queues(self, is_local_dev):
+        args = {}
+        if is_local_dev:
+            # Expire local dev created queues after 8 hours of inactivity
+            args['x-expires'] = 28800000
+
+        self.channel.queue_declare(self.create_queue, durable=True, arguments=args)
+        self.channel.queue_declare(self.update_queue, durable=True, arguments=args)
+        self.channel.queue_declare(self.delete_queue, durable=True, arguments=args)
 
         self.channel.queue_bind(exchange=self.exchange, queue=self.create_queue, routing_key='create')
         self.channel.queue_bind(exchange=self.exchange, queue=self.update_queue, routing_key='update')
