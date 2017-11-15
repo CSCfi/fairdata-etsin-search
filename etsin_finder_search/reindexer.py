@@ -1,8 +1,14 @@
 from etsin_finder_search.elastic.service.es_service import ElasticSearchService
 from etsin_finder_search.metax.metax_api import MetaxAPIService
 from etsin_finder_search.catalog_record_converter import CRConverter
-from etsin_finder_search.utils import get_metax_api_config, get_elasticsearch_config
 from etsin_finder_search.reindexing_log import get_logger
+from etsin_finder_search.utils import \
+    get_metax_api_config, \
+    get_elasticsearch_config, \
+    start_rabbitmq_consumer, \
+    stop_rabbitmq_consumer, \
+    rabbitmq_consumer_is_running
+
 
 log = get_logger(__name__)
 
@@ -110,8 +116,10 @@ class ReindexScheduledTask:
         urn_ids_to_delete = []
         urn_ids_to_index = []
 
-        # 1. Disable RabbitMQ consumer
-        # Code here
+        # 1. Stop RabbitMQ consumer
+        if rabbitmq_consumer_is_running():
+            if not stop_rabbitmq_consumer():
+                log.error("Unable to stop RabbitMQ consumer service, continuing with reindexing")
 
         # 2. Get all dataset urn_identifiers from metax
         metax_urn_identifiers = self.metax_api.get_all_catalog_record_urn_identifiers()
@@ -143,5 +151,7 @@ class ReindexScheduledTask:
                                                     self.converter.convert_metax_cr_urn_ids_to_es_data_model(
                                                         urn_ids_to_index, self.metax_api))
 
-        # 6. Enable RabbitMQ Consumer
-        # Code here
+        # 6. Start RabbitMQ consumer
+        if not rabbitmq_consumer_is_running():
+            if not start_rabbitmq_consumer():
+                log.error("Unable to start RabbitMQ consumer service")

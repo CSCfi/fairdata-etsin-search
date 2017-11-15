@@ -24,7 +24,15 @@ class ElasticSearchService:
         self.es = Elasticsearch(es_config.get('HOSTS'), **self._get_connection_parameters(es_config))
 
     def client_ok(self):
-        return self.es
+        try:
+            is_ok = self.es and self.es.ping()
+        except Exception:
+            is_ok = False
+
+        if not is_ok:
+            log.error("Unable to connect to Elasticsearch instance")
+
+        return is_ok
 
     def index_exists(self):
         return self.es.indices.exists(index=self.INDEX_NAME)
