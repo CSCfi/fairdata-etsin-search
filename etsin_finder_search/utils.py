@@ -33,9 +33,9 @@ def get_metax_rabbit_mq_config():
     return metax_rabbitmq_conf
 
 
-def write_json_to_file(json_data, filename):
-    with open(filename, "w") as output_file:
-        json.dump(json_data, output_file)
+def append_json_to_file(json_data, filename):
+    with open(filename, "a") as output_file:
+        json.dump(json_data, output_file, indent=4, sort_keys=True)
 
 
 def write_string_to_file(string, filename):

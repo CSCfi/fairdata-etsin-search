@@ -76,8 +76,6 @@ class ElasticSearchService:
         log.info("Trying to perform bulk request for data with type " + self.INDEX_DOC_TYPE_NAME +
                  " into index " + self.INDEX_NAME)
 
-        # write_string_to_file(bulk_request_str, 'bulk.txt')
-
         if not self._operation_ok(self.es.bulk(body=bulk_request_str, request_timeout=30)):
             log.error("Something went wrong with the following bulk request: \n{0}".format(bulk_request_str))
             return False
