@@ -21,12 +21,19 @@ class CRConverter:
     def _convert_metax_cr_urn_id_to_es_data_model(self, urn_identifier_in_metax, metax_api):
         metax_catalog_record_json = metax_api.get_catalog_record(urn_identifier_in_metax)
         if metax_catalog_record_json:
-            es_dataset_json = self.convert_metax_catalog_record_json_to_es_data_model(metax_catalog_record_json)
+            es_dataset_json = self.convert_metax_cr_json_to_es_data_model(metax_catalog_record_json)
+
+            # Uncomment the below in case you want to print the metax cr json and es dataset json to a file
+
+            from etsin_finder_search.utils import append_json_to_file
+            append_json_to_file(metax_catalog_record_json, 'data.txt')
+            append_json_to_file(es_dataset_json, 'data.txt')
+
             return ESDatasetModel(es_dataset_json)
 
         return None
 
-    def convert_metax_catalog_record_json_to_es_data_model(self, metax_cr_json):
+    def convert_metax_cr_json_to_es_data_model(self, metax_cr_json):
         es_dataset = {}
         if metax_cr_json.get('research_dataset', False) and \
                 metax_cr_json.get('research_dataset').get('urn_identifier', False):
@@ -75,12 +82,12 @@ class CRConverter:
                 if m_rd.get('access_rights').get('license', False):
                     m_license = m_rd.get('access_rights').get('license')
                     self._convert_metax_obj_containing_identifier_and_label_to_es_model(m_license, es_access_rights,
-                                                                                        'title', True, 'license')
+                                                                                        'title', 'license')
 
                 if m_rd.get('access_rights').get('type', False):
                     m_type = m_rd.get('access_rights').get('type')
                     self._convert_metax_obj_containing_identifier_and_label_to_es_model(m_type, es_access_rights,
-                                                                                        'pref_label', False, 'type')
+                                                                                        'pref_label', 'type')
 
             if m_rd.get('theme', False):
                 if 'theme' not in es_dataset:
@@ -88,7 +95,7 @@ class CRConverter:
 
                 m_theme = m_rd.get('theme')
                 self._convert_metax_obj_containing_identifier_and_label_to_es_model(m_theme, es_dataset, 'pref_label',
-                                                                                    False, 'theme')
+                                                                                    'theme')
 
             if m_rd.get('field_of_science', False):
                 if 'field_of_science' not in es_dataset:
@@ -96,8 +103,7 @@ class CRConverter:
 
                 m_field_of_science = m_rd.get('field_of_science')
                 self._convert_metax_obj_containing_identifier_and_label_to_es_model(m_field_of_science, es_dataset,
-                                                                                    'pref_label', False,
-                                                                                    'field_of_science')
+                                                                                    'pref_label', 'field_of_science')
 
             for m_is_output_of_item in m_rd.get('is_output_of', []):
                 if 'project' not in es_dataset:
@@ -139,6 +145,37 @@ class CRConverter:
 
         return es_dataset
 
+    @staticmethod
+    def _convert_metax_obj_containing_identifier_and_label_to_es_model(m_input, es_output, m_input_label_field,
+                                                                       es_array_relation_name=''):
+        """
+
+        If m_input is not array, set identifier and label directly on es_output.
+        If m_input is array, add a es_array_relation_name array relation to es_output, which will contain objects
+        having identifier and label each
+
+        :param m_input:
+        :param es_output:
+        :param m_input_label_field:
+        :param es_array_relation_name:
+        :return:
+        """
+
+        if isinstance(m_input, list) and es_array_relation_name:
+            output = []
+            for obj in m_input:
+                m_input_label_is_array = isinstance(obj.get(m_input_label_field), list)
+                out_obj = {
+                    'identifier': obj.get('identifier', ''),
+                    'label': obj.get(m_input_label_field, [] if m_input_label_is_array else {})
+                }
+                output.append(out_obj)
+            es_output[es_array_relation_name] = output
+        elif isinstance(m_input, dict):
+            m_input_label_is_array = isinstance(m_input.get(m_input_label_field), list)
+            es_output['identifier'] = m_input.get('identifier', '')
+            es_output['label'] = m_input.get(m_input_label_field, [] if m_input_label_is_array else {})
+
     def _convert_metax_org_or_person_to_es_model(self, m_input, es_output, relation_name):
         """
 
@@ -151,15 +188,15 @@ class CRConverter:
         if isinstance(m_input, list):
             output = []
             for m_obj in m_input:
-                output.append(self.get_converted_single_org_or_person_es_model(m_obj))
+                output.append(self._get_converted_single_org_or_person_es_model(m_obj))
         else:
             output = {}
             if m_input:
-                output = self.get_converted_single_org_or_person_es_model(m_input)
+                output = self._get_converted_single_org_or_person_es_model(m_input)
 
         es_output[relation_name] = output
 
-    def get_converted_single_org_or_person_es_model(self, m_obj):
+    def _get_converted_single_org_or_person_es_model(self, m_obj):
         if m_obj.get('@type', '') not in ['Person', 'Organization']:
             return None
 
@@ -174,37 +211,6 @@ class CRConverter:
                 {'belongs_to_org': self._get_es_person_or_org_common_data_from_metax_obj(m_obj.get('is_part_of'))})
 
         return out_obj
-
-    @staticmethod
-    def _convert_metax_obj_containing_identifier_and_label_to_es_model(m_input, es_output, m_input_label_field,
-                                                                       m_input_label_is_array=False,
-                                                                       es_relation_name=''):
-        """
-
-        If m_input is not array, set identifier and label directly on es_output.
-        If m_input is array, add a relation_name array relation to es_output, which will contain objects
-        having identifier and label each
-
-        :param m_input:
-        :param es_output:
-        :param m_input_label_field:
-        :param m_input_label_is_array:
-        :param es_relation_name:
-        :return:
-        """
-
-        if isinstance(m_input, list) and es_relation_name:
-            output = []
-            for obj in m_input:
-                out_obj = {
-                    'identifier': obj.get('identifier', ''),
-                    'label': obj.get(m_input_label_field, [] if m_input_label_is_array else {})
-                }
-                output.append(out_obj)
-            es_output[es_relation_name] = output
-        else:
-            es_output['identifier'] = m_input.get('identifier', ''),
-            es_output['label'] = m_input.get(m_input_label_field, [] if m_input_label_is_array else {})
 
     @staticmethod
     def _get_es_person_or_org_common_data_from_metax_obj(m_obj):

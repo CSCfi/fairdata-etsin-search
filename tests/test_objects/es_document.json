@@ -1,0 +1,274 @@
+{
+    "access_rights": {
+        "license": [
+            {
+                "identifier": "http://www.opensource.org/licenses/Apache-2.0",
+                "label": {
+                    "en": "Apache Software License 2.0",
+                    "und": "Apache Software License 2.0"
+                }
+            }
+        ],
+        "type": [
+            {
+                "identifier": "http://purl.org/att/es/reference_data/access_type/access_type_open_access",
+                "label": {
+                    "en": "Open",
+                    "fi": "Avoin",
+                    "und": "Avoin"
+                }
+            }
+        ]
+    },
+    "contributor": [
+        {
+            "agent_type": "Person",
+            "belongs_to_org": {
+                "agent_type": "Organization",
+                "email": "info@csc.fi",
+                "homepage": {},
+                "identifier": "http://purl.org/att/es/organization_data/organization/organization_1901",
+                "name": {
+                    "und": "Helsingin yliopisto"
+                },
+                "telephone": [
+                    "+358501231235"
+                ]
+            },
+            "email": "kalle.kontribuuttaaja@csc.fi",
+            "homepage": {},
+            "identifier": "contributorid",
+            "name": {
+                "und": "Kalle Kontribuuttaja"
+            },
+            "telephone": [
+                "+358501231122"
+            ]
+        },
+        {
+            "agent_type": "Person",
+            "belongs_to_org": {
+                "agent_type": "Organization",
+                "email": "joo@csc.fi",
+                "homepage": {},
+                "identifier": "org_identifier",
+                "name": {
+                    "en": "Mysterious Organization 2",
+                    "fi": "Organisaatio"
+                },
+                "telephone": [
+                    "+23423423"
+                ]
+            },
+            "email": "franzibald.kontribuuttaaja@csc.fi",
+            "homepage": {},
+            "identifier": "contributorid2",
+            "name": {
+                "und": "Franzibald Kontribuuttaja"
+            },
+            "telephone": [
+                "+358501231133"
+            ]
+        }
+    ],
+    "creator": [
+        {
+            "agent_type": "Person",
+            "belongs_to_org": {
+                "agent_type": "Organization",
+                "email": "",
+                "homepage": {},
+                "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
+                "name": {
+                    "und": "Aalto yliopisto"
+                },
+                "telephone": ""
+            },
+            "email": "",
+            "homepage": {},
+            "identifier": "",
+            "name": {
+                "und": "Teppo Testaaja"
+            },
+            "telephone": ""
+        }
+    ],
+    "curator": [
+        {
+            "agent_type": "Organization",
+            "belongs_to_org": {
+                "agent_type": "Organization",
+                "email": "",
+                "homepage": {},
+                "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
+                "name": {
+                    "und": "Aalto yliopisto"
+                },
+                "telephone": ""
+            },
+            "email": "",
+            "homepage": {},
+            "identifier": "id:of:curator:default",
+            "name": {
+                "en": "Mysterious Organization",
+                "fi": "Organisaatio"
+            },
+            "telephone": ""
+        }
+    ],
+    "description": [
+        {
+            "en": "A descriptive description describing the contents of this dataset. Must be descriptive."
+        }
+    ],
+    "field_of_science": [
+        {
+            "identifier": "http://www.yso.fi/onto/okm-tieteenala/ta414",
+            "label": {
+                "en": "Agricultural biotechnology",
+                "fi": "Maatalouden bioteknologia",
+                "sv": "Jordbruksbioteknologi",
+                "und": "Maatalouden bioteknologia"
+            }
+        }
+    ],
+    "keyword": [
+        "keyword",
+        "keyword2",
+        "keyword3"
+    ],
+    "modified_by_api": "2017-11-16T12:18:18.068569",
+    "other_identifier": [
+        {
+            "notation": "doi:10.12345",
+            "type": {
+                "identifier": "http://purl.org/att/es/reference_data/identifier_type/identifier_type_doi",
+                "label": {
+                    "en": "Digital Object Identifier (DOI)",
+                    "und": "Digital Object Identifier (DOI)"
+                }
+            }
+        },
+        {
+            "notation": "urn:nbn:fi-12345",
+            "type": {
+                "identifier": "http://purl.org/att/es/reference_data/identifier_type/identifier_type_urn",
+                "label": {
+                    "en": "Uniform Resource Name (URN)",
+                    "und": "Uniform Resource Name (URN)"
+                }
+            }
+        }
+    ],
+    "preferred_identifier": "very:unique:urn-0",
+    "project": [
+        {
+            "has_funding_agency": [
+                {
+                    "agent_type": "Organization",
+                    "email": "rahoitus@rahaorg.fi",
+                    "homepage": {},
+                    "identifier": "fundingagencyidentifier",
+                    "name": {
+                        "en": "Funding Organization",
+                        "fi": "Organisaatio"
+                    },
+                    "telephone": [
+                        "+358501232233"
+                    ]
+                }
+            ],
+            "identifier": "projectidentifier",
+            "label": {
+                "en": "Name of project"
+            },
+            "source_organization": [
+                {
+                    "agent_type": "Organization",
+                    "email": "info@csc.fi",
+                    "homepage": {},
+                    "identifier": "http://purl.org/att/es/organization_data/organization/organization_1901",
+                    "name": {
+                        "und": "Helsingin yliopisto"
+                    },
+                    "telephone": [
+                        "+358501231235"
+                    ]
+                }
+            ]
+        }
+    ],
+    "publisher": {
+        "agent_type": "Organization",
+        "belongs_to_org": {
+            "agent_type": "Organization",
+            "email": "info@csc.fi",
+            "homepage": {
+                "identifier": "http://www.publisher_parent.fi/",
+                "title": {
+                    "en": "Publisher parent website",
+                    "fi": "Julkaisijan yl\u00c3\u00a4organisaation kotisivu"
+                }
+            },
+            "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
+            "name": {
+                "und": "Aalto yliopisto"
+            },
+            "telephone": [
+                "+234234"
+            ]
+        },
+        "email": "info@csc.fi",
+        "homepage": {
+            "identifier": "http://www.publisher.fi/",
+            "title": {
+                "en": "Publisher website",
+                "fi": "Julkaisijan kotisivu"
+            }
+        },
+        "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076-A800",
+        "name": {
+            "und": "School services, ARTS"
+        },
+        "telephone": [
+            "+358501231235"
+        ]
+    },
+    "rights_holder": {
+        "agent_type": "Organization",
+        "belongs_to_org": {
+            "agent_type": "Organization",
+            "email": "",
+            "homepage": {},
+            "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
+            "name": {
+                "und": "Aalto yliopisto"
+            },
+            "telephone": ""
+        },
+        "email": "info@csc.fi",
+        "homepage": {},
+        "identifier": "http://purl.org/att/es/organization_data/organization/organization_1901",
+        "name": {
+            "und": "Helsingin yliopisto"
+        },
+        "telephone": [
+            "+358501231235"
+        ]
+    },
+    "theme": [
+        {
+            "identifier": "http://www.yso.fi/onto/yso/p20518",
+            "label": {
+                "en": "Lapua movement",
+                "fi": "lapuanliike",
+                "sv": "Lappor\u00c3\u00b6relsen",
+                "und": "lapuanliike"
+            }
+        }
+    ],
+    "title": {
+        "en": "Wonderful Title"
+    },
+    "urn_identifier": "very:unique:urn-0"
+}

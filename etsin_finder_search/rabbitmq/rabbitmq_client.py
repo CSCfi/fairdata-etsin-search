@@ -98,7 +98,7 @@ class MetaxConsumer():
                 return
 
             converter = CRConverter()
-            es_data_model = converter.convert_metax_catalog_record_json_to_es_data_model(body_as_json)
+            es_data_model = converter.convert_metax_cr_json_to_es_data_model(body_as_json)
 
             if not es_data_model:
                 ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
@@ -152,10 +152,10 @@ class MetaxConsumer():
 
                 self.indexing_operation_complete = True
 
-        # Set up consumers
-        self.create_consumer_tag = self.channel.basic_consume(callback_reindex, queue=self.create_queue)
-        self.update_consumer_tag = self.channel.basic_consume(callback_reindex, queue=self.update_queue)
-        self.delete_consumer_tag = self.channel.basic_consume(callback_delete, queue=self.delete_queue)
+        # Set up consumers so that acks are required
+        self.create_consumer_tag = self.channel.basic_consume(callback_reindex, queue=self.create_queue, no_ack=False)
+        self.update_consumer_tag = self.channel.basic_consume(callback_reindex, queue=self.update_queue, no_ack=False)
+        self.delete_consumer_tag = self.channel.basic_consume(callback_delete, queue=self.delete_queue, no_ack=False)
 
         self.init_ok = True
 

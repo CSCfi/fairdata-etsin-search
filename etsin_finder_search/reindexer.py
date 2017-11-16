@@ -50,7 +50,7 @@ def reindex_metax_catalog_record(metax_catalog_record_json):
     es_client = _create_es_client()
     if es_client and create_search_index_and_doc_type_mapping_if_not_exist(es_client):
         converter = CRConverter()
-        es_data_model = converter.convert_metax_catalog_record_json_to_es_data_model(metax_catalog_record_json)
+        es_data_model = converter.convert_metax_cr_json_to_es_data_model(metax_catalog_record_json)
         es_client.reindex_dataset(es_data_model)
 
 
