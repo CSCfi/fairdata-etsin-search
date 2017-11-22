@@ -71,11 +71,7 @@
     },
     "keyword": {
       "type": "text",
-      "fields": {
-        "keyword": {
-          "type": "keyword"
-        }
-      }
+      "copy_to": ["theme.label.en", "theme.label.fi"]
     },
     "preservation_state": {
       "type": "integer"
