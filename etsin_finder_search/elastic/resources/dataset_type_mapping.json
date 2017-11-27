@@ -50,6 +50,22 @@
     }
   ],
   "properties": {
+    "creator_name": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }      
+    },
+    "organization_name": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }      
+    },
     "urn_identifier": {
       "type": "text",
       "fields": {

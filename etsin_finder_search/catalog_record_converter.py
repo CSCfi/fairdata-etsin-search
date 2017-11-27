@@ -138,6 +138,7 @@ class CRConverter:
             if m_rd.get('creator', False):
                 es_dataset['creator'] = []
                 self._convert_metax_org_or_person_to_es_model(m_rd.get('creator'), es_dataset, 'creator')
+                self._convert_metax_creator_name_to_es_model(m_rd.get('creator'), es_dataset, 'creator_name')
 
             if m_rd.get('rights_holder', False):
                 es_dataset['rights_holder'] = []
@@ -196,6 +197,26 @@ class CRConverter:
 
         es_output[relation_name] = output
 
+    def _convert_metax_creator_name_to_es_model(self, m_input, es_output, relation_name):
+        """
+
+        :param m_input:
+        :param es_output:
+        :param relation_name:
+        :return:
+        """
+
+        if isinstance(m_input, list):
+            output = []
+            for m_obj in m_input:
+                output.append(self._get_converted_creator_name_es_model(m_obj))
+        else:
+            output = {}
+            if m_input:
+                output = self._get_converted_creator_name_es_model(m_input)
+
+        es_output[relation_name] = output
+
     def _get_converted_single_org_or_person_es_model(self, m_obj):
         if m_obj.get('@type', '') not in ['Person', 'Organization']:
             return None
@@ -209,6 +230,15 @@ class CRConverter:
         elif agent_type == 'Organization' and m_obj.get('is_part_of', False):
             out_obj.update(
                 {'belongs_to_org': self._get_es_person_or_org_common_data_from_metax_obj(m_obj.get('is_part_of'))})
+
+        return out_obj
+
+    def _get_converted_creator_name_es_model(self, m_obj):
+        if m_obj.get('@type', '') not in ['Person', 'Organization']:
+            return None
+
+        person_or_org = self._get_es_person_or_org_common_data_from_metax_obj(m_obj)
+        out_obj = list(person_or_org['name'].values())
 
         return out_obj
 
