@@ -3,7 +3,7 @@
         "license": [
             {
                 "identifier": "http://www.opensource.org/licenses/Apache-2.0",
-                "label": {
+                "pref_label": {
                     "en": "Apache Software License 2.0",
                     "und": "Apache Software License 2.0"
                 }
@@ -12,7 +12,7 @@
         "type": [
             {
                 "identifier": "http://purl.org/att/es/reference_data/access_type/access_type_open_access",
-                "label": {
+                "pref_label": {
                     "en": "Open",
                     "fi": "Avoin",
                     "und": "Avoin"
@@ -124,7 +124,7 @@
     "field_of_science": [
         {
             "identifier": "http://www.yso.fi/onto/okm-tieteenala/ta414",
-            "label": {
+            "pref_label": {
                 "en": "Agricultural biotechnology",
                 "fi": "Maatalouden bioteknologia",
                 "sv": "Jordbruksbioteknologi",
@@ -143,7 +143,7 @@
             "notation": "doi:10.12345",
             "type": {
                 "identifier": "http://purl.org/att/es/reference_data/identifier_type/identifier_type_doi",
-                "label": {
+                "pref_label": {
                     "en": "Digital Object Identifier (DOI)",
                     "und": "Digital Object Identifier (DOI)"
                 }
@@ -153,7 +153,7 @@
             "notation": "urn:nbn:fi-12345",
             "type": {
                 "identifier": "http://purl.org/att/es/reference_data/identifier_type/identifier_type_urn",
-                "label": {
+                "pref_label": {
                     "en": "Uniform Resource Name (URN)",
                     "und": "Uniform Resource Name (URN)"
                 }
@@ -179,7 +179,7 @@
                 }
             ],
             "identifier": "projectidentifier",
-            "label": {
+            "pref_label": {
                 "en": "Name of project"
             },
             "source_organization": [
@@ -259,7 +259,7 @@
     "theme": [
         {
             "identifier": "http://www.yso.fi/onto/yso/p20518",
-            "label": {
+            "pref_label": {
                 "en": "Lapua movement",
                 "fi": "lapuanliike",
                 "sv": "Lappor\u00c3\u00b6relsen",
