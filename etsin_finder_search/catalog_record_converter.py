@@ -42,6 +42,9 @@ class CRConverter:
             es_dataset['urn_identifier'] = m_rd['urn_identifier']
             es_dataset['preferred_identifier'] = m_rd.get('preferred_identifier', '')
 
+            if 'organization_name' not in es_dataset:
+                es_dataset['organization_name'] = []
+
             if metax_cr_json.get('modified_by_api', False):
                 es_dataset['modified_by_api'] = metax_cr_json.get('modified_by_api')
 
@@ -116,33 +119,40 @@ class CRConverter:
                 if m_is_output_of_item.get('has_funding_agency', []):
                     self._convert_metax_org_or_person_to_es_model(m_is_output_of_item.get('has_funding_agency'),
                                                                   es_project, 'has_funding_agency')
+                    self._convert_metax_organization_name_to_es_model(m_is_output_of_item.get('has_funding_agency'), es_dataset, 'organization_name')
 
                 if m_is_output_of_item.get('source_organization', []):
                     self._convert_metax_org_or_person_to_es_model(m_is_output_of_item.get('source_organization'),
                                                                   es_project, 'source_organization')
+                    self._convert_metax_organization_name_to_es_model(m_is_output_of_item.get('source_organization'), es_dataset, 'organization_name')
 
                 es_dataset['project'].append(es_project)
 
             if m_rd.get('contributor', False):
                 es_dataset['contributor'] = []
                 self._convert_metax_org_or_person_to_es_model(m_rd.get('contributor'), es_dataset, 'contributor')
+                self._convert_metax_organization_name_to_es_model(m_rd.get('contributor'), es_dataset, 'organization_name')
 
             if m_rd.get('publisher', False):
                 es_dataset['publisher'] = []
                 self._convert_metax_org_or_person_to_es_model(m_rd.get('publisher'), es_dataset, 'publisher')
+                self._convert_metax_organization_name_to_es_model(m_rd.get('publisher'), es_dataset, 'organization_name')
 
             if m_rd.get('curator', False):
                 es_dataset['curator'] = []
                 self._convert_metax_org_or_person_to_es_model(m_rd.get('curator'), es_dataset, 'curator')
+                self._convert_metax_organization_name_to_es_model(m_rd.get('curator'), es_dataset, 'organization_name')
 
             if m_rd.get('creator', False):
                 es_dataset['creator'] = []
                 self._convert_metax_org_or_person_to_es_model(m_rd.get('creator'), es_dataset, 'creator')
                 self._convert_metax_creator_name_to_es_model(m_rd.get('creator'), es_dataset, 'creator_name')
+                self._convert_metax_organization_name_to_es_model(m_rd.get('creator'), es_dataset, 'organization_name')
 
             if m_rd.get('rights_holder', False):
                 es_dataset['rights_holder'] = []
                 self._convert_metax_org_or_person_to_es_model(m_rd.get('rights_holder'), es_dataset, 'rights_holder')
+                self._convert_metax_organization_name_to_es_model(m_rd.get('rights_holder'), es_dataset, 'organization_name')
 
         return es_dataset
 
@@ -206,16 +216,47 @@ class CRConverter:
         :return:
         """
 
+        output = []
         if isinstance(m_input, list):
-            output = []
             for m_obj in m_input:
-                output.append(self._get_converted_creator_name_es_model(m_obj))
+                name = self._get_converted_creator_name_es_model(m_obj)
+                if name is not None:
+                    output.extend(name)
         else:
-            output = {}
             if m_input:
                 output = self._get_converted_creator_name_es_model(m_input)
 
         es_output[relation_name] = output
+
+    def _convert_metax_organization_name_to_es_model(self, m_input, es_output, relation_name):
+        """
+
+        :param m_input:
+        :param es_output:
+        :param relation_name:
+        :return:
+        """
+
+        output = []
+        if isinstance(m_input, list):
+            for m_obj in m_input:
+                name = self._get_converted_organization_name_es_model(m_obj)
+                if name is not None:
+                    output.extend(name)
+                if 'is_part_of' in m_obj:
+                    self._convert_metax_organization_name_to_es_model(m_obj['is_part_of'], es_output, relation_name)
+                if 'member_of' in m_obj:
+                    self._convert_metax_organization_name_to_es_model(m_obj['member_of'], es_output, relation_name)
+        else:
+            if m_input:
+                output = self._get_converted_organization_name_es_model(m_input)
+                if 'is_part_of' in m_input:
+                    self._convert_metax_organization_name_to_es_model(m_input['is_part_of'], es_output, relation_name)
+                if 'member_of' in m_input:
+                    self._convert_metax_organization_name_to_es_model(m_input['member_of'], es_output, relation_name)
+
+        if output is not None:
+            es_output[relation_name].extend(output)
 
     def _get_converted_single_org_or_person_es_model(self, m_obj):
         if m_obj.get('@type', '') not in ['Person', 'Organization']:
@@ -239,6 +280,16 @@ class CRConverter:
 
         person_or_org = self._get_es_person_or_org_common_data_from_metax_obj(m_obj)
         out_obj = list(person_or_org['name'].values())
+
+        return out_obj
+
+    def _get_converted_organization_name_es_model(self, m_obj):
+        if m_obj.get('@type', '') != 'Organization':
+            return None
+
+        org = self._get_es_person_or_org_common_data_from_metax_obj(m_obj)
+        out_obj = list(org['name'].values())
+        out_obj = [x for x in out_obj if x] # remove empty strings
 
         return out_obj
 
