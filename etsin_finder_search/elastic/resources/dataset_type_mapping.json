@@ -5,7 +5,7 @@
         "path_match":   "title.*",
         "mapping": {
           "type": "text",
-          "analyzer": "standard"
+          "analyzer": "etsin_ngram_analyzer"
         }
       }
     },
@@ -14,17 +14,17 @@
         "path_match":   "description.*",
         "mapping": {
           "type": "text",
-          "analyzer": "standard"
+          "analyzer": "etsin_ngram_analyzer"
         }
       }
     },
     {
       "org_or_person": {
         "match_pattern": "regex",
-        "match": "^(creator|contributor|publisher|rights_holder|curator)\\..+",
+        "match": "^(creator|contributor|publisher|rights_holder|curator)\\..*(name|identifier).*",
         "mapping": {
           "type": "text",
-          "analyzer": "standard",
+          "analyzer": "etsin_ngram_analyzer",
           "fields": {
             "keyword": {
               "type": "keyword"
@@ -34,9 +34,19 @@
       }
     },
     {
+      "org_or_person_not_indexed": {
+        "match_pattern": "regex",
+        "match": "^(creator|contributor|publisher|rights_holder|curator)\\..*(email|telephone|agent_type|homepage).*",
+        "mapping": {
+          "type": "text",
+          "index": false
+        }
+      }
+    },
+    {
       "object_with_identifier_and_label": {
         "match_pattern": "regex",
-        "match": "^(access_rights.type|access_rights.license|theme|field_of_science|project|other_identifiers.*.type)\\..+",
+        "match": "^(access_rights\\.type|access_rights\\.license|theme|field_of_science|project|other_identifier\\.type)\\..*(pref_label|title|identifier).*",
         "mapping": {
           "type": "text",
           "analyzer": "standard",
@@ -50,6 +60,22 @@
     }
   ],
   "properties": {
+    "creator_name": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }      
+    },
+    "organization_name": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }      
+    },
     "urn_identifier": {
       "type": "text",
       "fields": {
@@ -71,11 +97,7 @@
     },
     "keyword": {
       "type": "text",
-      "fields": {
-        "keyword": {
-          "type": "keyword"
-        }
-      }
+      "copy_to": ["theme.label.en", "theme.label.fi"]
     },
     "preservation_state": {
       "type": "integer"

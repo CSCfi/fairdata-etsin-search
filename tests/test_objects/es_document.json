@@ -3,7 +3,7 @@
         "license": [
             {
                 "identifier": "http://www.opensource.org/licenses/Apache-2.0",
-                "pref_label": {
+                "title": {
                     "en": "Apache Software License 2.0",
                     "und": "Apache Software License 2.0"
                 }
@@ -25,50 +25,30 @@
             "agent_type": "Person",
             "belongs_to_org": {
                 "agent_type": "Organization",
-                "email": "info@csc.fi",
-                "homepage": {},
                 "identifier": "http://purl.org/att/es/organization_data/organization/organization_1901",
                 "name": {
                     "und": "Helsingin yliopisto"
-                },
-                "telephone": [
-                    "+358501231235"
-                ]
+                }
             },
-            "email": "kalle.kontribuuttaaja@csc.fi",
-            "homepage": {},
             "identifier": "contributorid",
             "name": {
                 "und": "Kalle Kontribuuttaja"
-            },
-            "telephone": [
-                "+358501231122"
-            ]
+            }
         },
         {
             "agent_type": "Person",
             "belongs_to_org": {
                 "agent_type": "Organization",
-                "email": "joo@csc.fi",
-                "homepage": {},
                 "identifier": "org_identifier",
                 "name": {
                     "en": "Mysterious Organization 2",
                     "fi": "Organisaatio"
-                },
-                "telephone": [
-                    "+23423423"
-                ]
+                }
             },
-            "email": "franzibald.kontribuuttaaja@csc.fi",
-            "homepage": {},
             "identifier": "contributorid2",
             "name": {
                 "und": "Franzibald Kontribuuttaja"
-            },
-            "telephone": [
-                "+358501231133"
-            ]
+            }
         }
     ],
     "creator": [
@@ -76,44 +56,33 @@
             "agent_type": "Person",
             "belongs_to_org": {
                 "agent_type": "Organization",
-                "email": "",
-                "homepage": {},
                 "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
                 "name": {
                     "und": "Aalto yliopisto"
-                },
-                "telephone": ""
+                }
             },
-            "email": "",
-            "homepage": {},
             "identifier": "",
             "name": {
                 "und": "Teppo Testaaja"
-            },
-            "telephone": ""
+            }
         }
     ],
+    "creator_name": ["Teppo Testaaja"],
     "curator": [
         {
             "agent_type": "Organization",
             "belongs_to_org": {
                 "agent_type": "Organization",
-                "email": "",
-                "homepage": {},
                 "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
                 "name": {
                     "und": "Aalto yliopisto"
-                },
-                "telephone": ""
+                }
             },
-            "email": "",
-            "homepage": {},
             "identifier": "id:of:curator:default",
             "name": {
                 "en": "Mysterious Organization",
                 "fi": "Organisaatio"
-            },
-            "telephone": ""
+            }
         }
     ],
     "description": [
@@ -138,6 +107,22 @@
         "keyword3"
     ],
     "modified_by_api": "2017-11-16T12:18:18.068569",
+    "organization_name": [
+        "Funding Organization", 
+        "Organisaatio",
+        "Helsingin yliopisto",
+        "Helsingin yliopisto",
+        "Mysterious Organization 2",
+        "Organisaatio",
+        "Aalto yliopisto",
+        "School services, ARTS",
+        "Aalto yliopisto",
+        "Mysterious Organization",
+        "Organisaatio",
+        "Aalto yliopisto",
+        "Aalto yliopisto",
+        "Helsingin yliopisto"
+    ],
     "other_identifier": [
         {
             "notation": "doi:10.12345",
@@ -166,34 +151,24 @@
             "has_funding_agency": [
                 {
                     "agent_type": "Organization",
-                    "email": "rahoitus@rahaorg.fi",
-                    "homepage": {},
                     "identifier": "fundingagencyidentifier",
                     "name": {
                         "en": "Funding Organization",
                         "fi": "Organisaatio"
-                    },
-                    "telephone": [
-                        "+358501232233"
-                    ]
+                    }
                 }
             ],
             "identifier": "projectidentifier",
-            "pref_label": {
+            "name": {
                 "en": "Name of project"
             },
             "source_organization": [
                 {
                     "agent_type": "Organization",
-                    "email": "info@csc.fi",
-                    "homepage": {},
                     "identifier": "http://purl.org/att/es/organization_data/organization/organization_1901",
                     "name": {
                         "und": "Helsingin yliopisto"
-                    },
-                    "telephone": [
-                        "+358501231235"
-                    ]
+                    }
                 }
             ]
         }
@@ -202,59 +177,29 @@
         "agent_type": "Organization",
         "belongs_to_org": {
             "agent_type": "Organization",
-            "email": "info@csc.fi",
-            "homepage": {
-                "identifier": "http://www.publisher_parent.fi/",
-                "title": {
-                    "en": "Publisher parent website",
-                    "fi": "Julkaisijan yl\u00c3\u00a4organisaation kotisivu"
-                }
-            },
             "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
             "name": {
                 "und": "Aalto yliopisto"
-            },
-            "telephone": [
-                "+234234"
-            ]
-        },
-        "email": "info@csc.fi",
-        "homepage": {
-            "identifier": "http://www.publisher.fi/",
-            "title": {
-                "en": "Publisher website",
-                "fi": "Julkaisijan kotisivu"
             }
         },
         "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076-A800",
         "name": {
             "und": "School services, ARTS"
-        },
-        "telephone": [
-            "+358501231235"
-        ]
+        }
     },
     "rights_holder": {
         "agent_type": "Organization",
         "belongs_to_org": {
             "agent_type": "Organization",
-            "email": "",
-            "homepage": {},
             "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
             "name": {
                 "und": "Aalto yliopisto"
-            },
-            "telephone": ""
+            }
         },
-        "email": "info@csc.fi",
-        "homepage": {},
         "identifier": "http://purl.org/att/es/organization_data/organization/organization_1901",
         "name": {
             "und": "Helsingin yliopisto"
-        },
-        "telephone": [
-            "+358501231235"
-        ]
+        }
     },
     "theme": [
         {
