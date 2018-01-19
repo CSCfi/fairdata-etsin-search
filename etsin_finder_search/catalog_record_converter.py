@@ -178,14 +178,14 @@ class CRConverter:
                 m_input_label_is_array = isinstance(obj.get(m_input_label_field), list)
                 out_obj = {
                     'identifier': obj.get('identifier', ''),
-                    'pref_label': obj.get(m_input_label_field, [] if m_input_label_is_array else {})
+                    m_input_label_field: obj.get(m_input_label_field, [] if m_input_label_is_array else {})
                 }
                 output.append(out_obj)
             es_output[es_array_relation_name] = output
         elif isinstance(m_input, dict):
             m_input_label_is_array = isinstance(m_input.get(m_input_label_field), list)
             es_output['identifier'] = m_input.get('identifier', '')
-            es_output['pref_label'] = m_input.get(m_input_label_field, [] if m_input_label_is_array else {})
+            es_output[m_input_label_field] = m_input.get(m_input_label_field, [] if m_input_label_is_array else {})
 
     def _convert_metax_org_or_person_to_es_model(self, m_input, es_output, relation_name):
         """
@@ -303,8 +303,5 @@ class CRConverter:
         return {
             'identifier': m_obj.get('identifier', ''),
             'name': name,
-            'email': m_obj.get('email', ''),
-            'telephone': m_obj.get('telephone', ''),
-            'agent_type': m_obj.get('@type'),
-            'homepage': m_obj.get('homepage', {})
+            'agent_type': m_obj.get('@type')
         }
