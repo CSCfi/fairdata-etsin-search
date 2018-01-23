@@ -45,8 +45,8 @@ class CRConverter:
             if 'organization_name' not in es_dataset:
                 es_dataset['organization_name'] = []
 
-            if metax_cr_json.get('modified_by_api', False):
-                es_dataset['modified_by_api'] = metax_cr_json.get('modified_by_api')
+            if metax_cr_json.get('date_modified', False):
+                es_dataset['date_modified'] = metax_cr_json.get('date_modified')
 
             if m_rd.get('title', False):
                 es_dataset['title'] = m_rd.get('title')
