@@ -47,6 +47,8 @@ class CRConverter:
 
             if metax_cr_json.get('date_modified', False):
                 es_dataset['date_modified'] = metax_cr_json.get('date_modified')
+            else:
+                es_dataset['date_modified'] = metax_cr_json.get('date_created')
 
             if m_rd.get('title', False):
                 es_dataset['title'] = m_rd.get('title')
