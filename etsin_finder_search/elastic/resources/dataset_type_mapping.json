@@ -92,7 +92,7 @@
         }
       }
     },
-    "modified_by_api": {
+    "date_modified": {
       "type": "date"
     },
     "keyword": {
