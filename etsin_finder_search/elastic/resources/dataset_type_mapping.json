@@ -101,6 +101,9 @@
     },
     "preservation_state": {
       "type": "integer"
+    },
+    "version_identifiers": {
+      "type": "text"
     }
   }
 }
