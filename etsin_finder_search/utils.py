@@ -79,3 +79,9 @@ def rabbitmq_consumer_is_running():
     if 'run_rabbitmq_consumer.py' in output:
         return True
     return False
+
+
+def get_catalog_record_previous_version_identifier(cr_json):
+    if cr_json.get('previous_version', False) and cr_json.get('previous_version').get('urn_identifier', False):
+        return cr_json.get('previous_version').get('urn_identifier')
+    return None
