@@ -112,9 +112,9 @@ def convert_identifiers_to_es_data_models(metax_api, identifiers, es_dataset_mod
 
             if es_dataset_json:
                 # The below 3 lines is in case you want to print the metax cr json and es dataset json to a file
-                from etsin_finder_search.utils import append_json_to_file
-                append_json_to_file(metax_cr_json, 'data.txt')
-                append_json_to_file(es_dataset_json, 'data.txt')
+                # from etsin_finder_search.utils import append_json_to_file
+                # append_json_to_file(metax_cr_json, 'data.txt')
+                # append_json_to_file(es_dataset_json, 'data.txt')
 
                 es_dataset_models.append(ESDatasetModel(es_dataset_json))
             else:
@@ -144,8 +144,9 @@ class ReindexScheduledTask:
                 log.error("Unable to stop RabbitMQ consumer service, continuing with reindexing")
 
         # 2. Get all dataset urn_identifiers from metax
+        # Fetch only the latest versions of each dataset
         metax_urn_identifiers = self.metax_api.get_all_catalog_record_urn_identifiers()
-        urn_ids_to_create = list(metax_urn_identifiers)
+        urn_ids_to_create = list(metax_urn_identifiers) if metax_urn_identifiers else []
 
         # 3. Get all urn_identifiers from search index
         es_urn_identifiers = self.es_client.get_all_doc_ids_from_index() or []
@@ -166,8 +167,7 @@ class ReindexScheduledTask:
         log.info("urn identifiers to update: \n{0}".format(urn_ids_to_index))
         urn_ids_to_index.extend(urn_ids_to_create)
 
-        # 5. Convert catalog records to es documents and add previous version ids, for those records to be added to
-        # index, on delete list.
+        # 5. Convert catalog records to es documents and for those records add their previous version ids to delete list
         es_data_models = []
         convert_identifiers_to_es_data_models(self.metax_api, urn_ids_to_index, es_data_models, urn_ids_to_delete)
 
@@ -180,4 +180,3 @@ class ReindexScheduledTask:
         if not rabbitmq_consumer_is_running():
             if not start_rabbitmq_consumer():
                 log.error("Unable to start RabbitMQ consumer service")
-

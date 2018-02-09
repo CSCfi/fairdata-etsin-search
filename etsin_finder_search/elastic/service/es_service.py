@@ -94,7 +94,7 @@ class ElasticSearchService:
         bulk_request_str = ''
 
         log.info("Reindexing {0} documents and deleting {1} documents".format(str(len(dataset_models_to_reindex)),
-                                                                                  str(len(doc_ids_to_delete))))
+                                                                              str(len(doc_ids_to_delete))))
         for doc_id in doc_ids_to_delete:
             log.info(doc_id)
 

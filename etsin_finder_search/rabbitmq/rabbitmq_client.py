@@ -25,7 +25,8 @@ from etsin_finder_search.reindexing_log import get_logger
 from etsin_finder_search.utils import \
     get_metax_rabbit_mq_config, \
     get_elasticsearch_config, \
-    get_catalog_record_previous_version_identifier
+    get_catalog_record_previous_version_identifier, \
+    catalog_record_has_next_version_identifier
 
 
 class MetaxConsumer():
@@ -145,6 +146,14 @@ class MetaxConsumer():
         self._cancel_consumers()
 
     def _convert_to_es_doc_and_reindex(self, ch, method, body_as_json):
+        if catalog_record_has_next_version_identifier(body_as_json):
+            self.log.debug("Received identifier {0} which has a next version {1}. Skipping reindexing.."
+                           .format(body_as_json['research_dataset'].get('urn_identifier', ''),
+                                   body_as_json['next_version'].get('urn_identifier')))
+            self.event_processing_completed = True
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+            return False
+
         prev_version_id = get_catalog_record_previous_version_identifier(body_as_json)
         converter = CRConverter()
         es_data_model = converter.convert_metax_cr_json_to_es_data_model(body_as_json)
@@ -156,8 +165,8 @@ class MetaxConsumer():
 
         es_reindex_success = False
         try:
-            es_reindex_success = self.es_client.reindex_dataset(es_data_model) and \
-                                 (prev_version_id is None or self.es_client.delete_dataset(prev_version_id))
+            es_reindex_success = \
+                self.es_client.reindex_dataset(es_data_model) and (prev_version_id is None or self.es_client.delete_dataset(prev_version_id))
         except Exception:
             es_reindex_success = False
         finally:
