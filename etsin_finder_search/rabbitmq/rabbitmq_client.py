@@ -22,14 +22,19 @@ from elasticsearch.exceptions import RequestError
 from etsin_finder_search.catalog_record_converter import CRConverter
 from etsin_finder_search.elastic.service.es_service import ElasticSearchService
 from etsin_finder_search.reindexing_log import get_logger
-from etsin_finder_search.utils import get_metax_rabbit_mq_config, get_elasticsearch_config, get_config_from_file
+from etsin_finder_search.utils import \
+    get_metax_rabbit_mq_config, \
+    get_elasticsearch_config, \
+    get_catalog_record_previous_version_identifier, \
+    catalog_record_has_next_version_identifier, \
+    catalog_record_is_deprecated
 
 
 class MetaxConsumer():
 
     def __init__(self):
         self.log = get_logger(__name__)
-        self.indexing_operation_complete = True
+        self.event_processing_completed = True
         self.init_ok = False
 
         # Get configs
@@ -82,79 +87,39 @@ class MetaxConsumer():
         self._set_queue_names(is_local_dev)
         self._create_and_bind_queues(is_local_dev)
 
-        def callback_reindex(ch, method, properties, body):
-            self.indexing_operation_complete = False
-            self.log.debug("Received create or update message from Metax RabbitMQ")
-
-            if not self._ensure_index_existence():
-                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
-                self.indexing_operation_complete = True
+        def callback_create(ch, method, properties, body):
+            if not self._init_event_callback_ok("create", ch, method):
                 return
 
-            body_as_json = self._get_message_body_as_json(body)
+            body_as_json = self._get_event_json_body(ch, method, body)
             if not body_as_json:
-                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
-                self.indexing_operation_complete = True
                 return
 
-            converter = CRConverter()
-            es_data_model = converter.convert_metax_cr_json_to_es_data_model(body_as_json)
+            self._convert_to_es_doc_and_reindex(ch, method, body_as_json)
 
-            if not es_data_model:
-                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
-                self.indexing_operation_complete = True
+        def callback_update(ch, method, properties, body):
+            if not self._init_event_callback_ok("update", ch, method):
                 return
 
-            es_reindex_success = False
-            try:
-                es_reindex_success = self.es_client.reindex_dataset(es_data_model)
-            except RequestError:
-                es_reindex_success = False
-            finally:
-                if es_reindex_success:
-                    ch.basic_ack(delivery_tag=method.delivery_tag)
-                else:
-                    self.log.error('Failed to reindex %s', json.loads(
-                        body).get('urn_identifier', 'unknown identifier'))
-                    ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
+            body_as_json = self._get_event_json_body(ch, method, body)
+            if not body_as_json:
+                return
 
-                self.indexing_operation_complete = True
+            self._convert_to_es_doc_and_reindex(ch, method, body_as_json)
 
         def callback_delete(ch, method, properties, body):
-            self.indexing_operation_complete = False
-            self.log.debug("Received delete message from Metax RabbitMQ")
-
-            if not self._ensure_index_existence():
-                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
-                self.indexing_operation_complete = True
+            if not self._init_event_callback_ok("delete", ch, method):
                 return
 
-            body_as_json = self._get_message_body_as_json(body)
+            body_as_json = self._get_event_json_body(ch, method, body)
             if not body_as_json:
-                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
-                self.indexing_operation_complete = True
                 return
 
-            delete_success = False
-            try:
-                delete_success = self.es_client.delete_dataset(body_as_json.get('urn_identifier'))
-            except RequestError:
-                delete_success = False
-            finally:
-                if delete_success:
-                    ch.basic_ack(delivery_tag=method.delivery_tag)
-                else:
-                    self.log.error('Failed to delete %s', json.loads(
-                        body).get('urn_identifier', 'unknown identifier'))
-                    # TODO: If delete fails because there's no such id in index,
-                    # no need to requeue
-                    ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
-
-                self.indexing_operation_complete = True
+            self._delete_from_index(ch, method, body_as_json)
 
         # Set up consumers so that acks are required
-        self.create_consumer_tag = self.channel.basic_consume(callback_reindex, queue=self.create_queue, no_ack=False)
-        self.update_consumer_tag = self.channel.basic_consume(callback_reindex, queue=self.update_queue, no_ack=False)
+        self.create_consumer_tag = self.channel.basic_consume(callback_create, queue=self.create_queue, no_ack=False)
+        self.update_consumer_tag = self.channel.basic_consume(callback_update, queue=self.update_queue, no_ack=False)
         self.delete_consumer_tag = self.channel.basic_consume(callback_delete, queue=self.delete_queue, no_ack=False)
 
         self.init_ok = True
@@ -166,6 +131,81 @@ class MetaxConsumer():
 
     def before_stop(self):
         self._cancel_consumers()
+
+    def _delete_from_index(self, ch, method, body_as_json):
+        try:
+            delete_success = self.es_client.delete_dataset(body_as_json['research_dataset'].get('urn_identifier'))
+
+            if delete_success:
+                ch.basic_ack(delivery_tag=method.delivery_tag)
+            else:
+                self.log.error('Failed to delete %s', body_as_json.get('urn_identifier'))
+                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+        except RequestError:
+            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
+        finally:
+            self.event_processing_completed = True
+
+    def _convert_to_es_doc_and_reindex(self, ch, method, body_as_json):
+        if catalog_record_is_deprecated(body_as_json):
+            self.log.debug("Received identifier {0} for a catalog record that is deprecated. "
+                           "Trying to delete from index if it exists.."
+                           .format(body_as_json['research_dataset'].get('urn_identifier', '')))
+            self._delete_from_index(ch, method, body_as_json)
+            self.event_processing_completed = True
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+            return
+
+        if catalog_record_has_next_version_identifier(body_as_json):
+            self.log.debug("Received identifier {0} for a catalog record that has a next version {1}. "
+                           "Skipping reindexing..".format(body_as_json['research_dataset'].get('urn_identifier', ''),
+                                                          body_as_json['next_version'].get('urn_identifier')))
+            self.event_processing_completed = True
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+            return
+
+        prev_version_id = get_catalog_record_previous_version_identifier(body_as_json)
+        converter = CRConverter()
+        es_data_model = converter.convert_metax_cr_json_to_es_data_model(body_as_json)
+
+        if not es_data_model:
+            self.log.error("Unable to convert metax catalog record to es data model, not requeing message")
+            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+            self.event_processing_completed = True
+            return
+
+        try:
+            es_reindex_success = \
+                self.es_client.reindex_dataset(es_data_model) and (prev_version_id is None or self.es_client.delete_dataset(prev_version_id))
+
+            if es_reindex_success:
+                ch.basic_ack(delivery_tag=method.delivery_tag)
+            else:
+                self.log.error('Failed to reindex %s', body_as_json.get('research_dataset').get('urn_identifier'))
+                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
+        except Exception:
+            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
+        finally:
+            self.event_processing_completed = True
+
+    def _init_event_callback_ok(self, callback_type, ch, method):
+        self.event_processing_completed = False
+        self.log.debug("Received {0} message from Metax RabbitMQ".format(callback_type))
+
+        if not self._ensure_index_existence():
+            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+            self.event_processing_completed = True
+            return False
+
+        return True
+
+    def _get_event_json_body(self, ch, method, body):
+        body_as_json = self._get_message_body_as_json(body)
+        if not body_as_json:
+            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+            self.event_processing_completed = True
+            return None
+        return body_as_json
 
     def _get_message_body_as_json(self, body):
         try:

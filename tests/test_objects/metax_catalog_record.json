@@ -115,7 +115,7 @@
                     "fi": "Datakatalogin julkaisijaorganisaatio"
                 }
             },
-            "research_dataset_schema": "att",
+            "research_dataset_schema": "ida",
             "title": {
                 "en": "Test data catalog name",
                 "fi": "Testidatakatalogin nimi"
@@ -124,19 +124,19 @@
         "catalog_record_group_create": "default-record-create-group",
         "catalog_record_group_edit": "default-record-edit-group",
         "date_created": "2017-05-15T13:07:22+03:00",
-        "date_modified": "2018-01-22T15:56:50+02:00",
+        "date_modified": "2018-02-09T16:31:32+02:00",
         "id": 1,
         "service_created": "metax",
         "service_modified": "metax"
     },
     "date_created": "2017-05-23T13:07:22+03:00",
-    "date_modified": "2018-01-22T15:56:45+02:00",
+    "date_modified": "2018-02-09T16:31:23+02:00",
     "deprecated": false,
     "editor": {
         "creator_id": "053bffbcc41edad4853bea91fc42ea18",
-        "owner_id": "053d18ecb29e752cb7a35cd77b34f5fd"
+        "owner_id": "053bffbcc41edad4853bea91fc42ea18"
     },
-    "id": 12,
+    "id": 11,
     "preservation_state": 0,
     "research_dataset": {
         "access_rights": {
@@ -366,15 +366,6 @@
         ],
         "files": [
             {
-                "access_url": {
-                    "description": {
-                        "en": "file url description"
-                    },
-                    "identifier": "https://www.url.address.perhaps.fi",
-                    "title": {
-                        "en": "file url title"
-                    }
-                },
                 "description": "file description",
                 "file_type": {
                     "definition": [
@@ -409,19 +400,8 @@
                 }
             },
             {
-                "access_url": {
-                    "description": {
-                        "en": "file url description"
-                    },
-                    "identifier": "https://www.url.address.perhaps.fi",
-                    "title": {
-                        "en": "file url title"
-                    }
-                },
                 "description": "file description",
-                "identifier": "pid:urn:2",
-                "title": "file title",
-                "type": {
+                "file_type": {
                     "definition": [
                         {
                             "en": "A statement or formal explanation of the meaning of a concept."
@@ -435,8 +415,15 @@
                                 "en": "The preferred lexical label for a resource"
                             }
                         }
-                    ]
+                    ],
+                    "pref_label": {
+                        "en": "Software",
+                        "fi": "Sovellus",
+                        "und": "Sovellus"
+                    }
                 },
+                "identifier": "pid:urn:2",
+                "title": "file title",
                 "use_category": {
                     "identifier": "http://purl.org/att/es/reference_data/use_category/use_category_publication",
                     "pref_label": {
@@ -594,7 +581,7 @@
                 }
             }
         ],
-        "preferred_identifier": "very:unique:urn-1",
+        "preferred_identifier": "very:unique:urn-0",
         "provenance": [
             {
                 "description": {
@@ -821,38 +808,6 @@
                 "+358501231235"
             ]
         },
-        "related_entity": [
-            {
-                "description": [
-                    {
-                        "en": "An account of the resource"
-                    }
-                ],
-                "identifier": "urn:nbn:fi:research-infras-2016111647",
-                "title": {
-                    "en": "A name given to the resource"
-                },
-                "type": {
-                    "definition": [
-                        {
-                            "en": "A statement or formal explanation of the meaning of a concept."
-                        }
-                    ],
-                    "identifier": "http://urn.fi/urn:nbn:fi:research-infras-2016111647",
-                    "in_scheme": [
-                        {
-                            "identifier": "http://uri.of.this.concept/scheme",
-                            "pref_label": {
-                                "en": "The preferred lexical label for a resource"
-                            }
-                        }
-                    ],
-                    "pref_label": {
-                        "en": "pref label for this type"
-                    }
-                }
-            }
-        ],
         "relation": [
             {
                 "entity": {
@@ -939,88 +894,6 @@
                         "en": "Has previous version",
                         "fi": "Edellinen versio",
                         "und": "Edellinen versio"
-                    }
-                }
-            }
-        ],
-        "remote_resources": [
-            {
-                "access_url": {
-                    "description": {
-                        "en": "Description of the link. For example to be used as hover text."
-                    },
-                    "identifier": "https://url.of.resource.com",
-                    "title": {
-                        "en": "A name given to the document, which may be e.g. a landing page"
-                    }
-                },
-                "bytesize": "2048",
-                "checksum": {
-                    "algorithm": "http://purl.org/att/es/reference_data/checksum_algorithm/checksum_algorithm_SHA-512",
-                    "checksum_value": "u5y6f4y68765ngf6ry8n"
-                },
-                "description": "Free-text account of the distribution.",
-                "download_url": {
-                    "description": {
-                        "en": "Description of the link. For example to be used as hover text."
-                    },
-                    "identifier": "https://download.url.of.resource.com",
-                    "title": {
-                        "en": "A name given to the document, which would be an actual downloadable file"
-                    }
-                },
-                "has_object_characteristics": {
-                    "description": "Description of file type",
-                    "encoding": "utf-8",
-                    "has_creating_application_name": "Creating application name",
-                    "title": "File type name"
-                },
-                "identifier": "identifierofresource",
-                "license": [
-                    {
-                        "description": [
-                            {
-                                "en": "Free account of the rights"
-                            }
-                        ],
-                        "identifier": "http://www.opensource.org/licenses/Apache-2.0",
-                        "license": "https://url.of.license.which.applies.org",
-                        "title": {
-                            "en": "Apache Software License 2.0",
-                            "und": "Apache Software License 2.0"
-                        }
-                    }
-                ],
-                "mediatype": "image/jpeg",
-                "modified": "2013-01-17T08:19:58Z",
-                "resource_type": {
-                    "definition": [
-                        {
-                            "en": "A statement or formal explanation of the meaning of a concept."
-                        }
-                    ],
-                    "identifier": "http://purl.org/att/es/reference_data/resource_type/resource_type_api",
-                    "in_scheme": [
-                        {
-                            "identifier": "http://uri.of.resource.concept/scheme",
-                            "pref_label": {
-                                "en": "The preferred lexical label for a resource"
-                            }
-                        }
-                    ],
-                    "pref_label": {
-                        "en": "Application interface",
-                        "fi": "Rajapinta",
-                        "und": "Rajapinta"
-                    }
-                },
-                "title": "A name given to the distribution",
-                "use_category": {
-                    "identifier": "http://purl.org/att/es/reference_data/use_category/use_category_rights",
-                    "pref_label": {
-                        "en": "Rights statement",
-                        "fi": "Oikeuksien kuvaus",
-                        "und": "Oikeuksien kuvaus"
                     }
                 }
             }
@@ -1113,7 +986,7 @@
             "en": "Wonderful Title"
         },
         "total_ida_byte_size": 21000,
-        "urn_identifier": "urn:nbn:fi:att:1955e904-e3dd-4d7e-99f1-3fed446f9612",
+        "urn_identifier": "urn:nbn:fi:att:1955e904-e3dd-4d7e-99f1-3fed446f9611",
         "value": [
             0.111
         ],
