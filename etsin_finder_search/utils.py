@@ -89,3 +89,7 @@ def get_catalog_record_previous_version_identifier(cr_json):
 
 def catalog_record_has_next_version_identifier(cr_json):
     return True if 'next_version' in cr_json else False
+
+
+def catalog_record_is_deprecated(cr_json):
+    return cr_json.get('deprecated', False)

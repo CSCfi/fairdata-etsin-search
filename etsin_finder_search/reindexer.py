@@ -9,7 +9,8 @@ from etsin_finder_search.utils import \
     start_rabbitmq_consumer, \
     stop_rabbitmq_consumer, \
     rabbitmq_consumer_is_running, \
-    get_catalog_record_previous_version_identifier
+    catalog_record_has_next_version_identifier, \
+    catalog_record_is_deprecated
 
 
 log = get_logger(__name__)
@@ -68,8 +69,7 @@ def load_test_data_into_es(dataset_amt):
         urn_ids_to_load = all_metax_urn_identifiers[0:min(len(all_metax_urn_identifiers), dataset_amt)]
 
         identifiers_to_delete = []
-        es_data_models = []
-        convert_identifiers_to_es_data_models(metax_api, urn_ids_to_load, es_data_models, identifiers_to_delete)
+        es_data_models = convert_identifiers_to_es_data_models(metax_api, urn_ids_to_load, identifiers_to_delete)
         es_client.do_bulk_request_for_datasets(es_data_models, identifiers_to_delete)
         log.info("Test data loaded into Elasticsearch")
         return True
@@ -88,28 +88,36 @@ def _create_es_client():
     return False
 
 
-def convert_identifiers_to_es_data_models(metax_api, identifiers, es_dataset_models, identifiers_to_delete):
+def convert_identifiers_to_es_data_models(metax_api, identifiers_to_convert, identifiers_to_delete):
     """
     Takes in Metax catalog record identifiers, fetches their json from Metax, converts them to an ESDatasetModel
-    object and adds to es_data_models list. At the same time checks if catalog record has a previous version and
-    if it does, adds the previous version's identifier to identifiers_to_delete list.
+    object and adds to es_data_models list. At the same time checks if catalog record has a next version it will be
+    added to identifiers_to_delete list. Also checks if the dataset has been deprecated in which case also add it to
+    identifiers_to_delete list
 
-    :param identifiers: Metax identifiers
-    :param es_dataset_models: List of ESDatasetModel objects that will be sent to es bulk request
+    :param identifiers_to_convert: Metax identifiers to fetch from Metax potentially to be reindexed
     :param identifiers_to_delete: list of Metax identifiers that will be sent to es bulk request
-    :return:
+    :return: List of ESDatasetModel objects
     """
 
+    es_dataset_models = []
     converter = CRConverter()
-    log.info("Converting {0} Metax catalog records to Elasticsearch documents..".format(len(identifiers)))
-    for identifier in identifiers:
+    log.info("Trying to convert {0} Metax catalog records to Elasticsearch documents. "
+             "Not converting but trying to delete if catalog record has next version or if catalog record is deprecated"
+             .format(len(identifiers_to_convert)))
+
+    for identifier in identifiers_to_convert:
         metax_cr_json = metax_api.get_catalog_record(identifier)
         if metax_cr_json:
-            prev_version_id = get_catalog_record_previous_version_identifier(metax_cr_json)
-            if prev_version_id:
-                identifiers_to_delete.append(prev_version_id)
-            es_dataset_json = converter.convert_metax_cr_json_to_es_data_model(metax_cr_json)
+            if catalog_record_has_next_version_identifier(metax_cr_json):
+                identifiers_to_delete.append(identifier)
+                continue
 
+            if catalog_record_is_deprecated(metax_cr_json):
+                identifiers_to_delete.append(identifier)
+                continue
+
+            es_dataset_json = converter.convert_metax_cr_json_to_es_data_model(metax_cr_json)
             if es_dataset_json:
                 # The below 3 lines is in case you want to print the metax cr json and es dataset json to a file
                 # from etsin_finder_search.utils import append_json_to_file
@@ -120,6 +128,9 @@ def convert_identifiers_to_es_data_models(metax_api, identifiers, es_dataset_mod
             else:
                 log.error("Something went wrong when converting {0} to es data model".format(identifier))
                 continue
+
+    log.info("Converted finally {0} Metax catalog records to Elasticsearch documents".format(len(es_dataset_models)))
+    return es_dataset_models
 
 
 class ReindexScheduledTask:
@@ -168,8 +179,7 @@ class ReindexScheduledTask:
         urn_ids_to_index.extend(urn_ids_to_create)
 
         # 5. Convert catalog records to es documents and for those records add their previous version ids to delete list
-        es_data_models = []
-        convert_identifiers_to_es_data_models(self.metax_api, urn_ids_to_index, es_data_models, urn_ids_to_delete)
+        es_data_models = convert_identifiers_to_es_data_models(self.metax_api, urn_ids_to_index, urn_ids_to_delete)
 
         # 6. Run bulk requests to search index
         # A. Create or update documents that are either new or already exist in search index

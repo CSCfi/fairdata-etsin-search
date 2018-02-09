@@ -26,7 +26,8 @@ from etsin_finder_search.utils import \
     get_metax_rabbit_mq_config, \
     get_elasticsearch_config, \
     get_catalog_record_previous_version_identifier, \
-    catalog_record_has_next_version_identifier
+    catalog_record_has_next_version_identifier, \
+    catalog_record_is_deprecated
 
 
 class MetaxConsumer():
@@ -114,21 +115,7 @@ class MetaxConsumer():
             if not body_as_json:
                 return
 
-            delete_success = False
-            try:
-                delete_success = self.es_client.delete_dataset(body_as_json.get('urn_identifier'))
-                # TODO: Move the document to the "dead dataset" index maybe via Reindex API?
-            except RequestError:
-                delete_success = False
-            finally:
-                if delete_success:
-                    ch.basic_ack(delivery_tag=method.delivery_tag)
-                else:
-                    self.log.error('Failed to delete %s', body_as_json.get('urn_identifier'))
-                    # TODO: If delete fails because there's no such id in index, no need to requeue
-                    ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
-
-                self.event_processing_completed = True
+            self._delete_from_index(ch, method, body_as_json)
 
         # Set up consumers so that acks are required
         self.create_consumer_tag = self.channel.basic_consume(callback_create, queue=self.create_queue, no_ack=False)
@@ -145,37 +132,60 @@ class MetaxConsumer():
     def before_stop(self):
         self._cancel_consumers()
 
+    def _delete_from_index(self, ch, method, body_as_json):
+        try:
+            delete_success = self.es_client.delete_dataset(body_as_json['research_dataset'].get('urn_identifier'))
+
+            if delete_success:
+                ch.basic_ack(delivery_tag=method.delivery_tag)
+            else:
+                self.log.error('Failed to delete %s', body_as_json.get('urn_identifier'))
+                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+        except RequestError:
+            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
+        finally:
+            self.event_processing_completed = True
+
     def _convert_to_es_doc_and_reindex(self, ch, method, body_as_json):
-        if catalog_record_has_next_version_identifier(body_as_json):
-            self.log.debug("Received identifier {0} which has a next version {1}. Skipping reindexing.."
-                           .format(body_as_json['research_dataset'].get('urn_identifier', ''),
-                                   body_as_json['next_version'].get('urn_identifier')))
+        if catalog_record_is_deprecated(body_as_json):
+            self.log.debug("Received identifier {0} for a catalog record that is deprecated. "
+                           "Trying to delete from index if it exists.."
+                           .format(body_as_json['research_dataset'].get('urn_identifier', '')))
+            self._delete_from_index(ch, method, body_as_json)
             self.event_processing_completed = True
             ch.basic_ack(delivery_tag=method.delivery_tag)
-            return False
+            return
+
+        if catalog_record_has_next_version_identifier(body_as_json):
+            self.log.debug("Received identifier {0} for a catalog record that has a next version {1}. "
+                           "Skipping reindexing..".format(body_as_json['research_dataset'].get('urn_identifier', ''),
+                                                          body_as_json['next_version'].get('urn_identifier')))
+            self.event_processing_completed = True
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+            return
 
         prev_version_id = get_catalog_record_previous_version_identifier(body_as_json)
         converter = CRConverter()
         es_data_model = converter.convert_metax_cr_json_to_es_data_model(body_as_json)
 
         if not es_data_model:
+            self.log.error("Unable to convert metax catalog record to es data model, not requeing message")
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
             self.event_processing_completed = True
-            return False
+            return
 
-        es_reindex_success = False
         try:
             es_reindex_success = \
                 self.es_client.reindex_dataset(es_data_model) and (prev_version_id is None or self.es_client.delete_dataset(prev_version_id))
-        except Exception:
-            es_reindex_success = False
-        finally:
+
             if es_reindex_success:
                 ch.basic_ack(delivery_tag=method.delivery_tag)
             else:
                 self.log.error('Failed to reindex %s', body_as_json.get('research_dataset').get('urn_identifier'))
                 ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
-
+        except Exception:
+            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
+        finally:
             self.event_processing_completed = True
 
     def _init_event_callback_ok(self, callback_type, ch, method):

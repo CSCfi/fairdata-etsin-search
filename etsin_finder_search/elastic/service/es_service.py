@@ -93,10 +93,8 @@ class ElasticSearchService:
     def do_bulk_request_for_datasets(self, dataset_models_to_reindex, doc_ids_to_delete):
         bulk_request_str = ''
 
-        log.info("Reindexing {0} documents and deleting {1} documents".format(str(len(dataset_models_to_reindex)),
-                                                                              str(len(doc_ids_to_delete))))
-        for doc_id in doc_ids_to_delete:
-            log.info(doc_id)
+        log.info("Reindexing {0} documents and trying to delete {1} documents".format(
+            str(len(dataset_models_to_reindex)), str(len(doc_ids_to_delete))))
 
         if dataset_models_to_reindex:
             for item_no, dataset_data in enumerate(dataset_models_to_reindex, start=1):
@@ -141,7 +139,6 @@ class ElasticSearchService:
 
     @staticmethod
     def _operation_ok(op_response):
-        log.info(op_response)
         if ('errors' in op_response and op_response.get('errors')) or \
                 ('acknowledged' in op_response and not op_response.get('acknowledged')):
             log.error('The performed operation had errors: \n{0}'.format(op_response))
