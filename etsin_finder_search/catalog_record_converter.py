@@ -128,9 +128,6 @@ class CRConverter:
                 self._convert_metax_org_or_person_to_es_model(m_rd.get('rights_holder'), es_dataset, 'rights_holder')
                 self._convert_metax_organization_name_to_es_model(m_rd.get('rights_holder'), es_dataset, 'organization_name')
 
-            if metax_cr_json.get('version_set', False):
-                es_dataset['version_identifiers'] = metax_cr_json.get('version_set')
-
         return es_dataset
 
     @staticmethod
