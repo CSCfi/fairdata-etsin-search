@@ -134,15 +134,19 @@ class MetaxConsumer():
 
     def _delete_from_index(self, ch, method, body_as_json):
         try:
-            delete_success = self.es_client.delete_dataset(body_as_json['research_dataset'].get('urn_identifier'))
-
-            if delete_success:
-                ch.basic_ack(delivery_tag=method.delivery_tag)
-            else:
-                self.log.error('Failed to delete %s', body_as_json.get('urn_identifier'))
+            identifier_to_delete = body_as_json.get('urn_identifier', None)
+            if not identifier_to_delete:
                 ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+            else:
+                delete_success = self.es_client.delete_dataset(identifier_to_delete)
+
+                if delete_success:
+                    ch.basic_ack(delivery_tag=method.delivery_tag)
+                else:
+                    self.log.error('Failed to delete %s', body_as_json.get('urn_identifier'))
+                    ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
         except RequestError:
-            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
+            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
         finally:
             self.event_processing_completed = True
 
@@ -182,9 +186,9 @@ class MetaxConsumer():
                 ch.basic_ack(delivery_tag=method.delivery_tag)
             else:
                 self.log.error('Failed to reindex %s', body_as_json.get('research_dataset').get('urn_identifier'))
-                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
+                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
         except Exception:
-            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
+            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
         finally:
             self.event_processing_completed = True
 
