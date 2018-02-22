@@ -25,12 +25,12 @@ def signal_term_handler(signal, frame):
     """
 
     consumer.before_stop()
-    reindexing_ongoing = not consumer.indexing_operation_complete
+    reindexing_ongoing = not consumer.event_processing_completed
     i = 0
     while reindexing_ongoing and i < 10:
         log.info("Waiting for reindexing operation to finish before exiting RabbitMQ consumer..")
         time.sleep(1)
-        reindexing_ongoing = not consumer.indexing_operation_complete
+        reindexing_ongoing = not consumer.event_processing_completed
         i += 1
 
     log.info("Exiting RabbitMQ consumer")

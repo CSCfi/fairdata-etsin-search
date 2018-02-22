@@ -79,3 +79,17 @@ def rabbitmq_consumer_is_running():
     if 'run_rabbitmq_consumer.py' in output:
         return True
     return False
+
+
+def get_catalog_record_previous_version_identifier(cr_json):
+    if cr_json.get('previous_version', False) and cr_json.get('previous_version').get('urn_identifier', False):
+        return cr_json.get('previous_version').get('urn_identifier')
+    return None
+
+
+def catalog_record_has_next_version_identifier(cr_json):
+    return True if 'next_version' in cr_json else False
+
+
+def catalog_record_is_deprecated(cr_json):
+    return cr_json.get('deprecated', False)
