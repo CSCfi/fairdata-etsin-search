@@ -61,10 +61,13 @@ class CRConverter:
                     self._convert_metax_obj_containing_identifier_and_label_to_es_model(m_license, es_access_rights,
                                                                                         'title', 'license')
 
-                if m_rd.get('access_rights').get('type', False):
-                    m_type = m_rd.get('access_rights').get('type')
-                    self._convert_metax_obj_containing_identifier_and_label_to_es_model(m_type, es_access_rights,
-                                                                                        'pref_label', 'type')
+                if m_rd.get('access_rights').get('access_type', False):
+                    es_dataset['access_rights']['access_type'] = {}
+                    es_access_type = es_dataset['access_rights']['access_type']
+
+                    m_type = m_rd.get('access_rights').get('access_type')
+                    self._convert_metax_obj_containing_identifier_and_label_to_es_model(m_type, es_access_type,
+                                                                                        'pref_label')
 
             if m_rd.get('theme', False):
                 if 'theme' not in es_dataset:
