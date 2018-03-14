@@ -9,7 +9,6 @@ from etsin_finder_search.utils import \
     start_rabbitmq_consumer, \
     stop_rabbitmq_consumer, \
     rabbitmq_consumer_is_running, \
-    catalog_record_has_next_version_identifier, \
     catalog_record_is_deprecated
 
 
@@ -64,12 +63,12 @@ def load_test_data_into_es(dataset_amt):
             log.error("Unable to create index")
             return False
 
-    all_metax_urn_identifiers = metax_api.get_all_catalog_record_urn_identifiers()
-    if all_metax_urn_identifiers:
-        urn_ids_to_load = all_metax_urn_identifiers[0:min(len(all_metax_urn_identifiers), dataset_amt)]
+    metax_identifiers = metax_api.get_latest_catalog_record_preferred_identifiers()
+    if metax_identifiers:
+        identifiers_to_load = metax_identifiers[0:min(len(metax_identifiers), dataset_amt)]
 
         identifiers_to_delete = []
-        es_data_models = convert_identifiers_to_es_data_models(metax_api, urn_ids_to_load, identifiers_to_delete)
+        es_data_models = convert_identifiers_to_es_data_models(metax_api, identifiers_to_load, identifiers_to_delete)
         es_client.do_bulk_request_for_datasets(es_data_models, identifiers_to_delete)
         log.info("Test data loaded into Elasticsearch")
         return True
@@ -91,8 +90,7 @@ def _create_es_client():
 def convert_identifiers_to_es_data_models(metax_api, identifiers_to_convert, identifiers_to_delete):
     """
     Takes in Metax catalog record identifiers, fetches their json from Metax, converts them to an ESDatasetModel
-    object and adds to es_data_models list. At the same time checks if catalog record has a next version it will be
-    added to identifiers_to_delete list. Also checks if the dataset has been deprecated in which case also add it to
+    object and adds to es_data_models list. Also checks if the dataset has been deprecated in which case also add it to
     identifiers_to_delete list
 
     :param identifiers_to_convert: Metax identifiers to fetch from Metax potentially to be reindexed
@@ -103,16 +101,11 @@ def convert_identifiers_to_es_data_models(metax_api, identifiers_to_convert, ide
     es_dataset_models = []
     converter = CRConverter()
     log.info("Trying to convert {0} Metax catalog records to Elasticsearch documents. "
-             "Not converting but trying to delete if catalog record has next version or if catalog record is deprecated"
-             .format(len(identifiers_to_convert)))
+             "If a catalog record is deprecated, try to delete from index instead.".format(len(identifiers_to_convert)))
 
     for identifier in identifiers_to_convert:
         metax_cr_json = metax_api.get_catalog_record(identifier)
         if metax_cr_json:
-            if catalog_record_has_next_version_identifier(metax_cr_json):
-                identifiers_to_delete.append(identifier)
-                continue
-
             if catalog_record_is_deprecated(metax_cr_json):
                 identifiers_to_delete.append(identifier)
                 continue
@@ -146,45 +139,45 @@ class ReindexScheduledTask:
         if not create_search_index_and_doc_type_mapping_if_not_exist():
             return
 
-        urn_ids_to_delete = []
-        urn_ids_to_index = []
+        ids_to_delete = []
+        ids_to_index = []
 
         # 1. Stop RabbitMQ consumer
         if rabbitmq_consumer_is_running():
             if not stop_rabbitmq_consumer():
                 log.error("Unable to stop RabbitMQ consumer service, continuing with reindexing")
 
-        # 2. Get all dataset urn_identifiers from metax
-        # Fetch only the latest versions of each dataset
-        metax_urn_identifiers = self.metax_api.get_all_catalog_record_urn_identifiers()
-        urn_ids_to_create = list(metax_urn_identifiers) if metax_urn_identifiers else []
+        # 2. Get all dataset identifiers from metax
+        # Fetch only the latest dataset versions
+        metax_identifiers = self.metax_api.get_latest_catalog_record_preferred_identifiers()
+        ids_to_create = list(metax_identifiers) if metax_identifiers else []
 
-        # 3. Get all urn_identifiers from search index
-        es_urn_identifiers = self.es_client.get_all_doc_ids_from_index() or []
+        # 3. Get all identifiers from search index
+        es_identifiers = self.es_client.get_all_doc_ids_from_index() or []
 
         # 4.
-        # If urn_id in metax and in es index -> index
-        # If urn_id in metax but not in es index -> index
-        # If urn_id not in metax but in es index -> delete
-        for es_urn_id in es_urn_identifiers:
-            if es_urn_id in metax_urn_identifiers:
-                urn_ids_to_index.append(es_urn_id)
-                urn_ids_to_create.remove(es_urn_id)
+        # If metax_id in metax and in es index -> index
+        # If metax_id in metax but not in es index -> index
+        # If metax_id not in metax but in es index -> delete
+        for es_id in es_identifiers:
+            if es_id in metax_identifiers:
+                ids_to_index.append(es_id)
+                ids_to_create.remove(es_id)
             else:
-                urn_ids_to_delete.append(es_urn_id)
+                ids_to_delete.append(es_id)
 
-        log.info("urn identifiers to delete: \n{0}".format(urn_ids_to_delete))
-        log.info("urn identifiers to create: \n{0}".format(urn_ids_to_create))
-        log.info("urn identifiers to update: \n{0}".format(urn_ids_to_index))
-        urn_ids_to_index.extend(urn_ids_to_create)
+        log.info("Identifiers to delete: \n{0}".format(ids_to_delete))
+        log.info("Identifiers to create: \n{0}".format(ids_to_create))
+        log.info("Identifiers to update: \n{0}".format(ids_to_index))
+        ids_to_index.extend(ids_to_create)
 
         # 5. Convert catalog records to es documents and for those records add their previous version ids to delete list
-        es_data_models = convert_identifiers_to_es_data_models(self.metax_api, urn_ids_to_index, urn_ids_to_delete)
+        es_data_models = convert_identifiers_to_es_data_models(self.metax_api, ids_to_index, ids_to_delete)
 
         # 6. Run bulk requests to search index
         # A. Create or update documents that are either new or already exist in search index
         # B. Delete documents from index no longer in metax
-        self.es_client.do_bulk_request_for_datasets(es_data_models, urn_ids_to_delete)
+        self.es_client.do_bulk_request_for_datasets(es_data_models, ids_to_delete)
 
         # 7. Start RabbitMQ consumer
         if not rabbitmq_consumer_is_running():
