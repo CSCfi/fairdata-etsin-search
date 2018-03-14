@@ -20,14 +20,18 @@ import os
 from elasticsearch.exceptions import RequestError
 
 from etsin_finder_search.catalog_record_converter import CRConverter
+from etsin_finder_search.elastic.domain.es_dataset_data_model import ESDatasetModel
 from etsin_finder_search.elastic.service.es_service import ElasticSearchService
 from etsin_finder_search.reindexing_log import get_logger
 from etsin_finder_search.utils import \
     get_metax_rabbit_mq_config, \
     get_elasticsearch_config, \
-    get_catalog_record_previous_version_identifier, \
-    catalog_record_has_next_version_identifier, \
-    catalog_record_is_deprecated
+    get_catalog_record_next_dataset_version_identifier, \
+    get_catalog_record_previous_dataset_version_identifier, \
+    catalog_record_has_next_dataset_version_identifier, \
+    catalog_record_has_previous_dataset_version_identifier, \
+    catalog_record_is_deprecated, \
+    catalog_record_is_harvested
 
 
 class MetaxConsumer():
@@ -134,58 +138,88 @@ class MetaxConsumer():
 
     def _delete_from_index(self, ch, method, body_as_json):
         try:
-            identifier_to_delete = body_as_json.get('urn_identifier', None)
-            if not identifier_to_delete:
+            mv_id_for_doc_to_delete = body_as_json.get('metadata_version_identifier', None)
+            if not mv_id_for_doc_to_delete:
+                self.log.error('No identifier found from RabbitMQ message, ignoring')
                 ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
             else:
-                delete_success = self.es_client.delete_dataset(identifier_to_delete)
+                doc_id_to_delete = \
+                    self.es_client.get_doc_id_having_metadata_version_identifier_from_index(mv_id_for_doc_to_delete)
+
+                delete_success = \
+                    self.es_client.delete_dataset_from_index(doc_id_to_delete) if doc_id_to_delete else True
 
                 if delete_success:
                     ch.basic_ack(delivery_tag=method.delivery_tag)
                 else:
-                    self.log.error('Failed to delete %s', body_as_json.get('urn_identifier'))
+                    self.log.error('Failed to delete document from index: %s', doc_id_to_delete)
                     ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
         except RequestError:
+            self.log.error('Request error on trying to delete from index triggered by RabbitMQ')
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
         finally:
             self.event_processing_completed = True
 
     def _convert_to_es_doc_and_reindex(self, ch, method, body_as_json):
+        incoming_pref_id = body_as_json['research_dataset'].get('preferred_identifier', '')
+        mv_id = body_as_json['research_dataset'].get('metadata_version_identifier', '')
+
+        if not incoming_pref_id:
+            self.log.error('No preferred_identifier found from RabbitMQ message, ignoring')
+            self.event_processing_completed = True
+            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+            return
+
         if catalog_record_is_deprecated(body_as_json):
-            self.log.debug("Received identifier {0} for a catalog record that is deprecated. "
-                           "Trying to delete from index if it exists.."
-                           .format(body_as_json['research_dataset'].get('urn_identifier', '')))
+            self.log.info("Received identifier {0} for a catalog record that is deprecated. "
+                          "Trying to delete from index if it exists..".format(incoming_pref_id))
             self._delete_from_index(ch, method, body_as_json)
             self.event_processing_completed = True
             ch.basic_ack(delivery_tag=method.delivery_tag)
             return
 
-        if catalog_record_has_next_version_identifier(body_as_json):
-            self.log.debug("Received identifier {0} for a catalog record that has a next version {1}. "
-                           "Skipping reindexing..".format(body_as_json['research_dataset'].get('urn_identifier', ''),
-                                                          body_as_json['next_version'].get('urn_identifier')))
+        # If catalog record has next dataset version, do not index it
+        if catalog_record_has_next_dataset_version_identifier(body_as_json):
+            next_version_id = get_catalog_record_next_dataset_version_identifier(body_as_json)
+            self.log.info("Received identifier {0} for a catalog record that has a next dataset version {1}. "
+                          "Skipping reindexing..".format(incoming_pref_id, next_version_id))
             self.event_processing_completed = True
             ch.basic_ack(delivery_tag=method.delivery_tag)
             return
 
-        prev_version_id = get_catalog_record_previous_version_identifier(body_as_json)
-        converter = CRConverter()
-        es_data_model = converter.convert_metax_cr_json_to_es_data_model(body_as_json)
+        # If cr har previous dataset version, try to delete the previous document from the index
+        if catalog_record_has_previous_dataset_version_identifier(body_as_json):
+                prev_version_id = get_catalog_record_previous_dataset_version_identifier(body_as_json)
+                self.log.info("Received identifier {0} for a catalog record that has a previous dataset version {1}. "
+                              "Trying to delete from index using {1}..".format(incoming_pref_id, prev_version_id))
+                self.es_client.delete_dataset_from_index(prev_version_id)
 
-        if not es_data_model:
-            self.log.error("Unable to convert metax catalog record to es data model, not requeing message")
+        # If cr is harvested, its preferred identifier may change without changing metadata version identifier
+        # So we need to check whether an older document exists in the index (having same mv_id).
+        # Should not happen for other than harvested records.
+        if catalog_record_is_harvested(body_as_json):
+            doc_id_with_same_mv_id = self.es_client.get_doc_id_having_metadata_version_identifier_from_index(mv_id)
+            if doc_id_with_same_mv_id and doc_id_with_same_mv_id != incoming_pref_id:
+                self.log.info("Found a document from the index which has the same metadata version identifier but "
+                              "different preferred identifier than in the incoming message. Trying to delete the "
+                              "existing document from the index before indexing the incoming message.")
+
+                self.es_client.delete_dataset_from_index(doc_id_with_same_mv_id)
+
+        converter = CRConverter()
+        es_doc = converter.convert_metax_cr_json_to_es_data_model(body_as_json)
+        if not es_doc:
+            self.log.error("Unable to convert Metax catalog record to es data model, not requeing message")
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
             self.event_processing_completed = True
             return
 
         try:
-            es_reindex_success = \
-                self.es_client.reindex_dataset(es_data_model) and (prev_version_id is None or self.es_client.delete_dataset(prev_version_id))
-
+            es_reindex_success = self.es_client.reindex_dataset(ESDatasetModel(es_doc))
             if es_reindex_success:
                 ch.basic_ack(delivery_tag=method.delivery_tag)
             else:
-                self.log.error('Failed to reindex %s', body_as_json.get('research_dataset').get('urn_identifier'))
+                self.log.error('Failed to reindex %s', incoming_pref_id)
                 ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
         except Exception:
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)

@@ -8,10 +8,10 @@ class CRConverter:
     def convert_metax_cr_json_to_es_data_model(self, metax_cr_json):
         es_dataset = {}
         if metax_cr_json.get('research_dataset', False) and \
-                metax_cr_json.get('research_dataset').get('urn_identifier', False):
+                metax_cr_json.get('research_dataset').get('metadata_version_identifier', False):
 
             m_rd = metax_cr_json['research_dataset']
-            es_dataset['urn_identifier'] = m_rd['urn_identifier']
+            es_dataset['metadata_version_identifier'] = m_rd['metadata_version_identifier']
             es_dataset['preferred_identifier'] = m_rd.get('preferred_identifier', '')
 
             if 'organization_name' not in es_dataset:
