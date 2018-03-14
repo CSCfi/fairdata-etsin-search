@@ -76,7 +76,7 @@
         }
       }      
     },
-    "urn_identifier": {
+    "metadata_version_identifier": {
       "type": "text",
       "fields": {
         "keyword": {

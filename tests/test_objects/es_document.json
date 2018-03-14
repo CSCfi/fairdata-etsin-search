@@ -8,7 +8,15 @@
                     "und": "Apache Software License 2.0"
                 }
             }
-        ]
+        ],
+        "access_type" : {
+              "identifier" : "http://purl.org/att/es/reference_data/access_type/access_type_open_access",
+              "pref_label" : {
+                "en" : "Open",
+                "fi" : "Avoin",
+                "und" : "Avoin"
+              }
+        }
     },
     "contributor": [
         {
@@ -207,5 +215,5 @@
     "title": {
         "en": "Wonderful Title"
     },
-    "urn_identifier": "urn:nbn:fi:att:1955e904-e3dd-4d7e-99f1-3fed446f9611"
+    "metadata_version_identifier": "urn:nbn:fi:att:1955e904-e3dd-4d7e-99f1-3fed446f9611"
 }

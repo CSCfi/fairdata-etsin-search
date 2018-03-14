@@ -6,7 +6,7 @@ from time import sleep
 from etsin_finder_search.reindexing_log import get_logger
 
 log = get_logger(__name__)
-TIMEOUT = 5
+TIMEOUT = 30
 NUM_RETRIES = 3
 
 
@@ -14,8 +14,8 @@ class MetaxAPIService:
 
     def __init__(self, metax_api_config):
         self.METAX_CATALOG_RECORDS_BASE_URL = 'https://{0}/rest/datasets'.format(metax_api_config['HOST'])
-        self.METAX_GET_URN_IDENTIFIERS_URL = self.METAX_CATALOG_RECORDS_BASE_URL + '/urn_identifiers?latest'
-        self.METAX_GET_CATALOG_RECORD_URL = self.METAX_CATALOG_RECORDS_BASE_URL + '/{0}'
+        self.METAX_GET_PIDS_URL = self.METAX_CATALOG_RECORDS_BASE_URL + '/unique_preferred_identifiers?latest'
+        self.METAX_GET_CATALOG_RECORD_URL = self.METAX_CATALOG_RECORDS_BASE_URL + '/{0}?preferred_identifier'
 
     @staticmethod
     def _do_request(request_func, arg=None):
@@ -40,8 +40,8 @@ class MetaxAPIService:
             return response
         return None
 
-    def get_catalog_record(self, identifier):
-        """ Get a catalog record with the given identifier from MetaX API.
+    def get_catalog_record(self, preferred_identifier):
+        """ Get a catalog record with the given preferred_identifier from MetaX API.
 
         :return: Metax catalog record as json
         """
@@ -51,29 +51,30 @@ class MetaxAPIService:
                          headers={'Content-Type': 'application/json'},
                          timeout=TIMEOUT)
 
-        response = self._do_request(get, identifier)
+        response = self._do_request(get, preferred_identifier)
         if not response:
-            log.error("Unable to connect to Metax API")
+            log.error("Unable to connect to Metax API with pref_id {0}".format(preferred_identifier))
             return None
 
         try:
             response.raise_for_status()
         except HTTPError as e:
             log.error('Failed to get catalog record: \nidentifier={id}, \nerror={error}, \njson={json}'.format(
-                id=identifier, error=repr(e), json=self.json_or_empty(response)))
+                id=preferred_identifier, error=repr(e), json=self.json_or_empty(response)))
             log.error('Response text: %s', response.text)
             return None
 
         return json.loads(response.text)
 
-    def get_all_catalog_record_urn_identifiers(self):
-        """ Get urn_identifiers of all catalog records in MetaX API.
+    def get_latest_catalog_record_preferred_identifiers(self):
+        """
+        Get a list of latest catalog record preferred_identifiers in terms of dataset versioning from MetaX API.
 
-        :return: List of urn_identifiers
+        :return: List of preferred_identifiers
         """
 
         def get():
-            return requests.get(self.METAX_GET_URN_IDENTIFIERS_URL,
+            return requests.get(self.METAX_GET_PIDS_URL,
                                 headers={'Content-Type': 'application/json'},
                                 timeout=TIMEOUT)
 
@@ -85,35 +86,12 @@ class MetaxAPIService:
         try:
             response.raise_for_status()
         except HTTPError as e:
-            log.error('Failed to get urn_identifiers from Metax: \nerror={error}, \njson={json}'.format(
+            log.error('Failed to get identifiers from Metax: \nerror={error}, \njson={json}'.format(
                 error=repr(e), json=self.json_or_empty(response)))
             log.error('Response text: %s', response.text)
             return None
 
         return json.loads(response.text)
-
-    def check_catalog_record_exists(self, identifier):
-        """ Ask MetaX whether the catalog record exists in MetaX by using identifier.
-
-        :return: True/False
-        """
-
-        def get(identifier):
-            return requests.get(
-                self.METAX_CATALOG_RECORDS_BASE_URL + '/{id}/exists'.format(id=identifier), timeout=TIMEOUT)
-
-        response = self._do_request(get)
-        if not response:
-            log.error("Unable to connect to Metax API")
-            return None
-
-        try:
-            response.raise_for_status()
-        except Exception as e:
-            log.error('Failed to check catalog record existence: \nidentifier={id}, \nerror={error}, '
-                      '\njson={json}'.format(id=identifier, error=repr(e), json=self.json_or_empty(response)))
-            log.error('Response text: %s', response.text)
-        return response.json()
 
     @staticmethod
     def json_or_empty(response):

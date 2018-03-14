@@ -38,8 +38,17 @@ class ElasticSearchService:
     def index_exists(self):
         return self.es.indices.exists(index=self.INDEX_NAME)
 
-    def doc_exists(self, doc_id):
+    def doc_exists_in_index(self, doc_id):
         return self.es.exists(self.INDEX_NAME, self.INDEX_DOC_TYPE_NAME, doc_id)
+
+    def get_doc_id_having_metadata_version_identifier_from_index(self, mv_id):
+        resp = self.es.search(self.INDEX_NAME, self.INDEX_DOC_TYPE_NAME,
+                           body={"query": {"term": {"metadata_version_identifier.keyword": mv_id}}})
+
+        if resp.get('hits') and resp['hits'].get('hits') and len(resp['hits']['hits']) > 0:
+            return resp['hits']['hits'][0].get('_id')
+
+        return None
 
     def create_index_and_mapping(self):
         log.info("Trying to create index " + self.INDEX_NAME)
@@ -57,21 +66,21 @@ class ElasticSearchService:
         return self._operation_ok(self.es.indices.delete(index=self.INDEX_NAME, ignore=[404]))
 
     def reindex_dataset(self, dataset_data_model):
-        log.info("{0}{1} into index {2}".format(
-            "Trying to reindex data with doc id {0} having type ".format(dataset_data_model['urn_identifier']),
+        log.info("{0} {1} into index {2}".format(
+            "Trying to reindex data with doc id {0} having type".format(dataset_data_model.get_es_document_id()),
             self.INDEX_DOC_TYPE_NAME, self.INDEX_NAME))
 
         return self._operation_ok(self.es.index(
             index=self.INDEX_NAME, doc_type=self.INDEX_DOC_TYPE_NAME,
-            id=dataset_data_model['urn_identifier'],
-            body=json.dumps(dataset_data_model)))
+            id=dataset_data_model.get_es_document_id(),
+            body=dataset_data_model.to_es_document_string()))
 
-    def delete_dataset(self, doc_id):
+    def delete_dataset_from_index(self, doc_id):
         log.info("{0}{1} from index {2}".format(
-            "Trying to delete data with doc id {0} having type ".format(doc_id),
-            self.INDEX_DOC_TYPE_NAME, self.INDEX_NAME))
+            "Trying to delete data with doc id {0} having type ".format(doc_id), self.INDEX_DOC_TYPE_NAME,
+            self.INDEX_NAME))
 
-        if self.doc_exists(doc_id):
+        if self.doc_exists_in_index(doc_id):
             return self._operation_ok(self.es.delete(index=self.INDEX_NAME, doc_type=self.INDEX_DOC_TYPE_NAME, id=doc_id))
         else:
             log.info("The document does not exist in the index, ignoring")

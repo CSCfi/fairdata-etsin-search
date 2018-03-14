@@ -8,10 +8,10 @@ class CRConverter:
     def convert_metax_cr_json_to_es_data_model(self, metax_cr_json):
         es_dataset = {}
         if metax_cr_json.get('research_dataset', False) and \
-                metax_cr_json.get('research_dataset').get('urn_identifier', False):
+                metax_cr_json.get('research_dataset').get('metadata_version_identifier', False):
 
             m_rd = metax_cr_json['research_dataset']
-            es_dataset['urn_identifier'] = m_rd['urn_identifier']
+            es_dataset['metadata_version_identifier'] = m_rd['metadata_version_identifier']
             es_dataset['preferred_identifier'] = m_rd.get('preferred_identifier', '')
 
             if 'organization_name' not in es_dataset:
@@ -61,10 +61,13 @@ class CRConverter:
                     self._convert_metax_obj_containing_identifier_and_label_to_es_model(m_license, es_access_rights,
                                                                                         'title', 'license')
 
-                if m_rd.get('access_rights').get('type', False):
-                    m_type = m_rd.get('access_rights').get('type')
-                    self._convert_metax_obj_containing_identifier_and_label_to_es_model(m_type, es_access_rights,
-                                                                                        'pref_label', 'type')
+                if m_rd.get('access_rights').get('access_type', False):
+                    es_dataset['access_rights']['access_type'] = {}
+                    es_access_type = es_dataset['access_rights']['access_type']
+
+                    m_type = m_rd.get('access_rights').get('access_type')
+                    self._convert_metax_obj_containing_identifier_and_label_to_es_model(m_type, es_access_type,
+                                                                                        'pref_label')
 
             if m_rd.get('theme', False):
                 if 'theme' not in es_dataset:
