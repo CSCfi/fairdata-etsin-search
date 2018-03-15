@@ -105,6 +105,19 @@ def get_catalog_record_next_dataset_version_identifier(cr_json):
     return None
 
 
+def catalog_record_has_next_metadata_version_identifier(cr_json):
+    if cr_json.get('next_metadata_version') and cr_json['next_metadata_version'].get('metadata_version_identifier'):
+        return True
+    return False
+
+
+def catalog_record_has_previous_metadata_version_identifier(cr_json):
+    if cr_json.get('previous_metadata_version') \
+            and cr_json['previous_metadata_version'].get('metadata_version_identifier'):
+        return True
+    return False
+
+
 def catalog_record_is_deprecated(cr_json):
     return cr_json.get('deprecated', False)
 
