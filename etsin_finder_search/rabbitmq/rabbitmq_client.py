@@ -31,7 +31,9 @@ from etsin_finder_search.utils import \
     catalog_record_has_next_dataset_version_identifier, \
     catalog_record_has_previous_dataset_version_identifier, \
     catalog_record_is_deprecated, \
-    catalog_record_is_harvested
+    catalog_record_is_harvested, \
+    catalog_record_has_previous_metadata_version_identifier, \
+    catalog_record_has_next_metadata_version_identifier
 
 
 class MetaxConsumer():
@@ -171,28 +173,39 @@ class MetaxConsumer():
             return
 
         if catalog_record_is_deprecated(body_as_json):
-            self.log.info("Received identifier {0} for a catalog record that is deprecated. "
+            self.log.info("Identifier {0} is deprecated. "
                           "Trying to delete from index if it exists..".format(incoming_pref_id))
             self._delete_from_index(ch, method, body_as_json)
             self.event_processing_completed = True
             ch.basic_ack(delivery_tag=method.delivery_tag)
             return
 
-        # If catalog record has next dataset version, do not index it
-        if catalog_record_has_next_dataset_version_identifier(body_as_json):
-            next_version_id = get_catalog_record_next_dataset_version_identifier(body_as_json)
-            self.log.info("Received identifier {0} for a catalog record that has a next dataset version {1}. "
-                          "Skipping reindexing..".format(incoming_pref_id, next_version_id))
+        # If catalog record has next metadata version, do not index it
+        if catalog_record_has_next_metadata_version_identifier(body_as_json):
+            self.log.info("Identifer {0} has a next metadata version. Skipping reindexing..."
+                          .format(incoming_pref_id))
             self.event_processing_completed = True
             ch.basic_ack(delivery_tag=method.delivery_tag)
             return
 
-        # If cr har previous dataset version, try to delete the previous document from the index
-        if catalog_record_has_previous_dataset_version_identifier(body_as_json):
-                prev_version_id = get_catalog_record_previous_dataset_version_identifier(body_as_json)
-                self.log.info("Received identifier {0} for a catalog record that has a previous dataset version {1}. "
-                              "Trying to delete from index using {1}..".format(incoming_pref_id, prev_version_id))
-                self.es_client.delete_dataset_from_index(prev_version_id)
+        # If catalog record has next dataset version, do not index it
+        if catalog_record_has_next_dataset_version_identifier(body_as_json):
+            self.log.info("Identifier {0} has a next dataset version. Skipping reindexing..."
+                          .format(incoming_pref_id))
+            self.event_processing_completed = True
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+            return
+
+        # If cr har previous dataset version but no previous or next metadata versions,
+        # try to delete the previous document from the index
+        if catalog_record_has_previous_dataset_version_identifier(body_as_json) and \
+                not catalog_record_has_previous_metadata_version_identifier(body_as_json) and \
+                not catalog_record_has_next_metadata_version_identifier(body_as_json):
+
+            prev_version_id = get_catalog_record_previous_dataset_version_identifier(body_as_json)
+            self.log.info("Identifier {0} has a previous dataset version {1} and no previous or next metadata versions."
+                          " Trying previous dataset version from index...".format(incoming_pref_id, prev_version_id))
+            self.es_client.delete_dataset_from_index(prev_version_id)
 
         # If cr is harvested, its preferred identifier may change without changing metadata version identifier
         # So we need to check whether an older document exists in the index (having same mv_id).
