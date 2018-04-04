@@ -147,18 +147,18 @@ class ReindexScheduledTask:
             if not stop_rabbitmq_consumer():
                 log.error("Unable to stop RabbitMQ consumer service, continuing with reindexing")
 
-        # 2. Get all dataset identifiers from metax
+        # 2. Get all unique preferred identifiers from Metax
         # Fetch only the latest dataset versions
         metax_identifiers = self.metax_api.get_latest_catalog_record_preferred_identifiers()
         ids_to_create = list(metax_identifiers) if metax_identifiers else []
 
-        # 3. Get all identifiers from search index
+        # 3. Get all document identifiers (equivalent to Metax preferred identifiers) from search index
         es_identifiers = self.es_client.get_all_doc_ids_from_index() or []
 
         # 4.
-        # If metax_id in metax and in es index -> index
-        # If metax_id in metax but not in es index -> index
-        # If metax_id not in metax but in es index -> delete
+        # If metax_id in Metax and in es index -> index
+        # If metax_id in Metax but not in es index -> index
+        # If metax_id not in Metax but in es index -> delete
         for es_id in es_identifiers:
             if es_id in metax_identifiers:
                 ids_to_index.append(es_id)

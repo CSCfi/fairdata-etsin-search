@@ -81,6 +81,30 @@ def rabbitmq_consumer_is_running():
     return False
 
 
+def catalog_record_has_preferred_identifier(cr_json):
+    if cr_json.get('research_dataset') and cr_json['research_dataset'].get('preferred_identifier'):
+        return True
+    return False
+
+
+def get_catalog_record_preferred_identifier(cr_json):
+    if cr_json.get('research_dataset') and cr_json['research_dataset'].get('preferred_identifier'):
+        return cr_json['research_dataset']['preferred_identifier']
+    return None
+
+
+def catalog_record_has_identifier(cr_json):
+    if cr_json.get('identifier'):
+        return True
+    return False
+
+
+def get_catalog_record_identifier(cr_json):
+    if cr_json.get('identifier'):
+        return cr_json['identifier']
+    return None
+
+
 def catalog_record_has_previous_dataset_version_identifier(cr_json):
     if cr_json.get('previous_dataset_version') and cr_json['previous_dataset_version'].get('preferred_identifier'):
         return True
@@ -95,25 +119,6 @@ def get_catalog_record_previous_dataset_version_identifier(cr_json):
 
 def catalog_record_has_next_dataset_version_identifier(cr_json):
     if cr_json.get('next_dataset_version') and cr_json['next_dataset_version'].get('preferred_identifier'):
-        return True
-    return False
-
-
-def get_catalog_record_next_dataset_version_identifier(cr_json):
-    if cr_json.get('next_dataset_version') and cr_json['next_dataset_version'].get('preferred_identifier'):
-        return cr_json['next_dataset_version']['preferred_identifier']
-    return None
-
-
-def catalog_record_has_next_metadata_version_identifier(cr_json):
-    if cr_json.get('next_metadata_version') and cr_json['next_metadata_version'].get('metadata_version_identifier'):
-        return True
-    return False
-
-
-def catalog_record_has_previous_metadata_version_identifier(cr_json):
-    if cr_json.get('previous_metadata_version') \
-            and cr_json['previous_metadata_version'].get('metadata_version_identifier'):
         return True
     return False
 

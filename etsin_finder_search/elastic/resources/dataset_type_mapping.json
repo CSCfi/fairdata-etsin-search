@@ -76,7 +76,7 @@
         }
       }      
     },
-    "metadata_version_identifier": {
+    "identifier": {
       "type": "text",
       "fields": {
         "keyword": {
