@@ -15,7 +15,7 @@ class MetaxAPIService:
     def __init__(self, metax_api_config):
         self.METAX_CATALOG_RECORDS_BASE_URL = 'https://{0}/rest/datasets'.format(metax_api_config['HOST'])
         self.METAX_GET_PIDS_URL = self.METAX_CATALOG_RECORDS_BASE_URL + '/unique_preferred_identifiers?latest'
-        self.METAX_GET_CATALOG_RECORD_URL = self.METAX_CATALOG_RECORDS_BASE_URL + '/{0}?preferred_identifier'
+        self.METAX_GET_CATALOG_RECORD_URL = self.METAX_CATALOG_RECORDS_BASE_URL + '?preferred_identifier={0}'
 
     @staticmethod
     def _do_request(request_func, arg=None):
