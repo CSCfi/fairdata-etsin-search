@@ -14,8 +14,8 @@ class MetaxAPIService:
 
     def __init__(self, metax_api_config):
         self.METAX_CATALOG_RECORDS_BASE_URL = 'https://{0}/rest/datasets'.format(metax_api_config['HOST'])
-        self.METAX_GET_PIDS_URL = self.METAX_CATALOG_RECORDS_BASE_URL + '/unique_preferred_identifiers?latest'
-        self.METAX_GET_CATALOG_RECORD_URL = self.METAX_CATALOG_RECORDS_BASE_URL + '?preferred_identifier={0}'
+        self.METAX_GET_PIDS_URL = self.METAX_CATALOG_RECORDS_BASE_URL + '/identifiers?latest'
+        self.METAX_GET_CATALOG_RECORD_URL = self.METAX_CATALOG_RECORDS_BASE_URL + '/{0}'
 
     @staticmethod
     def _do_request(request_func, arg=None):
@@ -40,8 +40,8 @@ class MetaxAPIService:
             return response
         return None
 
-    def get_catalog_record(self, preferred_identifier):
-        """ Get a catalog record with the given preferred_identifier from MetaX API.
+    def get_catalog_record(self, cr_identifier):
+        """ Get a catalog record with the given catalog record identifier from MetaX API.
 
         :return: Metax catalog record as json
         """
@@ -51,26 +51,26 @@ class MetaxAPIService:
                          headers={'Content-Type': 'application/json'},
                          timeout=TIMEOUT)
 
-        response = self._do_request(get, preferred_identifier)
+        response = self._do_request(get, cr_identifier)
         if not response:
-            log.error("Unable to connect to Metax API with pref_id {0}".format(preferred_identifier))
+            log.error("Not able to get response from Metax API with identifier {0}".format(cr_identifier))
             return None
 
         try:
             response.raise_for_status()
         except HTTPError as e:
             log.error('Failed to get catalog record: \nidentifier={id}, \nerror={error}, \njson={json}'.format(
-                id=preferred_identifier, error=repr(e), json=self.json_or_empty(response)))
+                id=cr_identifier, error=repr(e), json=self.json_or_empty(response)))
             log.error('Response text: %s', response.text)
             return None
 
         return json.loads(response.text)
 
-    def get_latest_catalog_record_preferred_identifiers(self):
+    def get_latest_catalog_record_identifiers(self):
         """
-        Get a list of latest catalog record preferred_identifiers in terms of dataset versioning from MetaX API.
+        Get a list of latest catalog record identifiers in terms of dataset versioning from MetaX API.
 
-        :return: List of preferred_identifiers
+        :return: List of latest catalog record identifiers in Metax
         """
 
         def get():

@@ -27,12 +27,11 @@ from etsin_finder_search.utils import \
     get_metax_rabbit_mq_config, \
     get_elasticsearch_config, \
     get_catalog_record_previous_dataset_version_identifier, \
-    catalog_record_has_next_dataset_version_identifier, \
-    catalog_record_has_previous_dataset_version_identifier, \
+    catalog_record_has_next_dataset_version, \
+    catalog_record_has_previous_dataset_version, \
     catalog_record_is_deprecated, \
-    catalog_record_is_harvested, \
     catalog_record_has_preferred_identifier, \
-    get_catalog_record_preferred_identifier, \
+    catalog_record_has_identifier, \
     get_catalog_record_identifier
 
 
@@ -94,7 +93,6 @@ class MetaxConsumer():
         self._create_and_bind_queues(is_local_dev)
 
         def callback_create(ch, method, properties, body):
-            self.log.info(body)
             if not self._init_event_callback_ok("create", ch, method):
                 return
 
@@ -103,21 +101,20 @@ class MetaxConsumer():
                 return
 
             # If cr har previous dataset version on create message, try to delete the previous document from the index
-            if catalog_record_has_preferred_identifier(body_as_json) and \
-                    catalog_record_has_previous_dataset_version_identifier(body_as_json):
+            if catalog_record_has_identifier(body_as_json) and \
+                    catalog_record_has_previous_dataset_version(body_as_json):
 
-                incoming_pref_id = get_catalog_record_preferred_identifier(body_as_json)
-                prev_version_id = get_catalog_record_previous_dataset_version_identifier(body_as_json)
+                incoming_cr_id = get_catalog_record_identifier(body_as_json)
+                prev_version_cr_id = get_catalog_record_previous_dataset_version_identifier(body_as_json)
 
                 self.log.info(
-                    "Identifier {0} has a previous dataset version {1} and no previous or next metadata versions."
-                    " Trying previous dataset version from index...".format(incoming_pref_id, prev_version_id))
-                self.es_client.delete_dataset_from_index(prev_version_id)
+                    "Identifier {0} has a previous dataset version {1}. Trying to delete the previous dataset version "
+                    "from index...".format(incoming_cr_id, prev_version_cr_id))
+                self.es_client.delete_dataset_from_index(prev_version_cr_id)
 
             self._convert_to_es_doc_and_reindex(ch, method, body_as_json)
 
         def callback_update(ch, method, properties, body):
-            self.log.info(body)
             if not self._init_event_callback_ok("update", ch, method):
                 return
 
@@ -125,22 +122,22 @@ class MetaxConsumer():
             if not body_as_json:
                 return
 
-            if catalog_record_has_preferred_identifier(body_as_json):
-                incoming_pref_id = get_catalog_record_preferred_identifier(body_as_json)
+            if catalog_record_has_identifier(body_as_json):
+                incoming_cr_id = get_catalog_record_identifier(body_as_json)
 
                 # If catalog record has been deprecated, delete it from index
                 if catalog_record_is_deprecated(body_as_json):
                     self.log.info("Identifier {0} is deprecated. "
-                                  "Trying to delete from index if it exists..".format(incoming_pref_id))
+                                  "Trying to delete from index if it exists..".format(incoming_cr_id))
                     self._delete_from_index(ch, method, body_as_json)
                     self.event_processing_completed = True
                     ch.basic_ack(delivery_tag=method.delivery_tag)
                     return
 
                 # If catalog record has next dataset version, do not index it
-                if catalog_record_has_next_dataset_version_identifier(body_as_json):
+                if catalog_record_has_next_dataset_version(body_as_json):
                     self.log.info("Identifier {0} has a next dataset version. Skipping reindexing..."
-                                  .format(incoming_pref_id))
+                                  .format(incoming_cr_id))
                     self.event_processing_completed = True
                     ch.basic_ack(delivery_tag=method.delivery_tag)
                     return
@@ -175,21 +172,16 @@ class MetaxConsumer():
     def _delete_from_index(self, ch, method, body_as_json):
         try:
             cr_id_for_doc_to_delete = get_catalog_record_identifier(body_as_json)
-            if not cr_id_for_doc_to_delete:
-                self.log.error('No identifier found from RabbitMQ message, ignoring')
-                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
-            else:
-                doc_id_to_delete = \
-                    self.es_client.get_doc_id_having_identifier_from_index(cr_id_for_doc_to_delete)
-
-                delete_success = \
-                    self.es_client.delete_dataset_from_index(doc_id_to_delete) if doc_id_to_delete else True
-
+            if cr_id_for_doc_to_delete:
+                delete_success = self.es_client.delete_dataset_from_index(cr_id_for_doc_to_delete)
                 if delete_success:
                     ch.basic_ack(delivery_tag=method.delivery_tag)
                 else:
-                    self.log.error('Failed to delete document from index: %s', doc_id_to_delete)
+                    self.log.error('Failed to delete document from index: %s', cr_id_for_doc_to_delete)
                     ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+            else:
+                self.log.error('No identifier found from RabbitMQ message, ignoring')
+                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
         except RequestError:
             self.log.error('Request error on trying to delete from index triggered by RabbitMQ')
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
@@ -197,26 +189,11 @@ class MetaxConsumer():
             self.event_processing_completed = True
 
     def _convert_to_es_doc_and_reindex(self, ch, method, body_as_json):
-        if not catalog_record_has_preferred_identifier(body_as_json):
-            self.log.error('No preferred_identifier found from RabbitMQ message, ignoring')
+        if not catalog_record_has_preferred_identifier(body_as_json) or not catalog_record_has_identifier(body_as_json):
+            self.log.error('No preferred_identifier or identifier found from RabbitMQ message, ignoring')
             self.event_processing_completed = True
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
             return
-
-        incoming_pref_id = get_catalog_record_preferred_identifier(body_as_json)
-
-        # If cr is harvested, its preferred identifier may change without changing catalog record identifier
-        # So we need to check whether an older document exists in the index (having same cr_id).
-        # Should not happen for other than harvested records.
-        if catalog_record_is_harvested(body_as_json):
-            cr_id = get_catalog_record_identifier(body_as_json)
-            doc_id_with_same_cr_id = self.es_client.get_doc_id_having_identifier_from_index(cr_id)
-            if doc_id_with_same_cr_id and doc_id_with_same_cr_id != incoming_pref_id:
-                self.log.info("Found a document from the index which has the same identifier but different preferred "
-                              "identifier than in the incoming message. Trying to delete the existing document from "
-                              "the index before indexing the incoming message.")
-
-                self.es_client.delete_dataset_from_index(doc_id_with_same_cr_id)
 
         converter = CRConverter()
         es_doc = converter.convert_metax_cr_json_to_es_data_model(body_as_json)
@@ -231,7 +208,7 @@ class MetaxConsumer():
             if es_reindex_success:
                 ch.basic_ack(delivery_tag=method.delivery_tag)
             else:
-                self.log.error('Failed to reindex %s', incoming_pref_id)
+                self.log.error('Failed to reindex %s', get_catalog_record_identifier(body_as_json))
                 ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
         except Exception:
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)

@@ -2,7 +2,6 @@ import json
 from os import path
 
 from elasticsearch import Elasticsearch
-from elasticsearch import TransportError
 from elasticsearch.helpers import scan
 
 from etsin_finder_search.reindexing_log import get_logger
@@ -40,15 +39,6 @@ class ElasticSearchService:
 
     def doc_exists_in_index(self, doc_id):
         return self.es.exists(self.INDEX_NAME, self.INDEX_DOC_TYPE_NAME, doc_id)
-
-    def get_doc_id_having_identifier_from_index(self, cr_id):
-        resp = self.es.search(self.INDEX_NAME, self.INDEX_DOC_TYPE_NAME,
-                              body={"query": {"term": {"identifier.keyword": cr_id}}})
-
-        if resp.get('hits') and resp['hits'].get('hits') and len(resp['hits']['hits']) > 0:
-            return resp['hits']['hits'][0].get('_id')
-
-        return None
 
     def create_index_and_mapping(self):
         log.info("Trying to create index " + self.INDEX_NAME)

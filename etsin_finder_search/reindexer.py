@@ -63,7 +63,7 @@ def load_test_data_into_es(dataset_amt):
             log.error("Unable to create index")
             return False
 
-    metax_identifiers = metax_api.get_latest_catalog_record_preferred_identifiers()
+    metax_identifiers = metax_api.get_latest_catalog_record_identifiers()
     if metax_identifiers:
         identifiers_to_load = metax_identifiers[0:min(len(metax_identifiers), dataset_amt)]
 
@@ -101,7 +101,7 @@ def convert_identifiers_to_es_data_models(metax_api, identifiers_to_convert, ide
     es_dataset_models = []
     converter = CRConverter()
     log.info("Trying to convert {0} Metax catalog records to Elasticsearch documents. "
-             "If a catalog record is deprecated, try to delete from index instead.".format(len(identifiers_to_convert)))
+             "If catalog record is deprecated, try to delete it from index.".format(len(identifiers_to_convert)))
 
     for identifier in identifiers_to_convert:
         metax_cr_json = metax_api.get_catalog_record(identifier)
@@ -149,7 +149,7 @@ class ReindexScheduledTask:
 
         # 2. Get all unique preferred identifiers from Metax
         # Fetch only the latest dataset versions
-        metax_identifiers = self.metax_api.get_latest_catalog_record_preferred_identifiers()
+        metax_identifiers = self.metax_api.get_latest_catalog_record_identifiers()
         ids_to_create = list(metax_identifiers) if metax_identifiers else []
 
         # 3. Get all document identifiers (equivalent to Metax preferred identifiers) from search index
