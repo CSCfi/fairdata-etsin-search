@@ -63,7 +63,7 @@ def load_test_data_into_es(dataset_amt):
             log.error("Unable to create index")
             return False
 
-    metax_identifiers = metax_api.get_latest_catalog_record_preferred_identifiers()
+    metax_identifiers = metax_api.get_latest_catalog_record_identifiers()
     if metax_identifiers:
         identifiers_to_load = metax_identifiers[0:min(len(metax_identifiers), dataset_amt)]
 
@@ -101,7 +101,7 @@ def convert_identifiers_to_es_data_models(metax_api, identifiers_to_convert, ide
     es_dataset_models = []
     converter = CRConverter()
     log.info("Trying to convert {0} Metax catalog records to Elasticsearch documents. "
-             "If a catalog record is deprecated, try to delete from index instead.".format(len(identifiers_to_convert)))
+             "If catalog record is deprecated, try to delete it from index.".format(len(identifiers_to_convert)))
 
     for identifier in identifiers_to_convert:
         metax_cr_json = metax_api.get_catalog_record(identifier)
@@ -147,18 +147,18 @@ class ReindexScheduledTask:
             if not stop_rabbitmq_consumer():
                 log.error("Unable to stop RabbitMQ consumer service, continuing with reindexing")
 
-        # 2. Get all dataset identifiers from metax
+        # 2. Get all unique preferred identifiers from Metax
         # Fetch only the latest dataset versions
-        metax_identifiers = self.metax_api.get_latest_catalog_record_preferred_identifiers()
+        metax_identifiers = self.metax_api.get_latest_catalog_record_identifiers()
         ids_to_create = list(metax_identifiers) if metax_identifiers else []
 
-        # 3. Get all identifiers from search index
+        # 3. Get all document identifiers (equivalent to Metax preferred identifiers) from search index
         es_identifiers = self.es_client.get_all_doc_ids_from_index() or []
 
         # 4.
-        # If metax_id in metax and in es index -> index
-        # If metax_id in metax but not in es index -> index
-        # If metax_id not in metax but in es index -> delete
+        # If metax_id in Metax and in es index -> index
+        # If metax_id in Metax but not in es index -> index
+        # If metax_id not in Metax but in es index -> delete
         for es_id in es_identifiers:
             if es_id in metax_identifiers:
                 ids_to_index.append(es_id)
