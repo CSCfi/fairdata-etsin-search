@@ -13,4 +13,4 @@ class ESDatasetModel:
         return json.dumps(self.doc_obj)
 
     def get_es_document_id(self):
-        return self.doc_obj['preferred_identifier']
+        return self.doc_obj.get('identifier', '')

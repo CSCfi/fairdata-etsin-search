@@ -1,219 +1,174 @@
 {
-    "access_rights": {
-        "license": [
-            {
-                "identifier": "http://www.opensource.org/licenses/Apache-2.0",
-                "title": {
-                    "en": "Apache Software License 2.0",
-                    "und": "Apache Software License 2.0"
-                }
-            }
-        ],
-        "access_type" : {
-              "identifier" : "http://purl.org/att/es/reference_data/access_type/access_type_open_access",
-              "pref_label" : {
-                "en" : "Open",
-                "fi" : "Avoin",
-                "und" : "Avoin"
-              }
-        }
-    },
-    "contributor": [
-        {
-            "agent_type": "Person",
-            "belongs_to_org": {
-                "agent_type": "Organization",
-                "identifier": "http://purl.org/att/es/organization_data/organization/organization_1901",
-                "name": {
-                    "und": "Helsingin yliopisto"
-                }
-            },
-            "identifier": "contributorid",
-            "name": {
-                "und": "Kalle Kontribuuttaja"
-            }
-        },
-        {
-            "agent_type": "Person",
-            "belongs_to_org": {
-                "agent_type": "Organization",
-                "identifier": "org_identifier",
-                "name": {
-                    "en": "Mysterious Organization 2",
-                    "fi": "Organisaatio"
-                }
-            },
-            "identifier": "contributorid2",
-            "name": {
-                "und": "Franzibald Kontribuuttaja"
-            }
-        }
-    ],
-    "creator": [
-        {
-            "agent_type": "Person",
-            "belongs_to_org": {
-                "agent_type": "Organization",
-                "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
-                "name": {
-                    "und": "Aalto yliopisto"
-                }
-            },
-            "identifier": "",
-            "name": {
-                "und": "Teppo Testaaja"
-            }
-        }
-    ],
-    "creator_name": [
-        "Teppo Testaaja"
-    ],
-    "curator": [
-        {
-            "agent_type": "Organization",
-            "belongs_to_org": {
-                "agent_type": "Organization",
-                "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
-                "name": {
-                    "und": "Aalto yliopisto"
-                }
-            },
-            "identifier": "id:of:curator:default",
-            "name": {
-                "en": "Mysterious Organization",
-                "fi": "Organisaatio"
-            }
-        }
-    ],
-    "date_modified": "2018-02-09T16:31:23+02:00",
-    "description": [
-        {
-            "en": "A descriptive description describing the contents of this dataset. Must be descriptive."
-        }
-    ],
-    "field_of_science": [
-        {
-            "identifier": "http://www.yso.fi/onto/okm-tieteenala/ta414",
-            "pref_label": {
-                "en": "Agricultural biotechnology",
-                "fi": "Maatalouden bioteknologia",
-                "sv": "Jordbruksbioteknologi",
-                "und": "Maatalouden bioteknologia"
-            }
-        }
-    ],
-    "keyword": [
-        "keyword",
-        "keyword2",
-        "keyword3"
-    ],
-    "organization_name": [
-        "Funding Organization",
-        "Organisaatio",
-        "Helsingin yliopisto",
-        "Helsingin yliopisto",
-        "Mysterious Organization 2",
-        "Organisaatio",
-        "Aalto yliopisto",
-        "School services, ARTS",
-        "Aalto yliopisto",
-        "Mysterious Organization",
-        "Organisaatio",
-        "Aalto yliopisto",
-        "Aalto yliopisto",
-        "Helsingin yliopisto"
-    ],
-    "other_identifier": [
-        {
-            "notation": "doi:10.12345",
-            "type": {
-                "identifier": "http://purl.org/att/es/reference_data/identifier_type/identifier_type_doi",
-                "pref_label": {
-                    "en": "Digital Object Identifier (DOI)",
-                    "und": "Digital Object Identifier (DOI)"
-                }
-            }
-        },
-        {
-            "notation": "urn:nbn:fi-12345",
-            "type": {
-                "identifier": "http://purl.org/att/es/reference_data/identifier_type/identifier_type_urn",
-                "pref_label": {
-                    "en": "Uniform Resource Name (URN)",
-                    "und": "Uniform Resource Name (URN)"
-                }
-            }
-        }
-    ],
-    "preferred_identifier": "very:unique:urn-0",
-    "project": [
-        {
-            "has_funding_agency": [
-                {
-                    "agent_type": "Organization",
-                    "identifier": "fundingagencyidentifier",
-                    "name": {
-                        "en": "Funding Organization",
-                        "fi": "Organisaatio"
-                    }
-                }
-            ],
-            "identifier": "projectidentifier",
-            "name": {
-                "en": "Name of project"
-            },
-            "source_organization": [
-                {
-                    "agent_type": "Organization",
-                    "identifier": "http://purl.org/att/es/organization_data/organization/organization_1901",
-                    "name": {
-                        "und": "Helsingin yliopisto"
-                    }
-                }
-            ]
-        }
-    ],
-    "publisher": {
-        "agent_type": "Organization",
-        "belongs_to_org": {
-            "agent_type": "Organization",
-            "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
-            "name": {
-                "und": "Aalto yliopisto"
-            }
-        },
-        "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076-A800",
-        "name": {
-            "und": "School services, ARTS"
-        }
-    },
-    "rights_holder": {
-        "agent_type": "Organization",
-        "belongs_to_org": {
-            "agent_type": "Organization",
-            "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
-            "name": {
-                "und": "Aalto yliopisto"
-            }
-        },
-        "identifier": "http://purl.org/att/es/organization_data/organization/organization_1901",
-        "name": {
-            "und": "Helsingin yliopisto"
-        }
-    },
-    "theme": [
-        {
-            "identifier": "http://www.yso.fi/onto/yso/p20518",
-            "pref_label": {
-                "en": "Lapua movement",
-                "fi": "lapuanliike",
-                "sv": "Lappor\u00f6relsen",
-                "und": "lapuanliike"
-            }
-        }
-    ],
-    "title": {
-        "en": "Wonderful Title"
-    },
-    "metadata_version_identifier": "urn:nbn:fi:att:1955e904-e3dd-4d7e-99f1-3fed446f9611"
+	"identifier": "urn:nbn:fi:att:cr955e904-e3dd-4d7e-99f1-3fed446f9613",
+	"preferred_identifier": "very:unique:urn-13",
+	"organization_name": ["Funding Organization", "Organisaatio", "Helsingin yliopisto", "Helsingin yliopisto", "Mysterious Organization 2", "Organisaatio", "Aalto yliopisto", "School services, ARTS", "Aalto yliopisto", "Mysterious Organization", "Organisaatio", "Aalto yliopisto", "Aalto yliopisto", "Helsingin yliopisto"],
+	"date_modified": "2018-04-04T15:03:41+03:00",
+	"title": {
+		"en": "Wonderful Title"
+	},
+	"description": [{
+		"en": "A descriptive description describing the contents of this dataset. Must be descriptive."
+	}],
+	"keyword": ["keyword", "keyword2", "keyword3"],
+	"other_identifier": [{
+		"notation": "doi:10.12345",
+		"type": {
+			"identifier": "http://purl.org/att/es/reference_data/identifier_type/identifier_type_doi",
+			"pref_label": {
+				"en": "Digital Object Identifier (DOI)",
+				"und": "Digital Object Identifier (DOI)"
+			}
+		}
+	}, {
+		"notation": "urn:nbn:fi-12345",
+		"type": {
+			"identifier": "http://purl.org/att/es/reference_data/identifier_type/identifier_type_urn",
+			"pref_label": {
+				"en": "Uniform Resource Name (URN)",
+				"und": "Uniform Resource Name (URN)"
+			}
+		}
+	}],
+	"access_rights": {
+		"license": [{
+			"identifier": "http://www.opensource.org/licenses/Apache-2.0",
+			"title": {
+				"en": "Apache Software License 2.0",
+				"und": "Apache Software License 2.0"
+			}
+		}],
+		"access_type": {
+			"identifier": "http://purl.org/att/es/reference_data/access_type/access_type_open_access",
+			"pref_label": {
+				"en": "Open",
+				"fi": "Avoin",
+				"und": "Avoin"
+			}
+		}
+	},
+	"theme": [{
+		"identifier": "http://www.yso.fi/onto/yso/p20518",
+		"pref_label": {
+			"en": "Lapua movement",
+			"fi": "lapuanliike",
+			"sv": "Lappor\u00f6relsen",
+			"und": "lapuanliike"
+		}
+	}],
+	"field_of_science": [{
+		"identifier": "http://www.yso.fi/onto/okm-tieteenala/ta414",
+		"pref_label": {
+			"en": "Agricultural biotechnology",
+			"fi": "Maatalouden bioteknologia",
+			"sv": "Jordbruksbioteknologi",
+			"und": "Maatalouden bioteknologia"
+		}
+	}],
+	"project": [{
+		"identifier": "projectidentifier",
+		"name": {
+			"en": "Name of project"
+		},
+		"has_funding_agency": [{
+			"identifier": "fundingagencyidentifier",
+			"name": {
+				"en": "Funding Organization",
+				"fi": "Organisaatio"
+			},
+			"agent_type": "Organization"
+		}],
+		"source_organization": [{
+			"identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
+			"name": {
+				"und": "Helsingin yliopisto"
+			},
+			"agent_type": "Organization"
+		}]
+	}],
+	"contributor": [{
+		"identifier": "contributorid",
+		"name": {
+			"und": "Kalle Kontribuuttaja"
+		},
+		"agent_type": "Person",
+		"belongs_to_org": {
+			"identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
+			"name": {
+				"und": "Helsingin yliopisto"
+			},
+			"agent_type": "Organization"
+		}
+	}, {
+		"identifier": "contributorid2",
+		"name": {
+			"und": "Franzibald Kontribuuttaja"
+		},
+		"agent_type": "Person",
+		"belongs_to_org": {
+			"identifier": "org_identifier",
+			"name": {
+				"en": "Mysterious Organization 2",
+				"fi": "Organisaatio"
+			},
+			"agent_type": "Organization"
+		}
+	}],
+	"publisher": {
+		"identifier": "http://purl.org/att/es/organization_data/organization/organization_10076-A800",
+		"name": {
+			"und": "School services, ARTS"
+		},
+		"agent_type": "Organization",
+		"belongs_to_org": {
+			"identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
+			"name": {
+				"und": "Aalto yliopisto"
+			},
+			"agent_type": "Organization"
+		}
+	},
+	"curator": [{
+		"identifier": "id:of:curator:default",
+		"name": {
+			"en": "Mysterious Organization",
+			"fi": "Organisaatio"
+		},
+		"agent_type": "Organization",
+		"belongs_to_org": {
+			"identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
+			"name": {
+				"und": "Aalto yliopisto"
+			},
+			"agent_type": "Organization"
+		}
+	}],
+	"creator": [{
+		"identifier": "",
+		"name": {
+			"und": "Teppo Testaaja"
+		},
+		"agent_type": "Person",
+		"belongs_to_org": {
+			"identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
+			"name": {
+				"und": "Aalto yliopisto"
+			},
+			"agent_type": "Organization"
+		}
+	}],
+	"creator_name": ["Teppo Testaaja"],
+	"rights_holder": {
+		"identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
+		"name": {
+			"und": "Helsingin yliopisto"
+		},
+		"agent_type": "Organization",
+		"belongs_to_org": {
+			"identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
+			"name": {
+				"und": "Aalto yliopisto"
+			},
+			"agent_type": "Organization"
+		}
+	}
 }

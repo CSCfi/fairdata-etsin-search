@@ -1,4 +1,9 @@
 from etsin_finder_search.reindexing_log import get_logger
+from etsin_finder_search.utils import \
+    catalog_record_has_preferred_identifier, \
+    get_catalog_record_preferred_identifier, \
+    catalog_record_has_identifier, \
+    get_catalog_record_identifier
 
 log = get_logger(__name__)
 
@@ -8,11 +13,12 @@ class CRConverter:
     def convert_metax_cr_json_to_es_data_model(self, metax_cr_json):
         es_dataset = {}
         if metax_cr_json.get('research_dataset', False) and \
-                metax_cr_json.get('research_dataset').get('metadata_version_identifier', False):
+                catalog_record_has_identifier(metax_cr_json) and \
+                catalog_record_has_preferred_identifier(metax_cr_json):
 
+            es_dataset['identifier'] = get_catalog_record_identifier(metax_cr_json)
+            es_dataset['preferred_identifier'] = get_catalog_record_preferred_identifier(metax_cr_json)
             m_rd = metax_cr_json['research_dataset']
-            es_dataset['metadata_version_identifier'] = m_rd['metadata_version_identifier']
-            es_dataset['preferred_identifier'] = m_rd.get('preferred_identifier', '')
 
             if 'organization_name' not in es_dataset:
                 es_dataset['organization_name'] = []
