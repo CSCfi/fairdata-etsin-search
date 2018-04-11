@@ -91,6 +91,16 @@ class CRConverter:
                 self._convert_metax_obj_containing_identifier_and_label_to_es_model(m_field_of_science, es_dataset,
                                                                                     'pref_label', 'field_of_science')
 
+            for m_is_output_of_item in m_rd.get('infrastructure', []):
+                if 'infrastructure' not in es_dataset:
+                    es_dataset['infrastructure'] = []
+
+                m_infrastructure = {}
+                self._convert_metax_obj_containing_identifier_and_label_to_es_model(m_is_output_of_item, m_infrastructure,
+                                                                                    'pref_label')
+
+                es_dataset['infrastructure'].append(m_infrastructure)
+
             for m_is_output_of_item in m_rd.get('is_output_of', []):
                 if 'project' not in es_dataset:
                     es_dataset['project'] = []
