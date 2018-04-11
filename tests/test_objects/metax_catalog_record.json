@@ -134,8 +134,22 @@
     },
     "dataset_version_set": [
         {
+            "identifier": "urn:nbn:fi:att:cr955e904-e3dd-4d7e-99f1-3fed446f9613",
             "preferred_identifier": "very:unique:urn-13",
+            "removed": false,
             "date_created": "2017-05-23T13:07:22+03:00"
+        },
+        {
+            "identifier": "urn:nbn:fi:att:cr955e904-e3dd-4d7e-99f1-3fed446f9611",
+            "preferred_identifier": "old_version_identifier",
+            "removed": false,
+            "date_created": "2016-01-01T13:07:22+03:00"
+        },
+        {
+            "identifier": "urn:nbn:fi:att:cr955e904-e3dd-4d7e-99f1-3fed446f9620",
+            "preferred_identifier": "oldest_version_identifier",
+            "removed": true,
+            "date_created": "2015-01-01T13:07:22+03:00"
         }
     ],
     "deprecated": false,
@@ -1038,8 +1052,11 @@
         "creator_id": "053bffbcc41edad4853bea91fc42ea18"
     },
     "removed": false,
-    "date_modified": "2018-04-04T15:03:41+03:00",
     "date_created": "2017-05-23T13:07:22+03:00",
-    "service_modified": "etsin",
-    "service_created": "metax"
+    "service_created": "metax",
+    "previous_dataset_version": {
+        "id": 1000,
+        "identifier": "urn:nbn:fi:att:cr955e904-e3dd-4d7e-99f1-3fed446f9611",
+        "preferred_identifier": "old_version_identifier"
+    }
 }
