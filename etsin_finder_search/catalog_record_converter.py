@@ -102,24 +102,17 @@ class CRConverter:
                 es_dataset['infrastructure'].append(m_infrastructure)
 
             for m_is_output_of_item in m_rd.get('is_output_of', []):
-                if 'project' not in es_dataset:
-                    es_dataset['project'] = []
-
-                es_project = {}
-                self._convert_metax_obj_containing_identifier_and_label_to_es_model(m_is_output_of_item, es_project,
-                                                                                    'name')
-
                 if m_is_output_of_item.get('has_funding_agency', []):
-                    self._convert_metax_org_or_person_to_es_model(m_is_output_of_item.get('has_funding_agency'),
-                                                                  es_project, 'has_funding_agency')
                     self._convert_metax_organization_name_to_es_model(m_is_output_of_item.get('has_funding_agency'), es_dataset, 'organization_name')
 
                 if m_is_output_of_item.get('source_organization', []):
-                    self._convert_metax_org_or_person_to_es_model(m_is_output_of_item.get('source_organization'),
-                                                                  es_project, 'source_organization')
                     self._convert_metax_organization_name_to_es_model(m_is_output_of_item.get('source_organization'), es_dataset, 'organization_name')
 
-                es_dataset['project'].append(es_project)
+            if m_rd.get('is_output_of', []):
+                if 'project_name' not in es_dataset:
+                    es_dataset['project_name'] = []
+                
+                self._convert_metax_project_name_to_es_model(m_rd.get('is_output_of'), es_dataset, 'project_name')
 
             if m_rd.get('contributor', False):
                 es_dataset['contributor'] = []
@@ -221,6 +214,30 @@ class CRConverter:
 
         es_output[relation_name] = output
 
+    def _convert_metax_project_name_to_es_model(self, m_input, es_output, relation_name):
+        """
+
+        :param m_input:
+        :param es_output:
+        :param relation_name:
+        :return:
+        """
+
+        output = []
+        if isinstance(m_input, list):
+            for m_obj in m_input:
+                name = self._get_converted_project_name_es_model(m_obj)
+                if name is not None:
+                    output.extend(name)
+        else:
+            if m_input:
+                name = self._get_converted_project_name_es_model(m_input)
+                if name is not None:
+                    output.extend(name)
+
+        es_output[relation_name] = output
+
+
     def _convert_metax_organization_name_to_es_model(self, m_input, es_output, relation_name):
         """
 
@@ -275,6 +292,16 @@ class CRConverter:
         out_obj = list(person_or_org['name'].values())
 
         return out_obj
+
+    def _get_converted_project_name_es_model(self, m_obj):
+        name = m_obj.get('name', '')
+        if not isinstance(m_obj.get('name'), dict):
+            name = {'und': m_obj.get('name', '')}
+
+        out_obj = list(name.values())
+
+        return out_obj
+
 
     def _get_converted_organization_name_es_model(self, m_obj):
         if m_obj.get('@type', '') != 'Organization':
