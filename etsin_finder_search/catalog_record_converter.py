@@ -111,7 +111,7 @@ class CRConverter:
             if m_rd.get('is_output_of', []):
                 if 'project_name' not in es_dataset:
                     es_dataset['project_name'] = []
-                
+
                 self._convert_metax_project_name_to_es_model(m_rd.get('is_output_of'), es_dataset, 'project_name')
 
             if 'file_type' not in es_dataset and (m_rd.get('files', False) or m_rd.get('remote_resources', False)):
@@ -247,7 +247,6 @@ class CRConverter:
 
         es_output[relation_name] = output
 
-
     def _convert_metax_organization_name_to_es_model(self, m_input, es_output, relation_name):
         """
 
@@ -311,7 +310,6 @@ class CRConverter:
         out_obj = list(name.values())
 
         return out_obj
-
 
     def _get_converted_organization_name_es_model(self, m_obj):
         if m_obj.get('@type', '') != 'Organization':
