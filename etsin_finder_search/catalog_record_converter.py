@@ -114,6 +114,16 @@ class CRConverter:
                 
                 self._convert_metax_project_name_to_es_model(m_rd.get('is_output_of'), es_dataset, 'project_name')
 
+            if 'file_type' not in es_dataset and (m_rd.get('files', False) or m_rd.get('remote_resources', False)):
+                es_dataset['file_type'] = []
+
+            for m_is_output_of_item in m_rd.get('files', []) + m_rd.get('remote_resources', []):
+                if 'file_type' in m_is_output_of_item:
+                    m_file_type = {}
+                    self._convert_metax_obj_containing_identifier_and_label_to_es_model(m_is_output_of_item['file_type'], m_file_type,
+                                                                                        'pref_label')
+                    es_dataset['file_type'].append(m_file_type)
+
             if m_rd.get('contributor', False):
                 es_dataset['contributor'] = []
                 self._convert_metax_org_or_person_to_es_model(m_rd.get('contributor'), es_dataset, 'contributor')
