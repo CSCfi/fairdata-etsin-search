@@ -46,7 +46,7 @@
     {
       "object_with_identifier_and_label": {
         "match_pattern": "regex",
-        "match": "^(access_rights\\.type|access_rights\\.license|theme|field_of_science|project|other_identifier\\.type)\\..*(pref_label|title|identifier).*",
+        "match": "^(access_rights\\.type|access_rights\\.license|theme|field_of_science|infrastructure|file_type|other_identifier\\.type)\\..*(pref_label|title|identifier).*",
         "mapping": {
           "type": "text",
           "analyzer": "standard",
@@ -107,6 +107,14 @@
       "type": "text",
       "copy_to": ["theme.label.en", "theme.label.fi"]
     },
+    "project_name": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }      
+    },    
     "preservation_state": {
       "type": "integer"
     }
