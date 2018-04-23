@@ -92,6 +92,14 @@
         }
       }
     },
+    "dataset_version_set": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
     "date_modified": {
       "type": "date"
     },

@@ -129,3 +129,12 @@ def catalog_record_is_deprecated(cr_json):
 
 def catalog_record_is_harvested(cr_json):
     return cr_json.get('data_catalog').get('catalog_json').get('harvested', False)
+
+
+def get_catalog_record_dataset_version_set(cr_json):
+    ret_val = []
+    for dvs_obj in cr_json.get('dataset_version_set', []):
+        prev_pref_id = dvs_obj.get('preferred_identifier')
+        if prev_pref_id:
+            ret_val.append(prev_pref_id)
+    return ret_val
