@@ -137,7 +137,7 @@
 		}
 	}],
 	"creator_name": ["Teppo Testaaja"],
-	"rights_holder": {
+	"rights_holder": [{
 		"identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
 		"name": {
 			"und": "Helsingin yliopisto"
@@ -150,7 +150,7 @@
 			},
 			"agent_type": "Organization"
 		}
-	},
+	}],
   "file_type": [{
     "identifier": "http://purl.org/att/es/reference_data/file_type/file_type_video",
     "pref_label": {
