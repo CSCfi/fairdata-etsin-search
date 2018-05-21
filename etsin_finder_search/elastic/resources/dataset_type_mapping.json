@@ -5,7 +5,7 @@
         "path_match":   "title.*",
         "mapping": {
           "type": "text",
-          "analyzer": "etsin_ngram_analyzer"
+          "analyzer": "etsin_long_ngram_analyzer"
         }
       }
     },
