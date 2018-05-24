@@ -18,6 +18,16 @@
           "type": "ngram",
           "min_gram": 3,
           "max_gram": 15
+        },
+        "long_edge_ngram_tokenizer": {
+          "type": "edge_ngram",
+          "min_gram": 3,
+          "max_gram": 20
+        },
+        "long_ngram_tokenizer": {
+          "type": "ngram",
+          "min_gram": 3,
+          "max_gram": 20
         }
       },
       "analyzer": {
@@ -37,6 +47,20 @@
         "etsin_ngram_analyzer": {
           "type": "custom",
           "tokenizer": "ngram_tokenizer",
+          "filter": [
+            "lowercase"
+          ]
+        },
+        "etsin_long_edge_ngram_analyzer": {
+          "type": "custom",
+          "tokenizer": "long_edge_ngram_tokenizer",
+          "filter": [
+            "lowercase"
+          ]
+        },
+        "etsin_long_ngram_analyzer": {
+          "type": "custom",
+          "tokenizer": "long_ngram_tokenizer",
           "filter": [
             "lowercase"
           ]

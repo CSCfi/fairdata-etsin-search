@@ -29,8 +29,6 @@ before_script:
 - sudo mkdir /var/log/etsin_finder_search
 - sudo chown -R $USER:$USER /var/log/etsin_finder_search
 
-# Add the below to the script after python tests once the frontend tests are in place
-#cd $TRAVIS_BUILD_DIR/etsin_finder/frontend && npm run test
 script:
 - cd $TRAVIS_BUILD_DIR && flake8 . && pytest --cov=etsin_finder_search tests/ && $TRAVIS_BUILD_DIR/.travis-deploy.sh
 

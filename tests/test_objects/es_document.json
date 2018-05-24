@@ -1,8 +1,9 @@
 {
 	"identifier": "urn:nbn:fi:att:cr955e904-e3dd-4d7e-99f1-3fed446f9613",
 	"preferred_identifier": "very:unique:urn-13",
+	"dataset_version_set": ["very:unique:urn-13", "old_version_identifier", "oldest_version_identifier"],
 	"organization_name": ["Funding Organization", "Organisaatio", "Helsingin yliopisto", "Helsingin yliopisto", "Mysterious Organization 2", "Organisaatio", "Aalto yliopisto", "School services, ARTS", "Aalto yliopisto", "Mysterious Organization", "Organisaatio", "Aalto yliopisto", "Aalto yliopisto", "Helsingin yliopisto"],
-	"date_modified": "2018-04-04T15:03:41+03:00",
+	"date_modified": "2017-05-23T13:07:22+03:00",
 	"title": {
 		"en": "Wonderful Title"
 	},
@@ -63,27 +64,6 @@
 			"sv": "Jordbruksbioteknologi",
 			"und": "Maatalouden bioteknologia"
 		}
-	}],
-	"project": [{
-		"identifier": "projectidentifier",
-		"name": {
-			"en": "Name of project"
-		},
-		"has_funding_agency": [{
-			"identifier": "fundingagencyidentifier",
-			"name": {
-				"en": "Funding Organization",
-				"fi": "Organisaatio"
-			},
-			"agent_type": "Organization"
-		}],
-		"source_organization": [{
-			"identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
-			"name": {
-				"und": "Helsingin yliopisto"
-			},
-			"agent_type": "Organization"
-		}]
 	}],
 	"contributor": [{
 		"identifier": "contributorid",
@@ -157,7 +137,7 @@
 		}
 	}],
 	"creator_name": ["Teppo Testaaja"],
-	"rights_holder": {
+	"rights_holder": [{
 		"identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
 		"name": {
 			"und": "Helsingin yliopisto"
@@ -170,5 +150,23 @@
 			},
 			"agent_type": "Organization"
 		}
-	}
+	}],
+  "file_type": [{
+    "identifier": "http://purl.org/att/es/reference_data/file_type/file_type_video",
+    "pref_label": {
+      "en": "Video", 
+      "fi": "Video", 
+      "und": "Video"
+    }
+    }, {
+    "identifier": "http://purl.org/att/es/reference_data/file_type/file_type_software",
+    "pref_label": {
+      "en": "Software",
+      "fi": "Sovellus",
+      "und": "Sovellus"}}],
+          "infrastructure": [{"identifier": "http://urn.fi/urn:nbn:fi:research-infras-2016072530",
+                              "pref_label": {"en": "Accelerator laboratory of the university of Jyväskylä",
+                                             "fi": "Jyväskylän yliopiston fysiikan laitoksen Kiihdytinlaboratorio",
+                                             "und": "Jyväskylän yliopiston fysiikan laitoksen Kiihdytinlaboratorio"}}],
+          "project_name": ["Name of project"]
 }
