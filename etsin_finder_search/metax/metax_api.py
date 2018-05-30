@@ -17,6 +17,9 @@ class MetaxAPIService:
         self.METAX_GET_PIDS_URL = self.METAX_CATALOG_RECORDS_BASE_URL + '/identifiers?latest'
         self.METAX_GET_CATALOG_RECORD_URL = self.METAX_CATALOG_RECORDS_BASE_URL + '/{0}'
 
+        self.user = metax_api_config['USER']
+        self.pw = metax_api_config['PASSWORD']
+
     @staticmethod
     def _do_request(request_func, arg=None):
         sleep_time = 4
@@ -48,8 +51,9 @@ class MetaxAPIService:
 
         def get(identifier):
             return requests.get(self.METAX_GET_CATALOG_RECORD_URL.format(identifier),
-                         headers={'Content-Type': 'application/json'},
-                         timeout=TIMEOUT)
+                                headers={'Content-Type': 'application/json'},
+                                auth=(self.user, self.pw),
+                                timeout=TIMEOUT)
 
         response = self._do_request(get, cr_identifier)
         if not response:
@@ -76,6 +80,7 @@ class MetaxAPIService:
         def get():
             return requests.get(self.METAX_GET_PIDS_URL,
                                 headers={'Content-Type': 'application/json'},
+                                auth=(self.user, self.pw),
                                 timeout=TIMEOUT)
 
         response = self._do_request(get)
