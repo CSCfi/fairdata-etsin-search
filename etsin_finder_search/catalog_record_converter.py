@@ -66,6 +66,8 @@ class CRConverter:
 
                 es_access_rights = es_dataset['access_rights']
 
+                CRConverter._add_descriptive_field_to_output_obj( m_rd.get('access_rights'), es_access_rights)
+
                 if m_rd.get('access_rights').get('license', False):
                     m_license = m_rd.get('access_rights').get('license')
                     self._convert_metax_obj_containing_identifier_and_label_to_es_model(m_license, es_access_rights,
@@ -175,17 +177,27 @@ class CRConverter:
         if isinstance(m_input, list) and es_array_relation_name:
             output = []
             for obj in m_input:
+
                 m_input_label_is_array = isinstance(obj.get(m_input_label_field), list)
                 out_obj = {
                     'identifier': obj.get('identifier', ''),
                     m_input_label_field: obj.get(m_input_label_field, [] if m_input_label_is_array else {})
                 }
+                CRConverter._add_descriptive_field_to_output_obj(obj, out_obj)
                 output.append(out_obj)
             es_output[es_array_relation_name] = output
         elif isinstance(m_input, dict):
             m_input_label_is_array = isinstance(m_input.get(m_input_label_field), list)
             es_output['identifier'] = m_input.get('identifier', '')
             es_output[m_input_label_field] = m_input.get(m_input_label_field, [] if m_input_label_is_array else {})
+            CRConverter._add_descriptive_field_to_output_obj(m_input, es_output)
+
+    @staticmethod
+    def _add_descriptive_field_to_output_obj(input_obj, output_obj):
+        if 'description' in input_obj:
+            output_obj['description'] = input_obj['description']
+        if 'definition' in input_obj:
+            output_obj['definition'] = input_obj['definition']
 
     def _convert_metax_org_or_person_to_es_model(self, m_input, es_output, relation_name):
         """

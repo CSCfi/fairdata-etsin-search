@@ -18,7 +18,7 @@ class ElasticSearchService:
     INDEX_CONFIG_FILENAME = 'metax_index_definition.json'
     INDEX_DOC_TYPE_NAME = 'dataset'
     INDEX_DOC_TYPE_MAPPING_FILENAME = 'dataset_type_mapping.json'
-    BULK_OPERATION_ROW_SIZE = 2000
+    BULK_OPERATION_ROW_SIZE = 200
 
     def __init__(self, es_config):
         self.es = Elasticsearch(es_config.get('HOSTS'), **self._get_connection_parameters(es_config))
