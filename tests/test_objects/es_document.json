@@ -1,6 +1,9 @@
 {
     "access_rights": {
         "access_type": {
+            "definition": {
+                "en": "A statement or formal explanation of the meaning of a concept."
+            },
             "identifier": "http://purl.org/att/es/reference_data/access_type/access_type_open_access",
             "pref_label": {
                 "en": "Open",
@@ -8,8 +11,14 @@
                 "und": "Avoin"
             }
         },
+        "description": {
+            "en": "Free account of the rights"
+        },
         "license": [
             {
+                "description": {
+                    "en": "Free account of the rights"
+                },
                 "identifier": "http://www.opensource.org/licenses/Apache-2.0",
                 "title": {
                     "en": "Apache Software License 2.0",
@@ -94,6 +103,9 @@
     },
     "field_of_science": [
         {
+            "definition": {
+                "en": "A statement or formal explanation of the meaning of a concept."
+            },
             "identifier": "http://www.yso.fi/onto/okm-tieteenala/ta414",
             "pref_label": {
                 "en": "Agricultural biotechnology",
@@ -105,6 +117,9 @@
     ],
     "file_type": [
         {
+            "definition": {
+                "en": "A statement or formal explanation of the meaning of a concept."
+            },
             "identifier": "http://purl.org/att/es/reference_data/file_type/file_type_video",
             "pref_label": {
                 "en": "Video",
@@ -113,6 +128,9 @@
             }
         },
         {
+            "definition": {
+                "en": "A statement or formal explanation of the meaning of a concept."
+            },
             "identifier": "http://purl.org/att/es/reference_data/file_type/file_type_software",
             "pref_label": {
                 "en": "Software",
@@ -157,6 +175,9 @@
         {
             "notation": "doi:10.12345",
             "type": {
+                "definition": {
+                    "en": "A statement or formal explanation of the meaning of a concept."
+                },
                 "identifier": "http://purl.org/att/es/reference_data/identifier_type/identifier_type_doi",
                 "pref_label": {
                     "en": "Digital Object Identifier (DOI)",
@@ -167,6 +188,9 @@
         {
             "notation": "urn:nbn:fi-12345",
             "type": {
+                "definition": {
+                    "en": "A statement or formal explanation of the meaning of a concept."
+                },
                 "identifier": "http://purl.org/att/es/reference_data/identifier_type/identifier_type_urn",
                 "pref_label": {
                     "en": "Uniform Resource Name (URN)",
@@ -211,6 +235,9 @@
     ],
     "theme": [
         {
+            "definition": {
+                "en": "A statement or formal explanation of the meaning of a concept."
+            },
             "identifier": "http://www.yso.fi/onto/yso/p20518",
             "pref_label": {
                 "en": "Lapua movement",
