@@ -68,7 +68,31 @@
         }
       }      
     },
-    "organization_name": {
+    "organization_name_fi": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }      
+    },
+    "organization_name_en": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }      
+    },
+    "project_name_fi": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }      
+    },
+    "project_name_en": {
       "type": "text",
       "fields": {
         "keyword": {
@@ -107,14 +131,6 @@
       "type": "text",
       "copy_to": ["theme.label.en", "theme.label.fi"]
     },
-    "project_name": {
-      "type": "text",
-      "fields": {
-        "keyword": {
-          "type": "keyword"
-        }
-      }      
-    },    
     "preservation_state": {
       "type": "integer"
     }
