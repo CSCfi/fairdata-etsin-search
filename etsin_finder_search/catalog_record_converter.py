@@ -248,7 +248,7 @@ class CRConverter:
 
     def _convert_metax_langstring_name_to_es_model(self, m_input, es_output, relation_name_base):
         """
-        Converts an object with langstring name to two lists, one for Finnish and one for English name.        
+        Converts an object with langstring name to two lists, one for Finnish and one for English name.
 
         :param m_input:
         :param es_output:
