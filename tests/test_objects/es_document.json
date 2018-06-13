@@ -155,22 +155,28 @@
         "keyword2",
         "keyword3"
     ],
-    "organization_name": [
-        "Funding Organization",
-        "Organisaatio",
+    "organization_name_en": ["Funding Organization",
         "Helsingin yliopisto",
         "Helsingin yliopisto",
         "Mysterious Organization 2",
-        "Organisaatio",
         "Aalto yliopisto",
         "School services, ARTS",
         "Aalto yliopisto",
         "Mysterious Organization",
+        "Aalto yliopisto",
+        "Aalto yliopisto",
+        "Helsingin yliopisto"],
+    "organization_name_fi": ["Organisaatio",
+        "Helsingin yliopisto",
+        "Helsingin yliopisto",
+        "Organisaatio",
+        "Aalto yliopisto",
+        "School services, ARTS",
+        "Aalto yliopisto",
         "Organisaatio",
         "Aalto yliopisto",
         "Aalto yliopisto",
-        "Helsingin yliopisto"
-    ],
+        "Helsingin yliopisto"],
     "other_identifier": [
         {
             "notation": "doi:10.12345",
@@ -200,9 +206,8 @@
         }
     ],
     "preferred_identifier": "urn:nbn:fi:att:1955e904-e3dd-4d7e-99f1-3fed446f9613",
-    "project_name": [
-        "Name of project"
-    ],
+    "project_name_en": ["Name of project"],
+    "project_name_fi": ["Name of project"],
     "publisher": {
         "agent_type": "Organization",
         "belongs_to_org": {

@@ -24,8 +24,11 @@ class CRConverter:
 
             m_rd = metax_cr_json['research_dataset']
 
-            if 'organization_name' not in es_dataset:
-                es_dataset['organization_name'] = []
+            if 'organization_name_fi' not in es_dataset:
+                es_dataset['organization_name_fi'] = []
+
+            if 'organization_name_en' not in es_dataset:
+                es_dataset['organization_name_en'] = []
 
             if metax_cr_json.get('date_modified', False):
                 es_dataset['date_modified'] = metax_cr_json.get('date_modified')
@@ -109,16 +112,19 @@ class CRConverter:
 
             for m_is_output_of_item in m_rd.get('is_output_of', []):
                 if m_is_output_of_item.get('has_funding_agency', []):
-                    self._convert_metax_organization_name_to_es_model(m_is_output_of_item.get('has_funding_agency'), es_dataset, 'organization_name')
+                    self._convert_metax_langstring_name_to_es_model(m_is_output_of_item.get('has_funding_agency'), es_dataset, 'organization_name')
 
                 if m_is_output_of_item.get('source_organization', []):
-                    self._convert_metax_organization_name_to_es_model(m_is_output_of_item.get('source_organization'), es_dataset, 'organization_name')
+                    self._convert_metax_langstring_name_to_es_model(m_is_output_of_item.get('source_organization'), es_dataset, 'organization_name')
 
             if m_rd.get('is_output_of', []):
-                if 'project_name' not in es_dataset:
-                    es_dataset['project_name'] = []
+                if 'project_name_fi' not in es_dataset:
+                    es_dataset['project_name_fi'] = []
 
-                self._convert_metax_project_name_to_es_model(m_rd.get('is_output_of'), es_dataset, 'project_name')
+                if 'project_name_en' not in es_dataset:
+                    es_dataset['project_name_en'] = []
+
+                self._convert_metax_langstring_name_to_es_model(m_rd.get('is_output_of'), es_dataset, 'project_name')
 
             if 'file_type' not in es_dataset and (m_rd.get('files', False) or m_rd.get('remote_resources', False)):
                 es_dataset['file_type'] = []
@@ -133,28 +139,28 @@ class CRConverter:
             if m_rd.get('contributor', False):
                 es_dataset['contributor'] = []
                 self._convert_metax_org_or_person_to_es_model(m_rd.get('contributor'), es_dataset, 'contributor')
-                self._convert_metax_organization_name_to_es_model(m_rd.get('contributor'), es_dataset, 'organization_name')
+                self._convert_metax_langstring_name_to_es_model(m_rd.get('contributor'), es_dataset, 'organization_name')
 
             if m_rd.get('publisher', False):
                 es_dataset['publisher'] = []
                 self._convert_metax_org_or_person_to_es_model(m_rd.get('publisher'), es_dataset, 'publisher')
-                self._convert_metax_organization_name_to_es_model(m_rd.get('publisher'), es_dataset, 'organization_name')
+                self._convert_metax_langstring_name_to_es_model(m_rd.get('publisher'), es_dataset, 'organization_name')
 
             if m_rd.get('curator', False):
                 es_dataset['curator'] = []
                 self._convert_metax_org_or_person_to_es_model(m_rd.get('curator'), es_dataset, 'curator')
-                self._convert_metax_organization_name_to_es_model(m_rd.get('curator'), es_dataset, 'organization_name')
+                self._convert_metax_langstring_name_to_es_model(m_rd.get('curator'), es_dataset, 'organization_name')
 
             if m_rd.get('creator', False):
                 es_dataset['creator'] = []
                 self._convert_metax_org_or_person_to_es_model(m_rd.get('creator'), es_dataset, 'creator')
                 self._convert_metax_creator_name_to_es_model(m_rd.get('creator'), es_dataset, 'creator_name')
-                self._convert_metax_organization_name_to_es_model(m_rd.get('creator'), es_dataset, 'organization_name')
+                self._convert_metax_langstring_name_to_es_model(m_rd.get('creator'), es_dataset, 'organization_name')
 
             if m_rd.get('rights_holder', False):
                 es_dataset['rights_holder'] = []
                 self._convert_metax_org_or_person_to_es_model(m_rd.get('rights_holder'), es_dataset, 'rights_holder')
-                self._convert_metax_organization_name_to_es_model(m_rd.get('rights_holder'), es_dataset, 'organization_name')
+                self._convert_metax_langstring_name_to_es_model(m_rd.get('rights_holder'), es_dataset, 'organization_name')
 
         return es_dataset
 
@@ -240,8 +246,9 @@ class CRConverter:
 
         es_output[relation_name] = output
 
-    def _convert_metax_project_name_to_es_model(self, m_input, es_output, relation_name):
+    def _convert_metax_langstring_name_to_es_model(self, m_input, es_output, relation_name_base):
         """
+        Converts an object with langstring name to two lists, one for Finnish and one for English name.
 
         :param m_input:
         :param es_output:
@@ -249,49 +256,33 @@ class CRConverter:
         :return:
         """
 
-        output = []
+        output_fi = []
+        output_en = []
         if isinstance(m_input, list):
             for m_obj in m_input:
-                name = self._get_converted_project_name_es_model(m_obj)
-                if name is not None:
-                    output.extend(name)
-        else:
-            if m_input:
-                name = self._get_converted_project_name_es_model(m_input)
-                if name is not None:
-                    output.extend(name)
+                name_fi = self._get_converted_langstring_name_es_model(m_obj, 'fi')
+                name_en = self._get_converted_langstring_name_es_model(m_obj, 'en')
+                if name_fi is not None and name_en is not None:
+                    output_fi.append(name_fi)
+                    output_en.append(name_en)
 
-        es_output[relation_name] = output
-
-    def _convert_metax_organization_name_to_es_model(self, m_input, es_output, relation_name):
-        """
-
-        :param m_input:
-        :param es_output:
-        :param relation_name:
-        :return:
-        """
-
-        output = []
-        if isinstance(m_input, list):
-            for m_obj in m_input:
-                name = self._get_converted_organization_name_es_model(m_obj)
-                if name is not None:
-                    output.extend(name)
                 if 'is_part_of' in m_obj:
-                    self._convert_metax_organization_name_to_es_model(m_obj['is_part_of'], es_output, relation_name)
+                    self._convert_metax_langstring_name_to_es_model(m_obj['is_part_of'], es_output, relation_name_base)
                 if 'member_of' in m_obj:
-                    self._convert_metax_organization_name_to_es_model(m_obj['member_of'], es_output, relation_name)
+                    self._convert_metax_langstring_name_to_es_model(m_obj['member_of'], es_output, relation_name_base)
         else:
             if m_input:
-                output = self._get_converted_organization_name_es_model(m_input)
-                if 'is_part_of' in m_input:
-                    self._convert_metax_organization_name_to_es_model(m_input['is_part_of'], es_output, relation_name)
-                if 'member_of' in m_input:
-                    self._convert_metax_organization_name_to_es_model(m_input['member_of'], es_output, relation_name)
+                output_fi.append(self._get_converted_langstring_name_es_model(m_input, 'fi'))
+                output_en.append(self._get_converted_langstring_name_es_model(m_input, 'en'))
 
-        if output is not None:
-            es_output[relation_name].extend(output)
+                if 'is_part_of' in m_input:
+                    self._convert_metax_langstring_name_to_es_model(m_input['is_part_of'], es_output, relation_name_base)
+                if 'member_of' in m_input:
+                    self._convert_metax_langstring_name_to_es_model(m_input['member_of'], es_output, relation_name_base)
+
+        if output_fi is not None and output_en is not None:
+            es_output[relation_name_base + '_fi'].extend(output_fi)
+            es_output[relation_name_base + '_en'].extend(output_en)
 
     def _get_converted_single_org_or_person_es_model(self, m_obj):
         if m_obj.get('@type', '') not in ['Person', 'Organization']:
@@ -318,22 +309,25 @@ class CRConverter:
 
         return out_obj
 
-    def _get_converted_project_name_es_model(self, m_obj):
-        name = m_obj.get('name', '')
+    def _get_converted_langstring_name_es_model(self, m_obj, lang):
         if not isinstance(m_obj.get('name'), dict):
-            name = {'und': m_obj.get('name', '')}
-
-        out_obj = list(name.values())
-
-        return out_obj
-
-    def _get_converted_organization_name_es_model(self, m_obj):
-        if m_obj.get('@type', '') != 'Organization':
             return None
 
-        org = self._get_es_person_or_org_common_data_from_metax_obj(m_obj)
-        out_obj = list(org['name'].values())
-        out_obj = [x for x in out_obj if x] # remove empty strings
+        if lang is 'fi':
+            preferred_order = ['fi', 'und', 'en']
+        elif lang is 'en':
+            preferred_order = ['en', 'und', 'fi']
+        else:
+            return None
+
+        for language in preferred_order:
+            try:
+                return m_obj['name'][language]
+            except KeyError:
+                continue
+
+        # If name is not available in preferred languages, choose any name
+        out_obj = list(m_obj['name'].values())[0]
 
         return out_obj
 
