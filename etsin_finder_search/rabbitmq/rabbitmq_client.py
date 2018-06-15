@@ -262,8 +262,8 @@ class MetaxConsumer():
             # filled with local dev queues. Cf. http://www.rabbitmq.com/ttl.html#queue-ttl
 
             import json
-            if os.path.isfile('/srv/etsin/rabbitmq_queues.json'):
-                with open('/srv/etsin/rabbitmq_queues.json') as json_data:
+            if os.path.isfile('/home/etsin-user/rabbitmq_queues.json'):
+                with open('/home/etsin-user/rabbitmq_queues.json') as json_data:
                     queues = json.load(json_data)
                     self.create_queue = queues.get('create', None)
                     self.update_queue = queues.get('update', None)
@@ -280,7 +280,7 @@ class MetaxConsumer():
                           'update': self.update_queue,
                           'delete': self.delete_queue}
 
-                with open('/srv/etsin/rabbitmq_queues.json', 'w') as outfile:
+                with open('/home/etsin-user/rabbitmq_queues.json', 'w') as outfile:
                     json.dump(queues, outfile)
 
     def _create_and_bind_queues(self, is_local_dev):
