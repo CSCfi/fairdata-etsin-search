@@ -1,3 +1,10 @@
+# This file is part of the Etsin service
+#
+# Copyright 2017-2018 Ministry of Education and Culture, Finland
+#
+# :author: CSC - IT Center for Science Ltd., Espoo Finland <servicedesk@csc.fi>
+# :license: MIT
+
 """
 Consumer connects to Metax RabbitMQ and listens for changes in Metax.
 When metadata is created, updated or deleted, consumer calls appropriate
