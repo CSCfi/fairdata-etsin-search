@@ -94,7 +94,7 @@ def _create_es_client():
     return False
 
 
-def convert_identifiers_to_es_data_models(metax_api, identifiers_to_convert, identifiers_to_delete):
+def convert_identifiers_to_es_data_models(metax_api, identifiers_to_convert, identifiers_to_delete, metax_crs_dict=None):
     """
     Takes in Metax catalog record identifiers, fetches their json from Metax, converts them to an ESDatasetModel
     object and adds to es_data_models list. Also checks if the dataset has been deprecated in which case also add it to
@@ -111,7 +111,11 @@ def convert_identifiers_to_es_data_models(metax_api, identifiers_to_convert, ide
              "If catalog record is deprecated, try to delete it from index.".format(len(identifiers_to_convert)))
 
     for identifier in identifiers_to_convert:
-        metax_cr_json = metax_api.get_catalog_record(identifier)
+        if metax_crs_dict:
+            metax_cr_json = metax_crs_dict.get(identifier, None)
+        else:
+            metax_cr_json = metax_api.get_catalog_record(identifier)
+
         if metax_cr_json:
             if catalog_record_is_deprecated(metax_cr_json):
                 identifiers_to_delete.append(identifier)
@@ -154,15 +158,24 @@ class ReindexScheduledTask:
             if not stop_rabbitmq_consumer():
                 log.error("Unable to stop RabbitMQ consumer service, continuing with reindexing")
 
-        # 2. Get all unique preferred identifiers from Metax
-        # Fetch only the latest dataset versions
-        metax_identifiers = self.metax_api.get_latest_catalog_record_identifiers()
-        ids_to_create = list(metax_identifiers) if metax_identifiers else []
+        # 2a. Get all latest catalog records from Metax
+        metax_crs = self.metax_api.get_latest_catalog_records()
 
-        # 3. Get all document identifiers (equivalent to Metax preferred identifiers) from search index
+        # 2b. Change catalog record array to dictionary with catalog record identifier as the key
+        metax_crs_dict = {}
+        for cr_json in metax_crs:
+            metax_crs_dict[cr_json['identifier']] = cr_json
+
+        # 3. Create a list containing all catalog record identifiers
+        # metax_identifiers = self.metax_api.get_latest_catalog_record_identifiers()
+        # ids_to_create = list(metax_identifiers) if metax_identifiers else []
+        metax_identifiers = list(metax_crs_dict.keys())
+        ids_to_create = list(metax_identifiers) if metax_crs_dict else []
+
+        # 4. Get all document identifiers (equivalent to Metax catalog record identifiers) from search index
         es_identifiers = self.es_client.get_all_doc_ids_from_index() or []
 
-        # 4.
+        # 5.
         # If metax_id in Metax and in es index -> index
         # If metax_id in Metax but not in es index -> index
         # If metax_id not in Metax but in es index -> delete
@@ -178,15 +191,16 @@ class ReindexScheduledTask:
         log.info("Identifiers to update: \n{0}".format(ids_to_index))
         ids_to_index.extend(ids_to_create)
 
-        # 5. Convert catalog records to es documents and for those records add their previous version ids to delete list
-        es_data_models = convert_identifiers_to_es_data_models(self.metax_api, ids_to_index, ids_to_delete)
+        # 6. Convert catalog records to es documents and for those records add their previous version ids to delete list
+        es_data_models = convert_identifiers_to_es_data_models(self.metax_api, ids_to_index, ids_to_delete,
+                                                               metax_crs_dict)
 
-        # 6. Run bulk requests to search index
+        # 7. Run bulk requests to search index
         # A. Create or update documents that are either new or already exist in search index
         # B. Delete documents from index no longer in metax
         self.es_client.do_bulk_request_for_datasets(es_data_models, ids_to_delete)
 
-        # 7. Start RabbitMQ consumer
+        # 8. Start RabbitMQ consumer
         if not rabbitmq_consumer_is_running():
             if not start_rabbitmq_consumer():
                 log.error("Unable to start RabbitMQ consumer service")

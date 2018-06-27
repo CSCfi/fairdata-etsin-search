@@ -22,6 +22,7 @@ class MetaxAPIService:
     def __init__(self, metax_api_config):
         self.METAX_CATALOG_RECORDS_BASE_URL = 'https://{0}/rest/datasets'.format(metax_api_config['HOST'])
         self.METAX_GET_PIDS_URL = self.METAX_CATALOG_RECORDS_BASE_URL + '/identifiers?latest'
+        self.METAX_GET_ALL_LATEST_DATASETS = self.METAX_CATALOG_RECORDS_BASE_URL + '?no_pagination=true&latest'
         self.METAX_GET_CATALOG_RECORD_URL = self.METAX_CATALOG_RECORDS_BASE_URL + '/{0}'
 
         self.user = metax_api_config['USER']
@@ -86,6 +87,34 @@ class MetaxAPIService:
 
         def get():
             return requests.get(self.METAX_GET_PIDS_URL,
+                                headers={'Content-Type': 'application/json'},
+                                auth=(self.user, self.pw),
+                                timeout=TIMEOUT)
+
+        response = self._do_request(get)
+        if not response:
+            log.error("Unable to connect to Metax API")
+            return None
+
+        try:
+            response.raise_for_status()
+        except HTTPError as e:
+            log.error('Failed to get identifiers from Metax: \nerror={error}, \njson={json}'.format(
+                error=repr(e), json=self.json_or_empty(response)))
+            log.error('Response text: %s', response.text)
+            return None
+
+        return json.loads(response.text)
+
+    def get_latest_catalog_records(self):
+        """
+        Get a list of latest catalog records in terms of dataset versioning from MetaX API.
+
+        :return: List of latest catalog records in Metax
+        """
+
+        def get():
+            return requests.get(self.METAX_GET_ALL_LATEST_DATASETS,
                                 headers={'Content-Type': 'application/json'},
                                 auth=(self.user, self.pw),
                                 timeout=TIMEOUT)
