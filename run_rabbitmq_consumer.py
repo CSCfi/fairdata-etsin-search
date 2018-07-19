@@ -34,7 +34,7 @@ def signal_term_handler(signal, frame):
     consumer.before_stop()
     reindexing_ongoing = not consumer.event_processing_completed
     i = 0
-    while reindexing_ongoing and i < 10:
+    while reindexing_ongoing and i < 5:
         log.info("Waiting for reindexing operation to finish before exiting RabbitMQ consumer..")
         time.sleep(1)
         reindexing_ongoing = not consumer.event_processing_completed
@@ -46,9 +46,10 @@ def signal_term_handler(signal, frame):
 
 # If consumer initialized ok (i.e. finished the __init__ without returning), start consuming
 if consumer.init_ok:
-    log.info("RabbitMQ consumer initialized")
     signal.signal(signal.SIGTERM, signal_term_handler)
     consumer.run()
+    log.error("Unable to consume, exiting service")
+    sys.exit(1)
 else:
     log.error("Consumer not initialized, exiting service")
     sys.exit(1)
