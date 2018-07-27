@@ -26,13 +26,24 @@ es_config = get_elasticsearch_config()
 
 
 def reindex_all_without_emptying_index():
-    task = ReindexScheduledTask(False)
-    task.run_task()
+    task = ReindexScheduledTask()
+    task.run_task(False)
+    _start_rabbitmq_service_if_not_running()
 
 
 def reindex_all_by_emptying_index():
-    task = ReindexScheduledTask(True)
-    task.run_task()
+    task = ReindexScheduledTask()
+    task.run_task(True)
+    _start_rabbitmq_service_if_not_running()
+
+
+def _start_rabbitmq_service_if_not_running():
+    if not rabbitmq_consumer_is_running():
+        log.info("Starting RabbitMQ consumer..")
+        if start_rabbitmq_consumer():
+            log.info("Started")
+        else:
+            log.error("Unable to start RabbitMQ consumer service")
 
 
 def create_search_index_and_doc_type_mapping_if_not_exist():
@@ -139,27 +150,32 @@ def convert_identifiers_to_es_data_models(metax_api, identifiers_to_convert, ide
 
 class ReindexScheduledTask:
 
-    def __init__(self, delete_index_first):
+    def __init__(self):
         if metax_api_config:
             self.metax_api = MetaxAPIService(metax_api_config)
             self.es_client = _create_es_client()
-            if self.es_client and delete_index_first:
-                self.es_client.delete_index()
 
-    def run_task(self):
-        if not create_search_index_and_doc_type_mapping_if_not_exist():
+    def run_task(self, delete_index_first):
+        # 1a. Check elasticsearch client ok
+        if not self.es_client:
+            log.error("Unable to create Elasticsearch client. Aborting reindexing operation")
             return
 
-        ids_to_delete = []
-        ids_to_index = []
-
-        # 1. Stop RabbitMQ consumer
+        # 1b. Stop RabbitMQ consumer
         if rabbitmq_consumer_is_running():
-            if not stop_rabbitmq_consumer():
-                log.error("Unable to stop RabbitMQ consumer service, continuing with reindexing")
+            log.info("Trying to stop RabbitMQ consumer service for the length of reindexing operation..")
+            if stop_rabbitmq_consumer():
+                log.info("RabbitMQ consumer service stopped")
+            else:
+                log.error("Unable to stop RabbitMQ consumer service, but continuing with reindexing operation..")
 
         # 2a. Get all latest catalog records from Metax
+        log.info("Trying to bulk fetch the latest catalog records from Metax..")
         metax_crs = self.metax_api.get_latest_catalog_records()
+        if not metax_crs:
+            log.error("Unable to fetch catalog records from Metax, aborting reindexing operation")
+            return
+        log.info("Done")
 
         # 2b. Change catalog record array to dictionary with catalog record identifier as the key
         metax_crs_dict = {}
@@ -172,13 +188,25 @@ class ReindexScheduledTask:
         metax_identifiers = list(metax_crs_dict.keys())
         ids_to_create = list(metax_identifiers) if metax_crs_dict else []
 
-        # 4. Get all document identifiers (equivalent to Metax catalog record identifiers) from search index
+        # 4. If necessary, delete search index. Check index and mapping existence and create if necessary.
+        if delete_index_first:
+            if not self.es_client.delete_index():
+                log.error("Unable to delete search index. Aborting reindexing operation")
+                return
+
+        if not create_search_index_and_doc_type_mapping_if_not_exist():
+            log.error("Unable to create search index and/or mapping. Aborting reindexing operation")
+            return
+
+        # 5. Get all document identifiers (equivalent to Metax catalog record identifiers) from search index
         es_identifiers = self.es_client.get_all_doc_ids_from_index() or []
 
-        # 5.
+        # 6.
         # If metax_id in Metax and in es index -> index
         # If metax_id in Metax but not in es index -> index
         # If metax_id not in Metax but in es index -> delete
+        ids_to_delete = []
+        ids_to_index = []
         for es_id in es_identifiers:
             if es_id in metax_identifiers:
                 ids_to_index.append(es_id)
@@ -186,21 +214,16 @@ class ReindexScheduledTask:
             else:
                 ids_to_delete.append(es_id)
 
-        log.info("Identifiers to delete: \n{0}".format(ids_to_delete))
-        log.info("Identifiers to create: \n{0}".format(ids_to_create))
-        log.info("Identifiers to update: \n{0}".format(ids_to_index))
+        log.info("Amount of identifiers to delete: {0}".format(len(ids_to_delete)))
+        log.info("Amount of identifiers to create: {0}".format(len(ids_to_create)))
+        log.info("Amount of identifiers to update: {0}".format(len(ids_to_index)))
         ids_to_index.extend(ids_to_create)
 
-        # 6. Convert catalog records to es documents and for those records add their previous version ids to delete list
+        # 7. Convert catalog records to es documents and for those records add their previous version ids to delete list
         es_data_models = convert_identifiers_to_es_data_models(self.metax_api, ids_to_index, ids_to_delete,
                                                                metax_crs_dict)
 
-        # 7. Run bulk requests to search index
-        # A. Create or update documents that are either new or already exist in search index
-        # B. Delete documents from index no longer in metax
+        # 8. Run bulk requests to search index
+        # a. Create or update documents that are either new or already exist in search index
+        # b. Delete documents from index no longer in metax
         self.es_client.do_bulk_request_for_datasets(es_data_models, ids_to_delete)
-
-        # 8. Start RabbitMQ consumer
-        if not rabbitmq_consumer_is_running():
-            if not start_rabbitmq_consumer():
-                log.error("Unable to start RabbitMQ consumer service")

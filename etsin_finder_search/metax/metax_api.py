@@ -13,7 +13,7 @@ from time import sleep
 from etsin_finder_search.reindexing_log import get_logger
 
 log = get_logger(__name__)
-TIMEOUT = 30
+TIMEOUT = 1200
 NUM_RETRIES = 3
 
 
