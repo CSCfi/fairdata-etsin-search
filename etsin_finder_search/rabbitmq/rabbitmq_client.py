@@ -20,10 +20,10 @@ Press CTRL+C to exit script.
 """
 
 import json
+import os
 import pika
 import random
 from time import sleep
-import os
 
 from elasticsearch.exceptions import RequestError
 
@@ -65,18 +65,11 @@ class MetaxConsumer():
         self.exchange = self.rabbit_settings['EXCHANGE']
         self._set_queue_names(self.is_local_dev)
 
-        # Set up ElasticSearch client. In case connection cannot be established, try every 2 seconds for 30 seconds
-        es_conn_ok = False
-        i = 0
-        while not es_conn_ok and i < 15:
-            self.es_client = ElasticSearchService(es_settings)
-            if self.es_client.client_ok():
-                es_conn_ok = True
-            else:
-                sleep(2)
-                i += 1
+        self.es_client = ElasticSearchService.get_elasticsearch_service(es_settings)
+        if self.es_client is None:
+            return
 
-        if not es_conn_ok or not self._ensure_index_existence():
+        if not self.es_client.ensure_index_existence():
             return
 
         self.init_ok = True
@@ -265,7 +258,7 @@ class MetaxConsumer():
         self.event_processing_completed = False
         self.log.debug("Received {0} message from Metax RabbitMQ".format(callback_type))
 
-        if not self._ensure_index_existence():
+        if not self.es_client.ensure_index_existence():
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
             self.event_processing_completed = True
             return False
@@ -342,12 +335,3 @@ class MetaxConsumer():
         self.channel.queue_bind(exchange=self.exchange, queue=self.create_queue, routing_key='create')
         self.channel.queue_bind(exchange=self.exchange, queue=self.update_queue, routing_key='update')
         self.channel.queue_bind(exchange=self.exchange, queue=self.delete_queue, routing_key='delete')
-
-    def _ensure_index_existence(self):
-        if not self.es_client.index_exists():
-            if not self.es_client.create_index_and_mapping():
-                # If there's no ES index, don't create consumer
-                self.log.error("Unable to create Elasticsearch index and type mapping")
-                return False
-
-        return True

@@ -47,61 +47,47 @@ def _start_rabbitmq_service_if_not_running():
 
 
 def create_search_index_and_doc_type_mapping_if_not_exist():
-    es_client = _create_es_client()
-
-    if not es_client:
+    es_client = ElasticSearchService.get_elasticsearch_service(es_config)
+    if es_client is None:
         return False
 
-    if not es_client.index_exists():
-        if not es_client.create_index_and_mapping():
-            log.error("Unable to create index or document type mapping")
-            return False
+    if not es_client.ensure_index_existence():
+        return False
 
     return True
 
 
 def delete_search_index():
-    es_client = _create_es_client()
-    if es_client:
-        es_client.delete_index()
+    es_client = ElasticSearchService.get_elasticsearch_service(es_config)
+    if es_client is None:
+        return
+
+    es_client.delete_index()
 
 
 def load_test_data_into_es(dataset_amt):
     log.info("Loading test data into Elasticsearch..")
 
-    es_client = ElasticSearchService(es_config)
-    metax_api = MetaxAPIService(metax_api_config)
+    es_client = ElasticSearchService.get_elasticsearch_service(es_config)
+    metax_api = MetaxAPIService.get_metax_api_service(metax_api_config)
 
-    if not es_client or not metax_api:
-        log.error("Loading test data into Elasticsearch failed")
+    if es_client is None or metax_api is None:
+        log.error("Unable to initialize Elastisearch client or Metax API client")
+        return False
 
-    if not es_client.index_exists():
-        log.info("Index does not exist, trying to create")
-        if not es_client.create_index_and_mapping():
-            log.error("Unable to create index")
-            return False
+    if not es_client.ensure_index_existence():
+        return False
 
-    metax_identifiers = metax_api.get_latest_catalog_record_identifiers()
-    if metax_identifiers:
-        identifiers_to_load = metax_identifiers[0:min(len(metax_identifiers), dataset_amt)]
-
+    cr_identifiers = metax_api.get_latest_catalog_record_identifiers()
+    if cr_identifiers:
+        identifiers_to_load = cr_identifiers[0:min(len(cr_identifiers), dataset_amt)]
         identifiers_to_delete = []
         es_data_models = convert_identifiers_to_es_data_models(metax_api, identifiers_to_load, identifiers_to_delete)
         es_client.do_bulk_request_for_datasets(es_data_models, identifiers_to_delete)
         log.info("Test data loaded into Elasticsearch")
         return True
 
-    return False
-
-
-def _create_es_client():
-    if es_config:
-        es_client = ElasticSearchService(es_config)
-        if not es_client.client_ok():
-            log.error("Unable to create Elasticsearch client instance")
-            return False
-        return es_client
-
+    log.error("No catalog record identifiers to load")
     return False
 
 
@@ -152,12 +138,22 @@ class ReindexScheduledTask:
 
     def __init__(self):
         if metax_api_config:
-            self.metax_api = MetaxAPIService(metax_api_config)
-            self.es_client = _create_es_client()
+            self.metax_api = MetaxAPIService.get_metax_api_service(metax_api_config)
+
+        if es_config:
+            self.es_client = ElasticSearchService.get_elasticsearch_service(es_config)
+
+    @classmethod
+    def get_reindex_scheduled_task(cls):
+        instance = cls()
+        if instance.metax_api is None or instance.es_client is None:
+            log.error("Unable to initialize Elasticsearch client or Metax API client")
+            return None
+        return instance
 
     def run_task(self, delete_index_first):
         # 1a. Check elasticsearch client ok
-        if not self.es_client:
+        if self.es_client is None:
             log.error("Unable to create Elasticsearch client. Aborting reindexing operation")
             return
 

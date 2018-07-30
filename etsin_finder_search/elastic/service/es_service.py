@@ -7,6 +7,7 @@
 
 import json
 from os import path
+from time import sleep
 
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import scan
@@ -25,38 +26,39 @@ class ElasticSearchService:
     INDEX_CONFIG_FILENAME = 'metax_index_definition.json'
     INDEX_DOC_TYPE_NAME = 'dataset'
     INDEX_DOC_TYPE_MAPPING_FILENAME = 'dataset_type_mapping.json'
-    BULK_OPERATION_ROW_SIZE = 200
+    BULK_OPERATION_ROW_SIZE = 300
 
-    def __init__(self, es_config):
-        self.es = Elasticsearch(es_config.get('HOSTS'), **self._get_connection_parameters(es_config))
+    def __init__(self, es_settings):
+        self.es = Elasticsearch(es_settings.get('HOSTS'), timeout=180, **self._get_connection_parameters(es_settings))
 
-    def client_ok(self):
-        try:
-            is_ok = self.es and self.es.ping()
-        except Exception:
-            is_ok = False
+    @classmethod
+    def get_elasticsearch_service(cls, es_settings):
+        if 'HOSTS' not in es_settings:
+            log.error("HOSTS missing from es settings")
+            return None
 
-        if not is_ok:
-            log.error("Unable to connect to Elasticsearch instance")
+        # Set up ElasticSearch client. In case connection cannot be established, try every 2 seconds 30 times
+        log.info("Trying to establish connection with Elasticsearch instance..")
+        i = 0
+        while i < 30:
+            es_client = cls(es_settings)
+            if es_client._client_ok():
+                log.info("Connection established with Elasticsearch instance")
+                return es_client
+            else:
+                log.error("Connection not established with Elasticsearch instance, trying again..")
+                sleep(2)
+                i += 1
 
-        return is_ok
+        log.error("Unable to establish connection with Elasticsearch instance, stopped trying")
+        return None
 
-    def index_exists(self):
-        return self.es.indices.exists(index=self.INDEX_NAME)
-
-    def doc_exists_in_index(self, doc_id):
-        return self.es.exists(self.INDEX_NAME, self.INDEX_DOC_TYPE_NAME, doc_id)
-
-    def create_index_and_mapping(self):
-        log.info("Trying to create index " + self.INDEX_NAME)
-        is_ok = self._operation_ok(self.es.indices.create(index=self.INDEX_NAME,
-                                                         body=self._get_json_file_as_str(self.INDEX_CONFIG_FILENAME)))
-        if is_ok:
-            log.info("Trying to create mapping type " + self.INDEX_DOC_TYPE_NAME + " for index " + self.INDEX_NAME)
-            return self._operation_ok(
-                self.es.indices.put_mapping(index=self.INDEX_NAME, doc_type=self.INDEX_DOC_TYPE_NAME,
-                                            body=self._get_json_file_as_str(self.INDEX_DOC_TYPE_MAPPING_FILENAME)))
-        return False
+    def ensure_index_existence(self):
+        if not self._index_exists():
+            if not self._create_index_and_mapping():
+                log.error("Unable to create Elasticsearch index and type mapping")
+                return False
+        return True
 
     def delete_index(self):
         log.info("Trying to delete index " + self.INDEX_NAME)
@@ -77,14 +79,14 @@ class ElasticSearchService:
             "Trying to delete data with doc id {0} having type ".format(doc_id), self.INDEX_DOC_TYPE_NAME,
             self.INDEX_NAME))
 
-        if self.doc_exists_in_index(doc_id):
+        if self._doc_exists_in_index(doc_id):
             return self._operation_ok(self.es.delete(index=self.INDEX_NAME, doc_type=self.INDEX_DOC_TYPE_NAME, id=doc_id))
         else:
             log.info("The document does not exist in the index, ignoring")
             return True
 
     def get_all_doc_ids_from_index(self):
-        if not self.index_exists():
+        if not self._index_exists():
             log.error("No index exists")
             return None
 
@@ -142,6 +144,31 @@ class ElasticSearchService:
     def _create_bulk_delete_row(self, doc_id):
         return "{\"delete\":{\"_index\": \"" + self.INDEX_NAME + "\", \"_type\": \"" + self.INDEX_DOC_TYPE_NAME + \
                "\", \"_id\":\"" + doc_id + "\"}}"
+
+    def _create_index_and_mapping(self):
+        log.info("Trying to create index " + self.INDEX_NAME)
+        is_ok = self._operation_ok(self.es.indices.create(index=self.INDEX_NAME,
+                                                         body=self._get_json_file_as_str(self.INDEX_CONFIG_FILENAME)))
+        if is_ok:
+            log.info("Trying to create mapping type " + self.INDEX_DOC_TYPE_NAME + " for index " + self.INDEX_NAME)
+            return self._operation_ok(
+                self.es.indices.put_mapping(index=self.INDEX_NAME, doc_type=self.INDEX_DOC_TYPE_NAME,
+                                            body=self._get_json_file_as_str(self.INDEX_DOC_TYPE_MAPPING_FILENAME)))
+        return False
+
+    def _client_ok(self):
+        try:
+            is_ok = self.es and self.es.ping()
+        except Exception:
+            is_ok = False
+
+        return is_ok
+
+    def _index_exists(self):
+        return self.es.indices.exists(index=self.INDEX_NAME)
+
+    def _doc_exists_in_index(self, doc_id):
+        return self.es.exists(self.INDEX_NAME, self.INDEX_DOC_TYPE_NAME, doc_id)
 
     @staticmethod
     def _operation_ok(op_response):
