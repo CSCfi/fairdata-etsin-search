@@ -186,9 +186,12 @@
         "Aalto yliopisto",
         "Organisaatio",
         "Aalto yliopisto",
+        "School services, ARTS",
         "Aalto yliopisto",
-        "Helsingin yliopisto"
-    ],
+        "Organisaatio",
+        "Aalto yliopisto",
+        "Aalto yliopisto",
+        "Helsingin yliopisto"],
     "other_identifier": [
         {
             "notation": "doi:10.12345",
