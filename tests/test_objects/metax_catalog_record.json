@@ -12,7 +12,7 @@
         }
     ],
     "date_created": "2017-05-23T13:07:22+03:00",
-    "date_modified": "2018-06-05T09:01:22+03:00",
+    "date_modified": "2018-08-01T13:00:20+03:00",
     "deprecated": false,
     "editor": {
         "creator_id": "05593961536b76fa825281ccaedd4d4f",
@@ -34,14 +34,7 @@
                     "en": "A statement or formal explanation of the meaning of a concept."
                 },
                 "identifier": "http://purl.org/att/es/reference_data/access_type/access_type_open_access",
-                "in_scheme": [
-                    {
-                        "identifier": "http://uri.of.accessrights.concept/scheme",
-                        "pref_label": {
-                            "en": "The preferred lexical label for a resource"
-                        }
-                    }
-                ],
+                "in_scheme": "https://metax.fairdata.fi/es/reference_data/access_type/_search?pretty",
                 "pref_label": {
                     "en": "Open",
                     "fi": "Avoin",
@@ -76,8 +69,11 @@
             ],
             "restriction_grounds": {
                 "identifier": "http://purl.org/att/es/reference_data/restriction_grounds/restriction_grounds_1",
+                "in_scheme": "https://metax.fairdata.fi/es/reference_data/restriction_grounds/_search?pretty",
                 "pref_label": {
+                    "en": "Open, no known restrictions",
                     "fi": "Avoin, ei tiedossa olevia rajoituksia",
+                    "sv": "\u00d6ppen tillg\u00e5ng, inga k\u00e4nda orsaker till begr\u00e4nsningar",
                     "und": "Avoin, ei tiedossa olevia rajoituksia"
                 }
             }
@@ -88,6 +84,7 @@
                 "@type": "Person",
                 "contributor_role": {
                     "identifier": "http://purl.org/att/es/reference_data/contributor_role/contributor_role_funding_acquisition",
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/contributor_role/_search?pretty",
                     "pref_label": {
                         "en": "Funding acquisition",
                         "und": "Funding acquisition"
@@ -100,6 +97,9 @@
                     "email": "info@csc.fi",
                     "identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
                     "name": {
+                        "en": "University of Helsinki",
+                        "fi": "Helsingin yliopisto",
+                        "sv": "Helsingfors universitet",
                         "und": "Helsingin yliopisto"
                     },
                     "telephone": [
@@ -115,6 +115,7 @@
                 "@type": "Person",
                 "contributor_role": {
                     "identifier": "http://purl.org/att/es/reference_data/contributor_role/contributor_role_project_administration",
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/contributor_role/_search?pretty",
                     "pref_label": {
                         "en": "Project administration",
                         "und": "Project administration"
@@ -145,6 +146,7 @@
                 "@type": "Person",
                 "contributor_role": {
                     "identifier": "http://purl.org/att/es/reference_data/contributor_role/contributor_role_data_curation",
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/contributor_role/_search?pretty",
                     "pref_label": {
                         "en": "Data curation",
                         "und": "Data curation"
@@ -154,6 +156,9 @@
                     "@type": "Organization",
                     "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
                     "name": {
+                        "en": "Aalto University",
+                        "fi": "Aalto yliopisto",
+                        "sv": "Aalto universitetet",
                         "und": "Aalto yliopisto"
                     }
                 },
@@ -168,6 +173,9 @@
                     "@type": "Organization",
                     "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
                     "name": {
+                        "en": "Aalto University",
+                        "fi": "Aalto yliopisto",
+                        "sv": "Aalto universitetet",
                         "und": "Aalto yliopisto"
                     }
                 },
@@ -187,6 +195,7 @@
                 "title": "Phase 1 of science data C",
                 "use_category": {
                     "identifier": "http://purl.org/att/es/reference_data/use_category/use_category_outcome",
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/use_category/_search?pretty",
                     "pref_label": {
                         "en": "Outcome material",
                         "fi": "Tulosaineisto",
@@ -200,6 +209,7 @@
                 "title": "Phase 2 of science data C",
                 "use_category": {
                     "identifier": "http://purl.org/att/es/reference_data/use_category/use_category_outcome",
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/use_category/_search?pretty",
                     "pref_label": {
                         "en": "Outcome material",
                         "fi": "Tulosaineisto",
@@ -213,6 +223,7 @@
                 "title": "Phase 1 01/2018 of Science data A",
                 "use_category": {
                     "identifier": "http://purl.org/att/es/reference_data/use_category/use_category_outcome",
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/use_category/_search?pretty",
                     "pref_label": {
                         "en": "Outcome material",
                         "fi": "Tulosaineisto",
@@ -226,6 +237,7 @@
                 "title": "Science data B",
                 "use_category": {
                     "identifier": "http://purl.org/att/es/reference_data/use_category/use_category_source",
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/use_category/_search?pretty",
                     "pref_label": {
                         "en": "Source material",
                         "fi": "L\u00e4hdeaineisto",
@@ -239,6 +251,7 @@
                 "title": "Other stuff",
                 "use_category": {
                     "identifier": "http://purl.org/att/es/reference_data/use_category/use_category_method",
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/use_category/_search?pretty",
                     "pref_label": {
                         "en": "Method",
                         "fi": "Metodi",
@@ -253,14 +266,7 @@
                     "en": "A statement or formal explanation of the meaning of a concept."
                 },
                 "identifier": "http://www.yso.fi/onto/okm-tieteenala/ta414",
-                "in_scheme": [
-                    {
-                        "identifier": "http://uri.of.that.concept/scheme",
-                        "pref_label": {
-                            "en": "The preferred lexical label for a resource"
-                        }
-                    }
-                ],
+                "in_scheme": "http://www.yso.fi/onto/okm-tieteenala/conceptscheme",
                 "pref_label": {
                     "en": "Agricultural biotechnology",
                     "fi": "Maatalouden bioteknologia",
@@ -277,14 +283,7 @@
                         "en": "A statement or formal explanation of the meaning of a concept."
                     },
                     "identifier": "http://purl.org/att/es/reference_data/file_type/file_type_video",
-                    "in_scheme": [
-                        {
-                            "identifier": "http://uri.of.filetype.concept/scheme",
-                            "pref_label": {
-                                "en": "The preferred lexical label for a resource"
-                            }
-                        }
-                    ],
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/file_type/_search?pretty",
                     "pref_label": {
                         "en": "Video",
                         "fi": "Video",
@@ -295,6 +294,7 @@
                 "title": "file title 6",
                 "use_category": {
                     "identifier": "http://purl.org/att/es/reference_data/use_category/use_category_configuration",
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/use_category/_search?pretty",
                     "pref_label": {
                         "en": "Configuration files",
                         "fi": "Konfiguraatiotiedosto",
@@ -309,14 +309,7 @@
                         "en": "A statement or formal explanation of the meaning of a concept."
                     },
                     "identifier": "http://purl.org/att/es/reference_data/file_type/file_type_software",
-                    "in_scheme": [
-                        {
-                            "identifier": "http://uri.of.filetype.concept/scheme",
-                            "pref_label": {
-                                "en": "The preferred lexical label for a resource"
-                            }
-                        }
-                    ],
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/file_type/_search?pretty",
                     "pref_label": {
                         "en": "Software",
                         "fi": "Sovellus",
@@ -327,6 +320,7 @@
                 "title": "file title 10",
                 "use_category": {
                     "identifier": "http://purl.org/att/es/reference_data/use_category/use_category_publication",
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/use_category/_search?pretty",
                     "pref_label": {
                         "en": "Publication",
                         "fi": "Julkaisu",
@@ -338,6 +332,7 @@
         "infrastructure": [
             {
                 "identifier": "http://urn.fi/urn:nbn:fi:research-infras-2016072530",
+                "in_scheme": "https://avaa.tdata.fi/api/jsonws/tupa-portlet.Infrastructures/get-all-infrastructures",
                 "pref_label": {
                     "en": "Accelerator laboratory of the university of Jyv\u00e4skyl\u00e4",
                     "fi": "Jyv\u00e4skyl\u00e4n yliopiston fysiikan laitoksen Kiihdytinlaboratorio",
@@ -349,6 +344,7 @@
             {
                 "funder_type": {
                     "identifier": "http://purl.org/att/es/reference_data/funder_type/funder_type_tekes",
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/funder_type/_search?pretty",
                     "pref_label": {
                         "en": "Tekes",
                         "fi": "Tekes",
@@ -380,6 +376,9 @@
                         "email": "info@csc.fi",
                         "identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
                         "name": {
+                            "en": "University of Helsinki",
+                            "fi": "Helsingin yliopisto",
+                            "sv": "Helsingfors universitet",
                             "und": "Helsingin yliopisto"
                         },
                         "telephone": [
@@ -417,6 +416,9 @@
                     "email": "info@csc.fi",
                     "identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
                     "name": {
+                        "en": "University of Helsinki",
+                        "fi": "Helsingin yliopisto",
+                        "sv": "Helsingfors universitet",
                         "und": "Helsingin yliopisto"
                     },
                     "telephone": [
@@ -428,14 +430,7 @@
                         "en": "A statement or formal explanation of the meaning of a concept."
                     },
                     "identifier": "http://purl.org/att/es/reference_data/identifier_type/identifier_type_doi",
-                    "in_scheme": [
-                        {
-                            "identifier": "http://uri.of.some.concept/scheme",
-                            "pref_label": {
-                                "en": "The preferred lexical label for a resource"
-                            }
-                        }
-                    ],
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/identifier_type/_search?pretty",
                     "pref_label": {
                         "en": "Digital Object Identifier (DOI)",
                         "und": "Digital Object Identifier (DOI)"
@@ -450,6 +445,9 @@
                     "email": "info@csc.fi",
                     "identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
                     "name": {
+                        "en": "University of Helsinki",
+                        "fi": "Helsingin yliopisto",
+                        "sv": "Helsingfors universitet",
                         "und": "Helsingin yliopisto"
                     },
                     "telephone": [
@@ -461,14 +459,7 @@
                         "en": "A statement or formal explanation of the meaning of a concept."
                     },
                     "identifier": "http://purl.org/att/es/reference_data/identifier_type/identifier_type_urn",
-                    "in_scheme": [
-                        {
-                            "identifier": "http://uri.of.other.concept/scheme",
-                            "pref_label": {
-                                "en": "The preferred lexical label for a resource"
-                            }
-                        }
-                    ],
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/identifier_type/_search?pretty",
                     "pref_label": {
                         "en": "Uniform Resource Name (URN)",
                         "und": "Uniform Resource Name (URN)"
@@ -487,14 +478,7 @@
                         "en": "A statement or formal explanation of the meaning of a concept."
                     },
                     "identifier": "http://purl.org/att/es/reference_data/lifecycle_event/lifecycle_event_collected",
-                    "in_scheme": [
-                        {
-                            "identifier": "http://uri.of.provenance.concept/scheme",
-                            "pref_label": {
-                                "en": "The preferred lexical label for a resource"
-                            }
-                        }
-                    ],
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/lifecycle_event/_search?pretty",
                     "pref_label": {
                         "en": "Collected",
                         "fi": "Ker\u00e4tty",
@@ -506,10 +490,11 @@
                     "as_wkt": [
                         "POINT(23.80834 67.92415)"
                     ],
-                    "fullAddress": "The complete address written as a string, with or without formatting",
+                    "full_address": "The complete address written as a string, with or without formatting",
                     "geographic_name": "Geographic name",
                     "place_uri": {
                         "identifier": "http://www.yso.fi/onto/yso/p107966",
+                        "in_scheme": "http://www.yso.fi/onto/yso/places",
                         "pref_label": {
                             "en": "Olostunturi",
                             "fi": "Olostunturi",
@@ -539,14 +524,7 @@
                                 "en": "A statement or formal explanation of the meaning of a concept."
                             },
                             "identifier": "thisisnotenoughconcepts",
-                            "in_scheme": [
-                                {
-                                    "identifier": "http://uri.of.used.concept/scheme",
-                                    "pref_label": {
-                                        "en": "The preferred lexical label for a resource"
-                                    }
-                                }
-                            ],
+                            "in_scheme": "http://uri.of.filetype.concept/scheme",
                             "pref_label": {
                                 "en": "pref label for this type"
                             }
@@ -560,14 +538,7 @@
                                 "en": "A statement or formal explanation of the meaning of a concept."
                             },
                             "identifier": "variableconceptidentifier",
-                            "in_scheme": [
-                                {
-                                    "identifier": "http://uri.of.variable.concept/scheme",
-                                    "pref_label": {
-                                        "en": "The preferred lexical label for a resource"
-                                    }
-                                }
-                            ],
+                            "in_scheme": "http://uri.of.filetype.concept/scheme",
                             "pref_label": {
                                 "en": "pref label"
                             }
@@ -578,25 +549,13 @@
                         "pref_label": {
                             "en": "Preferred label"
                         },
-                        "representation": {
-                            "identifier": "identifierheretoo",
-                            "pref_label": {
-                                "en": "Preferred label"
-                            }
-                        },
+                        "representation": "http://uri.of.filetype.concept/scheme",
                         "universe": {
                             "definition": {
                                 "en": "A statement or formal explanation of the meaning of a concept."
                             },
                             "identifier": "universeconceptidentifier",
-                            "in_scheme": [
-                                {
-                                    "identifier": "http://uri.of.universe.concept/scheme",
-                                    "pref_label": {
-                                        "en": "The preferred lexical label for a resource"
-                                    }
-                                }
-                            ],
+                            "in_scheme": "http://uri.of.filetype.concept/scheme",
                             "pref_label": {
                                 "en": "pref label"
                             }
@@ -609,6 +568,9 @@
                         "email": "info@csc.fi",
                         "identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
                         "name": {
+                            "en": "University of Helsinki",
+                            "fi": "Helsingin yliopisto",
+                            "sv": "Helsingfors universitet",
                             "und": "Helsingin yliopisto"
                         },
                         "telephone": [
@@ -623,6 +585,7 @@
                 },
                 "preservation_event": {
                     "identifier": "http://purl.org/att/reference_data/preservation_event/preservation_event_upd",
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/preservation_event/_search?pretty",
                     "pref_label": {
                         "en": "Object update",
                         "fi": "Objektin p\u00e4ivitys",
@@ -634,10 +597,11 @@
                     "as_wkt": [
                         "POINT(26 60.5)"
                     ],
-                    "fullAddress": "The complete address written as a string, with or without formatting",
+                    "full_address": "The complete address written as a string, with or without formatting",
                     "geographic_name": "Geographic name",
                     "place_uri": {
                         "identifier": "http://www.yso.fi/onto/yso/p105917",
+                        "in_scheme": "http://www.yso.fi/onto/yso/places",
                         "pref_label": {
                             "en": "Southern Finland Province",
                             "fi": "Etel\u00e4-Suomi",
@@ -678,6 +642,9 @@
                 },
                 "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
                 "name": {
+                    "en": "Aalto University",
+                    "fi": "Aalto yliopisto",
+                    "sv": "Aalto universitetet",
                     "und": "Aalto yliopisto"
                 },
                 "telephone": [
@@ -685,6 +652,7 @@
                 ]
             },
             "name": {
+                "fi": "School services, ARTS",
                 "und": "School services, ARTS"
             },
             "telephone": [
@@ -704,6 +672,7 @@
                     },
                     "type": {
                         "identifier": "http://purl.org/att/es/reference_data/resource_type/resource_type_physical_object",
+                        "in_scheme": "https://metax.fairdata.fi/es/reference_data/resource_type/_search?pretty",
                         "pref_label": {
                             "en": "Physical object",
                             "fi": "Fyysinen objekti",
@@ -713,6 +682,7 @@
                 },
                 "relation_type": {
                     "identifier": "http://www.w3.org/ns/prov#wasDerivedFrom",
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/relation_type/_search?pretty",
                     "pref_label": {
                         "en": "Was derived from",
                         "fi": "Johdettu aineistosta",
@@ -732,6 +702,7 @@
                     },
                     "type": {
                         "identifier": "http://purl.org/att/es/reference_data/resource_type/resource_type_collection",
+                        "in_scheme": "https://metax.fairdata.fi/es/reference_data/resource_type/_search?pretty",
                         "pref_label": {
                             "en": "Collection",
                             "fi": "Kokoelma",
@@ -741,6 +712,7 @@
                 },
                 "relation_type": {
                     "identifier": "http://purl.org/spar/cito/cites",
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/relation_type/_search?pretty",
                     "pref_label": {
                         "en": "Cites",
                         "fi": "Viittaa",
@@ -760,6 +732,7 @@
                     },
                     "type": {
                         "identifier": "http://purl.org/att/es/reference_data/resource_type/resource_type_service",
+                        "in_scheme": "https://metax.fairdata.fi/es/reference_data/resource_type/_search?pretty",
                         "pref_label": {
                             "en": "Service",
                             "fi": "Palvelu",
@@ -769,6 +742,7 @@
                 },
                 "relation_type": {
                     "identifier": "http://purl.org/dc/terms/isPartOf",
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/relation_type/_search?pretty",
                     "pref_label": {
                         "en": "Is part of",
                         "fi": "Kuuluu aineistoon",
@@ -788,6 +762,7 @@
                     },
                     "type": {
                         "identifier": "http://purl.org/att/es/reference_data/resource_type/resource_type_ui",
+                        "in_scheme": "https://metax.fairdata.fi/es/reference_data/resource_type/_search?pretty",
                         "pref_label": {
                             "en": "User interface",
                             "fi": "K\u00e4ytt\u00f6liittym\u00e4",
@@ -797,6 +772,7 @@
                 },
                 "relation_type": {
                     "identifier": "http://www.w3.org/ns/adms#previous",
+                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/relation_type/_search?pretty",
                     "pref_label": {
                         "en": "Has previous version",
                         "fi": "Edellinen versio",
@@ -814,10 +790,16 @@
                     "@type": "Organization",
                     "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
                     "name": {
+                        "en": "Aalto University",
+                        "fi": "Aalto yliopisto",
+                        "sv": "Aalto universitetet",
                         "und": "Aalto yliopisto"
                     }
                 },
                 "name": {
+                    "en": "University of Helsinki",
+                    "fi": "Helsingin yliopisto",
+                    "sv": "Helsingfors universitet",
                     "und": "Helsingin yliopisto"
                 },
                 "telephone": [
@@ -835,6 +817,7 @@
                 "geographic_name": "Geographic name",
                 "place_uri": {
                     "identifier": "http://www.yso.fi/onto/yso/p107966",
+                    "in_scheme": "http://www.yso.fi/onto/yso/places",
                     "pref_label": {
                         "en": "Olostunturi",
                         "fi": "Olostunturi",
@@ -852,6 +835,7 @@
                 "geographic_name": "Geographic name 2",
                 "place_uri": {
                     "identifier": "http://www.yso.fi/onto/yso/p107966",
+                    "in_scheme": "http://www.yso.fi/onto/yso/places",
                     "pref_label": {
                         "en": "Olostunturi",
                         "fi": "Olostunturi",
@@ -872,20 +856,24 @@
                 "definition": {
                     "en": "A statement or formal explanation of the meaning of a concept."
                 },
-                "identifier": "http://www.yso.fi/onto/yso/p20518",
-                "in_scheme": [
-                    {
-                        "identifier": "http://uri.of.concept/scheme",
-                        "pref_label": {
-                            "en": "The preferred lexical label for a resource"
-                        }
-                    }
-                ],
+                "identifier": "http://www.yso.fi/onto/koko/p32202",
+                "in_scheme": "http://www.yso.fi/onto/koko/",
                 "pref_label": {
-                    "en": "Lapua movement",
-                    "fi": "lapuanliike",
-                    "sv": "Lappor\u00f6relsen",
-                    "und": "lapuanliike"
+                    "en": "organic production",
+                    "fi": "luonnonmukainen tuotanto",
+                    "sv": "ekologisk produktion",
+                    "und": "luonnonmukainen tuotanto"
+                }
+            },
+            {
+                "definition": {
+                    "en": "A statement or formal explanation of the meaning of a concept."
+                },
+                "identifier": "http://www.yso.fi/onto/koko/p76312",
+                "in_scheme": "http://www.yso.fi/onto/koko/",
+                "pref_label": {
+                    "fi": "naulamestarit",
+                    "und": "naulamestarit"
                 }
             }
         ],

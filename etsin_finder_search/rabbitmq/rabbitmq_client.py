@@ -1,3 +1,10 @@
+# This file is part of the Etsin service
+#
+# Copyright 2017-2018 Ministry of Education and Culture, Finland
+#
+# :author: CSC - IT Center for Science Ltd., Espoo Finland <servicedesk@csc.fi>
+# :license: MIT
+
 """
 Consumer connects to Metax RabbitMQ and listens for changes in Metax.
 When metadata is created, updated or deleted, consumer calls appropriate
@@ -13,9 +20,10 @@ Press CTRL+C to exit script.
 """
 
 import json
-import pika
-import time
 import os
+import pika
+import random
+from time import sleep
 
 from elasticsearch.exceptions import RequestError
 
@@ -44,53 +52,81 @@ class MetaxConsumer():
 
         # Get configs
         # If these raise errors, let consumer init fail
-        rabbit_settings = get_metax_rabbit_mq_config()
+        self.rabbit_settings = get_metax_rabbit_mq_config()
         es_settings = get_elasticsearch_config()
 
-        is_local_dev = True if os.path.isdir("/etsin/ansible") else False
+        self.is_local_dev = True if os.path.isdir("/etsin/ansible") else False
 
-        if not rabbit_settings or not es_settings:
+        if not self.rabbit_settings or not es_settings:
             self.log.error("Unable to load RabbitMQ configuration or Elasticsearch configuration")
             return
 
-        # Set up RabbitMQ connection, channel, exchange and queues
-        credentials = pika.PlainCredentials(
-            rabbit_settings['USER'], rabbit_settings['PASSWORD'])
+        self.credentials = pika.PlainCredentials(self.rabbit_settings['USER'], self.rabbit_settings['PASSWORD'])
+        self.exchange = self.rabbit_settings['EXCHANGE']
+        self._set_queue_names(self.is_local_dev)
 
-        # Try connecting every one minute 30 times
-        try:
-            connection = pika.BlockingConnection(
-                pika.ConnectionParameters(
-                    rabbit_settings['HOST'],
-                    rabbit_settings['PORT'],
-                    rabbit_settings['VHOST'],
-                    credentials,
-                    connection_attempts=30,
-                    retry_delay=60))
-        except Exception as e:
-            self.log.error(e)
-            self.log.error("Unable to open RabbitMQ connection")
+        self.es_client = ElasticSearchService.get_elasticsearch_service(es_settings)
+        if self.es_client is None:
             return
 
-        # Set up ElasticSearch client. In case connection cannot be established, try every 2 seconds for 30 seconds
-        es_conn_ok = False
-        i = 0
-        while not es_conn_ok and i < 15:
-            self.es_client = ElasticSearchService(es_settings)
-            if self.es_client.client_ok():
-                es_conn_ok = True
+        if not self.es_client.ensure_index_existence():
+            return
+
+        self.init_ok = True
+
+    def run(self):
+        if self._setup_connection() and self._setup_consumers():
+            self.log.info('RabbitMQ client starting to consume messages..')
+            print('[*] RabbitMQ is running. To exit press CTRL+C. See logs for indexing details.')
+            try:
+                self.channel.start_consuming()
+            except Exception as e:
+                self.log.error(e)
+                self.log.error('An error occurred while consuming')
+                return
+        else:
+            self.log.error('Unable to setup RabbitMQ connection or consumers')
+            return
+
+    def _setup_connection(self):
+        self.log.info("Setting up connection to RabbitMQ server..")
+        hosts = self.rabbit_settings['HOSTS']
+
+        # Connection retries are needed as long as there is no load balancer in front of rabbitmq-server VMs
+        sleep_time = 30
+        num_conn_retries = 3000
+
+        for x in range(0, num_conn_retries):
+            # Choose host randomly so that different hosts are tried out in case of connection problems
+            try:
+                self.connection = pika.BlockingConnection(pika.ConnectionParameters(
+                    random.choice(hosts),
+                    self.rabbit_settings['PORT'],
+                    self.rabbit_settings['VHOST'],
+                    self.credentials))
+
+                self.channel = self.connection.channel()
+                self._create_and_bind_queues(self.is_local_dev)
+                str_error = None
+            except Exception as e:
+                self.log.error(e)
+                self.log.error("Problem connecting to RabbitMQ server, trying to reconnect in {0} seconds...".
+                               format(str(sleep_time)))
+                str_error = e
+
+            if str_error:
+                sleep(sleep_time)  # wait before trying to connect again
             else:
-                time.sleep(2)
-                i += 1
+                break
 
-        if not es_conn_ok or not self._ensure_index_existence():
-            return
+        if not self.connection:
+            return False
 
-        self.channel = connection.channel()
-        self.exchange = rabbit_settings['EXCHANGE']
+        self.log.info("Connection OK")
+        return True
 
-        self._set_queue_names(is_local_dev)
-        self._create_and_bind_queues(is_local_dev)
+    def _setup_consumers(self):
+        self.log.info("Setting up consumers..")
 
         def callback_create(ch, method, properties, body):
             if not self._init_event_callback_ok("create", ch, method):
@@ -103,7 +139,6 @@ class MetaxConsumer():
             # If cr har previous dataset version on create message, try to delete the previous document from the index
             if catalog_record_has_identifier(body_as_json) and \
                     catalog_record_has_previous_dataset_version(body_as_json):
-
                 incoming_cr_id = get_catalog_record_identifier(body_as_json)
                 prev_version_cr_id = get_catalog_record_previous_dataset_version_identifier(body_as_json)
 
@@ -130,16 +165,16 @@ class MetaxConsumer():
                     self.log.info("Identifier {0} is deprecated. "
                                   "Trying to delete from index if it exists..".format(incoming_cr_id))
                     self._delete_from_index(ch, method, body_as_json)
-                    self.event_processing_completed = True
                     ch.basic_ack(delivery_tag=method.delivery_tag)
+                    self.event_processing_completed = True
                     return
 
                 # If catalog record has next dataset version, do not index it
                 if catalog_record_has_next_dataset_version(body_as_json):
                     self.log.info("Identifier {0} has a next dataset version. Skipping reindexing..."
                                   .format(incoming_cr_id))
-                    self.event_processing_completed = True
                     ch.basic_ack(delivery_tag=method.delivery_tag)
+                    self.event_processing_completed = True
                     return
 
             self._convert_to_es_doc_and_reindex(ch, method, body_as_json)
@@ -155,16 +190,20 @@ class MetaxConsumer():
             self._delete_from_index(ch, method, body_as_json)
 
         # Set up consumers so that acks are required
-        self.create_consumer_tag = self.channel.basic_consume(callback_create, queue=self.create_queue, no_ack=False)
-        self.update_consumer_tag = self.channel.basic_consume(callback_update, queue=self.update_queue, no_ack=False)
-        self.delete_consumer_tag = self.channel.basic_consume(callback_delete, queue=self.delete_queue, no_ack=False)
+        try:
+            self.create_consumer_tag = self.channel.basic_consume(
+                callback_create, queue=self.create_queue, no_ack=False)
+            self.update_consumer_tag = self.channel.basic_consume(
+                callback_update, queue=self.update_queue, no_ack=False)
+            self.delete_consumer_tag = self.channel.basic_consume(
+                callback_delete, queue=self.delete_queue, no_ack=False)
+        except Exception as e:
+            self.log.error(e)
+            self.log.error("Unable to setup consumers")
+            return False
 
-        self.init_ok = True
-
-    def run(self):
-        self.log.info('RabbitMQ client starting to consume messages..')
-        print('[*] RabbitMQ is running. To exit press CTRL+C. See logs for indexing details.')
-        self.channel.start_consuming()
+        self.log.info("Consumers OK")
+        return True
 
     def before_stop(self):
         self._cancel_consumers()
@@ -191,8 +230,8 @@ class MetaxConsumer():
     def _convert_to_es_doc_and_reindex(self, ch, method, body_as_json):
         if not catalog_record_has_preferred_identifier(body_as_json) or not catalog_record_has_identifier(body_as_json):
             self.log.error('No preferred_identifier or identifier found from RabbitMQ message, ignoring')
-            self.event_processing_completed = True
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+            self.event_processing_completed = True
             return
 
         converter = CRConverter()
@@ -219,7 +258,7 @@ class MetaxConsumer():
         self.event_processing_completed = False
         self.log.debug("Received {0} message from Metax RabbitMQ".format(callback_type))
 
-        if not self._ensure_index_existence():
+        if not self.es_client.ensure_index_existence():
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
             self.event_processing_completed = True
             return False
@@ -296,12 +335,3 @@ class MetaxConsumer():
         self.channel.queue_bind(exchange=self.exchange, queue=self.create_queue, routing_key='create')
         self.channel.queue_bind(exchange=self.exchange, queue=self.update_queue, routing_key='update')
         self.channel.queue_bind(exchange=self.exchange, queue=self.delete_queue, routing_key='delete')
-
-    def _ensure_index_existence(self):
-        if not self.es_client.index_exists():
-            if not self.es_client.create_index_and_mapping():
-                # If there's no ES index, don't create consumer
-                self.log.error("Unable to create Elasticsearch index and type mapping")
-                return False
-
-        return True
