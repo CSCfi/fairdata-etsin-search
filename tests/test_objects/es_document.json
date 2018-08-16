@@ -34,6 +34,9 @@
                 "agent_type": "Organization",
                 "identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
                 "name": {
+                    "en": "University of Helsinki",
+                    "fi": "Helsingin yliopisto",
+                    "sv": "Helsingfors universitet",
                     "und": "Helsingin yliopisto"
                 }
             },
@@ -65,10 +68,12 @@
                 "agent_type": "Organization",
                 "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
                 "name": {
+                    "en": "Aalto University",
+                    "fi": "Aalto yliopisto",
+                    "sv": "Aalto universitetet",
                     "und": "Aalto yliopisto"
                 }
             },
-            "identifier": "",
             "name": {
                 "und": "Teppo Testaaja"
             }
@@ -84,6 +89,9 @@
                 "agent_type": "Organization",
                 "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
                 "name": {
+                    "en": "Aalto University",
+                    "fi": "Aalto yliopisto",
+                    "sv": "Aalto universitetet",
                     "und": "Aalto yliopisto"
                 }
             },
@@ -97,7 +105,7 @@
     "dataset_version_set": [
         "urn:nbn:fi:att:1955e904-e3dd-4d7e-99f1-3fed446f9613"
     ],
-    "date_modified": "2018-06-05T09:01:22+03:00",
+    "date_modified": "2018-08-01T13:00:20+03:00",
     "description": {
         "en": "A descriptive description describing the contents of this dataset. Must be descriptive."
     },
@@ -155,18 +163,21 @@
         "keyword2",
         "keyword3"
     ],
-    "organization_name_en": ["Funding Organization",
-        "Helsingin yliopisto",
-        "Helsingin yliopisto",
+    "organization_name_en": [
+        "Funding Organization",
+        "University of Helsinki",
+        "University of Helsinki",
         "Mysterious Organization 2",
-        "Aalto yliopisto",
+        "Aalto University",
         "School services, ARTS",
-        "Aalto yliopisto",
+        "Aalto University",
         "Mysterious Organization",
-        "Aalto yliopisto",
-        "Aalto yliopisto",
-        "Helsingin yliopisto"],
-    "organization_name_fi": ["Organisaatio",
+        "Aalto University",
+        "Aalto University",
+        "University of Helsinki"
+    ],
+    "organization_name_fi": [
+        "Organisaatio",
         "Helsingin yliopisto",
         "Helsingin yliopisto",
         "Organisaatio",
@@ -176,7 +187,8 @@
         "Organisaatio",
         "Aalto yliopisto",
         "Aalto yliopisto",
-        "Helsingin yliopisto"],
+        "Helsingin yliopisto"
+    ],
     "other_identifier": [
         {
             "notation": "doi:10.12345",
@@ -206,19 +218,27 @@
         }
     ],
     "preferred_identifier": "urn:nbn:fi:att:1955e904-e3dd-4d7e-99f1-3fed446f9613",
-    "project_name_en": ["Name of project"],
-    "project_name_fi": ["Name of project"],
+    "project_name_en": [
+        "Name of project"
+    ],
+    "project_name_fi": [
+        "Name of project"
+    ],
     "publisher": {
         "agent_type": "Organization",
         "belongs_to_org": {
             "agent_type": "Organization",
             "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
             "name": {
+                "en": "Aalto University",
+                "fi": "Aalto yliopisto",
+                "sv": "Aalto universitetet",
                 "und": "Aalto yliopisto"
             }
         },
         "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076-A800",
         "name": {
+            "fi": "School services, ARTS",
             "und": "School services, ARTS"
         }
     },
@@ -229,11 +249,17 @@
                 "agent_type": "Organization",
                 "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
                 "name": {
+                    "en": "Aalto University",
+                    "fi": "Aalto yliopisto",
+                    "sv": "Aalto universitetet",
                     "und": "Aalto yliopisto"
                 }
             },
             "identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
             "name": {
+                "en": "University of Helsinki",
+                "fi": "Helsingin yliopisto",
+                "sv": "Helsingfors universitet",
                 "und": "Helsingin yliopisto"
             }
         }
@@ -243,12 +269,22 @@
             "definition": {
                 "en": "A statement or formal explanation of the meaning of a concept."
             },
-            "identifier": "http://www.yso.fi/onto/yso/p20518",
+            "identifier": "http://www.yso.fi/onto/koko/p32202",
             "pref_label": {
-                "en": "Lapua movement",
-                "fi": "lapuanliike",
-                "sv": "Lappor\u00f6relsen",
-                "und": "lapuanliike"
+                "en": "organic production",
+                "fi": "luonnonmukainen tuotanto",
+                "sv": "ekologisk produktion",
+                "und": "luonnonmukainen tuotanto"
+            }
+        },
+        {
+            "definition": {
+                "en": "A statement or formal explanation of the meaning of a concept."
+            },
+            "identifier": "http://www.yso.fi/onto/koko/p76312",
+            "pref_label": {
+                "fi": "naulamestarit",
+                "und": "naulamestarit"
             }
         }
     ],

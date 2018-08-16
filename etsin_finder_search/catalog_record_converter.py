@@ -1,3 +1,10 @@
+# This file is part of the Etsin service
+#
+# Copyright 2017-2018 Ministry of Education and Culture, Finland
+#
+# :author: CSC - IT Center for Science Ltd., Espoo Finland <servicedesk@csc.fi>
+# :license: MIT
+
 from etsin_finder_search.reindexing_log import get_logger
 from etsin_finder_search.utils import \
     catalog_record_has_preferred_identifier, \
@@ -217,11 +224,15 @@ class CRConverter:
         if isinstance(m_input, list):
             output = []
             for m_obj in m_input:
-                output.append(self._get_converted_single_org_or_person_es_model(m_obj))
+                org_or_person = self._get_converted_single_org_or_person_es_model(m_obj)
+                if org_or_person is not None:
+                    output.append(org_or_person)
         else:
             output = {}
             if m_input:
-                output = self._get_converted_single_org_or_person_es_model(m_input)
+                org_or_person = self._get_converted_single_org_or_person_es_model(m_input)
+                if org_or_person is not None:
+                    output = org_or_person
 
         es_output[relation_name] = output
 
@@ -242,7 +253,9 @@ class CRConverter:
                     output.extend(name)
         else:
             if m_input:
-                output = self._get_converted_creator_name_es_model(m_input)
+                name = self._get_converted_creator_name_es_model(m_input)
+                if name is not None:
+                    output = name
 
         es_output[relation_name] = output
 
@@ -285,28 +298,32 @@ class CRConverter:
             es_output[relation_name_base + '_en'].extend(output_en)
 
     def _get_converted_single_org_or_person_es_model(self, m_obj):
-        if m_obj.get('@type', '') not in ['Person', 'Organization']:
+        out_obj = self._get_es_person_or_org_common_data_obj_from_metax_agent_obj(m_obj)
+        if out_obj is None:
             return None
-
-        out_obj = self._get_es_person_or_org_common_data_from_metax_obj(m_obj)
 
         agent_type = m_obj.get('@type')
         if agent_type == 'Person' and m_obj.get('member_of', False):
-            out_obj.update(
-                {'belongs_to_org': self._get_es_person_or_org_common_data_from_metax_obj(m_obj.get('member_of'))})
+            org = self._get_es_person_or_org_common_data_obj_from_metax_agent_obj(m_obj.get('member_of'))
+            if org is not None:
+                out_obj.update({
+                    'belongs_to_org': org
+                })
         elif agent_type == 'Organization' and m_obj.get('is_part_of', False):
-            out_obj.update(
-                {'belongs_to_org': self._get_es_person_or_org_common_data_from_metax_obj(m_obj.get('is_part_of'))})
+            org = self._get_es_person_or_org_common_data_obj_from_metax_agent_obj(m_obj.get('is_part_of'))
+            if org is not None:
+                out_obj.update({
+                    'belongs_to_org': org
+                })
 
         return out_obj
 
     def _get_converted_creator_name_es_model(self, m_obj):
-        if m_obj.get('@type', '') not in ['Person', 'Organization']:
+        person_or_org = self._get_es_person_or_org_common_data_obj_from_metax_agent_obj(m_obj)
+        if person_or_org is None:
             return None
 
-        person_or_org = self._get_es_person_or_org_common_data_from_metax_obj(m_obj)
         out_obj = list(person_or_org['name'].values())
-
         return out_obj
 
     def _get_converted_langstring_name_es_model(self, m_obj, lang):
@@ -332,14 +349,25 @@ class CRConverter:
         return out_obj
 
     @staticmethod
-    def _get_es_person_or_org_common_data_from_metax_obj(m_obj):
-        # Name should be langstring
-        name = m_obj.get('name', '')
-        if not isinstance(m_obj.get('name'), dict):
-            name = {'und': m_obj.get('name', '')}
+    def _get_es_person_or_org_common_data_obj_from_metax_agent_obj(m_obj):
+        if not m_obj or 'name' not in m_obj or '@type' not in m_obj:
+            log.warning("Agent object does not have either name or @type")
+            return None
 
-        return {
-            'identifier': m_obj.get('identifier', ''),
+        if m_obj['@type'] not in ['Agent', 'Person', 'Organization']:
+            log.warning("Agent object's @type is not one of allowed values")
+            return None
+
+        # Name should be langstring
+        name = m_obj['name']
+        if not isinstance(name, dict):
+            name = {'und': m_obj['name']}
+
+        ret_obj = {
             'name': name,
-            'agent_type': m_obj.get('@type')
+            'agent_type': m_obj['@type']
         }
+        if m_obj.get('identifier', False):
+            ret_obj['identifier'] = m_obj['identifier']
+
+        return ret_obj

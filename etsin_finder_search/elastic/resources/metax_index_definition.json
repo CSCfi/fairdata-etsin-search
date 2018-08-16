@@ -6,23 +6,10 @@
     },
     "analysis": {
       "tokenizer": {
-        "classic_tokenizer": {
-          "type": "classic"
-        },
-        "edge_ngram_tokenizer": {
-          "type": "edge_ngram",
-          "min_gram": 3,
-          "max_gram": 15
-        },
         "ngram_tokenizer": {
           "type": "ngram",
           "min_gram": 3,
           "max_gram": 15
-        },
-        "long_edge_ngram_tokenizer": {
-          "type": "edge_ngram",
-          "min_gram": 3,
-          "max_gram": 20
         },
         "long_ngram_tokenizer": {
           "type": "ngram",
@@ -31,29 +18,9 @@
         }
       },
       "analyzer": {
-        "etsin_classic_analyzer": {
-          "tokenizer": "classic_tokenizer",
-          "filter": [
-            "lowercase"
-          ]
-        },
-        "etsin_edge_ngram_analyzer": {
-          "type": "custom",
-          "tokenizer": "edge_ngram_tokenizer",
-          "filter": [
-            "lowercase"
-          ]
-        },
         "etsin_ngram_analyzer": {
           "type": "custom",
           "tokenizer": "ngram_tokenizer",
-          "filter": [
-            "lowercase"
-          ]
-        },
-        "etsin_long_edge_ngram_analyzer": {
-          "type": "custom",
-          "tokenizer": "long_edge_ngram_tokenizer",
           "filter": [
             "lowercase"
           ]
