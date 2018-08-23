@@ -27,6 +27,7 @@ class MetaxAPIService:
 
         self.USER = metax_api_config['USER']
         self.PW = metax_api_config['PASSWORD']
+        self.VERIFY_SSL = metax_api_config.get('VERIFY_SSL', True)
 
     @classmethod
     def get_metax_api_service(cls, metax_api_config):
@@ -65,8 +66,9 @@ class MetaxAPIService:
 
         def get(identifier):
             return requests.get(self.METAX_GET_CATALOG_RECORD_URL.format(identifier),
-                                headers={'Content-Type': 'application/json'},
+                                headers={'Accept': 'application/json'},
                                 auth=(self.USER, self.PW),
+                                verify=self.VERIFY_SSL,
                                 timeout=TIMEOUT)
 
         response = self._do_request(get, cr_identifier)
@@ -93,8 +95,9 @@ class MetaxAPIService:
 
         def get():
             return requests.get(self.METAX_GET_PIDS_URL,
-                                headers={'Content-Type': 'application/json'},
+                                headers={'Accept': 'application/json'},
                                 auth=(self.USER, self.PW),
+                                verify=self.VERIFY_SSL,
                                 timeout=TIMEOUT)
 
         response = self._do_request(get)
@@ -121,8 +124,9 @@ class MetaxAPIService:
 
         def get():
             return requests.get(self.METAX_GET_ALL_LATEST_DATASETS,
-                                headers={'Content-Type': 'application/json'},
+                                headers={'Accept': 'application/json'},
                                 auth=(self.USER, self.PW),
+                                verify=self.VERIFY_SSL,
                                 timeout=TIMEOUT)
 
         response = self._do_request(get)
