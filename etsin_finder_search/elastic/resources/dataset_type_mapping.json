@@ -46,7 +46,7 @@
     {
       "object_with_identifier_and_label": {
         "match_pattern": "regex",
-        "match": "^(access_rights|access_rights\\.access_type|access_rights\\.license|theme|field_of_science|infrastructure|file_type|other_identifier\\.type)\\..*(pref_label|title|identifier|description|definition).*",
+        "match": "^(access_rights|access_rights\\.access_type|access_rights\\.license|field_of_science|infrastructure|file_type|other_identifier\\.type)\\..*(pref_label|title|identifier|description|definition).*",
         "mapping": {
           "type": "text",
           "analyzer": "standard",
@@ -55,6 +55,24 @@
               "type": "keyword"
             }
           }
+        }
+      }
+    },
+    {
+      "theme_fi": {
+        "path_match": "theme.pref_label.fi",
+        "mapping": {
+          "type": "text",
+          "copy_to": "all_keywords_fi"
+        }
+      }
+    },
+    {
+      "theme_en": {
+        "path_match": "theme.pref_label.en",
+        "mapping": {
+          "type": "text",
+          "copy_to": "all_keywords_en"
         }
       }
     }
@@ -129,7 +147,13 @@
     },
     "keyword": {
       "type": "text",
-      "copy_to": ["theme.label.en", "theme.label.fi"]
+      "copy_to": ["all_keywords_fi", "all_keywords_en"]
+    },
+    "all_keywords_fi": {
+      "type": "keyword"
+    },
+    "all_keywords_en": {
+      "type": "keyword"
     },
     "preservation_state": {
       "type": "integer"
