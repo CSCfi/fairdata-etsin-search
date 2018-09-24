@@ -158,6 +158,13 @@
             }
         }
     ],
+    "is_output_of": [
+        {
+            "name": {
+                "en": "Name of project"
+            }
+        }
+    ],
     "keyword": [
         "keyword",
         "keyword2",
