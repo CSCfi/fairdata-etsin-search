@@ -33,7 +33,7 @@
                 "definition": {
                     "en": "A statement or formal explanation of the meaning of a concept."
                 },
-                "identifier": "http://purl.org/att/es/reference_data/access_type/access_type_open_access",
+                "identifier": "http://uri.suomi.fi/codelist/fairdata/access_type/code/open_access",
                 "in_scheme": "https://metax.fairdata.fi/es/reference_data/access_type/_search?pretty",
                 "pref_label": {
                     "en": "Open",
@@ -68,7 +68,7 @@
                 }
             ],
             "restriction_grounds": {
-                "identifier": "http://purl.org/att/es/reference_data/restriction_grounds/restriction_grounds_1",
+                "identifier": "http://uri.suomi.fi/codelist/fairdata/restriction_grounds/code/1",
                 "in_scheme": "https://metax.fairdata.fi/es/reference_data/restriction_grounds/_search?pretty",
                 "pref_label": {
                     "en": "Open, no known restrictions",
@@ -83,7 +83,7 @@
             {
                 "@type": "Person",
                 "contributor_role": {
-                    "identifier": "http://purl.org/att/es/reference_data/contributor_role/contributor_role_funding_acquisition",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_role/code/funding_acquisition",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/contributor_role/_search?pretty",
                     "pref_label": {
                         "en": "Funding acquisition",
@@ -95,7 +95,7 @@
                 "member_of": {
                     "@type": "Organization",
                     "email": "info@csc.fi",
-                    "identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/01901",
                     "name": {
                         "en": "University of Helsinki",
                         "fi": "Helsingin yliopisto",
@@ -114,7 +114,7 @@
             {
                 "@type": "Person",
                 "contributor_role": {
-                    "identifier": "http://purl.org/att/es/reference_data/contributor_role/contributor_role_project_administration",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_role/code/project_administration",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/contributor_role/_search?pretty",
                     "pref_label": {
                         "en": "Project administration",
@@ -145,7 +145,7 @@
             {
                 "@type": "Person",
                 "contributor_role": {
-                    "identifier": "http://purl.org/att/es/reference_data/contributor_role/contributor_role_data_curation",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_role/code/data_curation",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/contributor_role/_search?pretty",
                     "pref_label": {
                         "en": "Data curation",
@@ -154,7 +154,7 @@
                 },
                 "member_of": {
                     "@type": "Organization",
-                    "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/10076",
                     "name": {
                         "en": "Aalto University",
                         "fi": "Aalto yliopisto",
@@ -171,7 +171,7 @@
                 "identifier": "id:of:curator:default",
                 "is_part_of": {
                     "@type": "Organization",
-                    "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/10076",
                     "name": {
                         "en": "Aalto University",
                         "fi": "Aalto yliopisto",
@@ -194,7 +194,7 @@
                 "identifier": "pid:urn:dir:18",
                 "title": "Phase 1 of science data C",
                 "use_category": {
-                    "identifier": "http://purl.org/att/es/reference_data/use_category/use_category_outcome",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/use_category/code/outcome",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/use_category/_search?pretty",
                     "pref_label": {
                         "en": "Outcome material",
@@ -208,7 +208,7 @@
                 "identifier": "pid:urn:dir:22",
                 "title": "Phase 2 of science data C",
                 "use_category": {
-                    "identifier": "http://purl.org/att/es/reference_data/use_category/use_category_outcome",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/use_category/code/outcome",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/use_category/_search?pretty",
                     "pref_label": {
                         "en": "Outcome material",
@@ -222,7 +222,7 @@
                 "identifier": "pid:urn:dir:12",
                 "title": "Phase 1 01/2018 of Science data A",
                 "use_category": {
-                    "identifier": "http://purl.org/att/es/reference_data/use_category/use_category_outcome",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/use_category/code/outcome",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/use_category/_search?pretty",
                     "pref_label": {
                         "en": "Outcome material",
@@ -236,7 +236,7 @@
                 "identifier": "pid:urn:dir:13",
                 "title": "Science data B",
                 "use_category": {
-                    "identifier": "http://purl.org/att/es/reference_data/use_category/use_category_source",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/use_category/code/source",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/use_category/_search?pretty",
                     "pref_label": {
                         "en": "Source material",
@@ -250,7 +250,7 @@
                 "identifier": "pid:urn:dir:14",
                 "title": "Other stuff",
                 "use_category": {
-                    "identifier": "http://purl.org/att/es/reference_data/use_category/use_category_method",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/use_category/code/method",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/use_category/_search?pretty",
                     "pref_label": {
                         "en": "Method",
@@ -282,7 +282,7 @@
                     "definition": {
                         "en": "A statement or formal explanation of the meaning of a concept."
                     },
-                    "identifier": "http://purl.org/att/es/reference_data/file_type/file_type_video",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/file_type/code/video",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/file_type/_search?pretty",
                     "pref_label": {
                         "en": "Video",
@@ -293,7 +293,7 @@
                 "identifier": "pid:urn:6",
                 "title": "file title 6",
                 "use_category": {
-                    "identifier": "http://purl.org/att/es/reference_data/use_category/use_category_configuration",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/use_category/code/configuration",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/use_category/_search?pretty",
                     "pref_label": {
                         "en": "Configuration files",
@@ -308,7 +308,7 @@
                     "definition": {
                         "en": "A statement or formal explanation of the meaning of a concept."
                     },
-                    "identifier": "http://purl.org/att/es/reference_data/file_type/file_type_software",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/file_type/code/software",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/file_type/_search?pretty",
                     "pref_label": {
                         "en": "Software",
@@ -319,7 +319,7 @@
                 "identifier": "pid:urn:10",
                 "title": "file title 10",
                 "use_category": {
-                    "identifier": "http://purl.org/att/es/reference_data/use_category/use_category_publication",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/use_category/code/publication",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/use_category/_search?pretty",
                     "pref_label": {
                         "en": "Publication",
@@ -343,7 +343,7 @@
         "is_output_of": [
             {
                 "funder_type": {
-                    "identifier": "http://purl.org/att/es/reference_data/funder_type/funder_type_tekes",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/funder_type/code/tekes",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/funder_type/_search?pretty",
                     "pref_label": {
                         "en": "Tekes",
@@ -374,7 +374,7 @@
                     {
                         "@type": "Organization",
                         "email": "info@csc.fi",
-                        "identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/01901",
                         "name": {
                             "en": "University of Helsinki",
                             "fi": "Helsingin yliopisto",
@@ -414,7 +414,7 @@
                 "provider": {
                     "@type": "Organization",
                     "email": "info@csc.fi",
-                    "identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/01901",
                     "name": {
                         "en": "University of Helsinki",
                         "fi": "Helsingin yliopisto",
@@ -429,7 +429,7 @@
                     "definition": {
                         "en": "A statement or formal explanation of the meaning of a concept."
                     },
-                    "identifier": "http://purl.org/att/es/reference_data/identifier_type/identifier_type_doi",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/identifier_type/code/doi",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/identifier_type/_search?pretty",
                     "pref_label": {
                         "en": "Digital Object Identifier (DOI)",
@@ -443,7 +443,7 @@
                 "provider": {
                     "@type": "Organization",
                     "email": "info@csc.fi",
-                    "identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/01901",
                     "name": {
                         "en": "University of Helsinki",
                         "fi": "Helsingin yliopisto",
@@ -458,7 +458,7 @@
                     "definition": {
                         "en": "A statement or formal explanation of the meaning of a concept."
                     },
-                    "identifier": "http://purl.org/att/es/reference_data/identifier_type/identifier_type_urn",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/identifier_type/code/urn",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/identifier_type/_search?pretty",
                     "pref_label": {
                         "en": "Uniform Resource Name (URN)",
@@ -477,7 +477,7 @@
                     "definition": {
                         "en": "A statement or formal explanation of the meaning of a concept."
                     },
-                    "identifier": "http://purl.org/att/es/reference_data/lifecycle_event/lifecycle_event_collected",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/lifecycle_event/code/collected",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/lifecycle_event/_search?pretty",
                     "pref_label": {
                         "en": "Collected",
@@ -566,7 +566,7 @@
                     {
                         "@type": "Organization",
                         "email": "info@csc.fi",
-                        "identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/01901",
                         "name": {
                             "en": "University of Helsinki",
                             "fi": "Helsingin yliopisto",
@@ -584,7 +584,7 @@
                     "en": "Description of other provenance activity"
                 },
                 "preservation_event": {
-                    "identifier": "http://purl.org/att/reference_data/preservation_event/preservation_event_upd",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/preservation_event/code/upd",
                     "in_scheme": "https://metax.fairdata.fi/es/reference_data/preservation_event/_search?pretty",
                     "pref_label": {
                         "en": "Object update",
@@ -629,7 +629,7 @@
                     "fi": "Julkaisijan kotisivu"
                 }
             },
-            "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076-A800",
+            "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/10076-A800",
             "is_part_of": {
                 "@type": "Organization",
                 "email": "info@csc.fi",
@@ -640,7 +640,7 @@
                         "fi": "Julkaisijan yl\u00e4organisaation kotisivu"
                     }
                 },
-                "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
+                "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/10076",
                 "name": {
                     "en": "Aalto University",
                     "fi": "Aalto yliopisto",
@@ -671,7 +671,7 @@
                         "fi": "Ulkopuolinen aineisto 1"
                     },
                     "type": {
-                        "identifier": "http://purl.org/att/es/reference_data/resource_type/resource_type_physical_object",
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/resource_type/code/physical_object",
                         "in_scheme": "https://metax.fairdata.fi/es/reference_data/resource_type/_search?pretty",
                         "pref_label": {
                             "en": "Physical object",
@@ -701,7 +701,7 @@
                         "fi": "Ulkopuolinen asia 2"
                     },
                     "type": {
-                        "identifier": "http://purl.org/att/es/reference_data/resource_type/resource_type_collection",
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/resource_type/code/collection",
                         "in_scheme": "https://metax.fairdata.fi/es/reference_data/resource_type/_search?pretty",
                         "pref_label": {
                             "en": "Collection",
@@ -731,7 +731,7 @@
                         "fi": "Ulkopuolinen aineisto 2"
                     },
                     "type": {
-                        "identifier": "http://purl.org/att/es/reference_data/resource_type/resource_type_service",
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/resource_type/code/service",
                         "in_scheme": "https://metax.fairdata.fi/es/reference_data/resource_type/_search?pretty",
                         "pref_label": {
                             "en": "Service",
@@ -761,7 +761,7 @@
                         "fi": "Ulkopuolinen asia 2"
                     },
                     "type": {
-                        "identifier": "http://purl.org/att/es/reference_data/resource_type/resource_type_ui",
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/resource_type/code/ui",
                         "in_scheme": "https://metax.fairdata.fi/es/reference_data/resource_type/_search?pretty",
                         "pref_label": {
                             "en": "User interface",
@@ -785,10 +785,10 @@
             {
                 "@type": "Organization",
                 "email": "info@csc.fi",
-                "identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
+                "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/01901",
                 "is_part_of": {
                     "@type": "Organization",
-                    "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/10076",
                     "name": {
                         "en": "Aalto University",
                         "fi": "Aalto yliopisto",

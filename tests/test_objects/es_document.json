@@ -4,7 +4,7 @@
             "definition": {
                 "en": "A statement or formal explanation of the meaning of a concept."
             },
-            "identifier": "http://purl.org/att/es/reference_data/access_type/access_type_open_access",
+            "identifier": "http://uri.suomi.fi/codelist/fairdata/access_type/code/open_access",
             "pref_label": {
                 "en": "Open",
                 "fi": "Avoin",
@@ -32,7 +32,7 @@
             "agent_type": "Person",
             "belongs_to_org": {
                 "agent_type": "Organization",
-                "identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
+                "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/01901",
                 "name": {
                     "en": "University of Helsinki",
                     "fi": "Helsingin yliopisto",
@@ -66,7 +66,7 @@
             "agent_type": "Person",
             "belongs_to_org": {
                 "agent_type": "Organization",
-                "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
+                "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/10076",
                 "name": {
                     "en": "Aalto University",
                     "fi": "Aalto yliopisto",
@@ -87,7 +87,7 @@
             "agent_type": "Organization",
             "belongs_to_org": {
                 "agent_type": "Organization",
-                "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
+                "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/10076",
                 "name": {
                     "en": "Aalto University",
                     "fi": "Aalto yliopisto",
@@ -128,7 +128,7 @@
             "definition": {
                 "en": "A statement or formal explanation of the meaning of a concept."
             },
-            "identifier": "http://purl.org/att/es/reference_data/file_type/file_type_video",
+            "identifier": "http://uri.suomi.fi/codelist/fairdata/file_type/code/video",
             "pref_label": {
                 "en": "Video",
                 "fi": "Video",
@@ -139,7 +139,7 @@
             "definition": {
                 "en": "A statement or formal explanation of the meaning of a concept."
             },
-            "identifier": "http://purl.org/att/es/reference_data/file_type/file_type_software",
+            "identifier": "http://uri.suomi.fi/codelist/fairdata/file_type/code/software",
             "pref_label": {
                 "en": "Software",
                 "fi": "Sovellus",
@@ -203,7 +203,7 @@
                 "definition": {
                     "en": "A statement or formal explanation of the meaning of a concept."
                 },
-                "identifier": "http://purl.org/att/es/reference_data/identifier_type/identifier_type_doi",
+                "identifier": "http://uri.suomi.fi/codelist/fairdata/identifier_type/code/doi",
                 "pref_label": {
                     "en": "Digital Object Identifier (DOI)",
                     "und": "Digital Object Identifier (DOI)"
@@ -216,7 +216,7 @@
                 "definition": {
                     "en": "A statement or formal explanation of the meaning of a concept."
                 },
-                "identifier": "http://purl.org/att/es/reference_data/identifier_type/identifier_type_urn",
+                "identifier": "http://uri.suomi.fi/codelist/fairdata/identifier_type/code/urn",
                 "pref_label": {
                     "en": "Uniform Resource Name (URN)",
                     "und": "Uniform Resource Name (URN)"
@@ -235,7 +235,7 @@
         "agent_type": "Organization",
         "belongs_to_org": {
             "agent_type": "Organization",
-            "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
+            "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/10076",
             "name": {
                 "en": "Aalto University",
                 "fi": "Aalto yliopisto",
@@ -243,7 +243,7 @@
                 "und": "Aalto yliopisto"
             }
         },
-        "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076-A800",
+        "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/10076-A800",
         "name": {
             "fi": "School services, ARTS",
             "und": "School services, ARTS"
@@ -254,7 +254,7 @@
             "agent_type": "Organization",
             "belongs_to_org": {
                 "agent_type": "Organization",
-                "identifier": "http://purl.org/att/es/organization_data/organization/organization_10076",
+                "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/10076",
                 "name": {
                     "en": "Aalto University",
                     "fi": "Aalto yliopisto",
@@ -262,7 +262,7 @@
                     "und": "Aalto yliopisto"
                 }
             },
-            "identifier": "http://purl.org/att/es/organization_data/organization/organization_01901",
+            "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/01901",
             "name": {
                 "en": "University of Helsinki",
                 "fi": "Helsingin yliopisto",
