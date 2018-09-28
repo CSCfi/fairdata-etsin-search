@@ -21,7 +21,7 @@
     {
       "org_or_person": {
         "match_pattern": "regex",
-        "match": "^(creator|contributor|publisher|rights_holder|curator)\\..*(name|identifier).*",
+        "match": "^(creator|contributor|publisher|rights_holder|curator|is_output_of(\\..*source_organization|\\..*has_funding_agency))\\..*(name|identifier).*",
         "mapping": {
           "type": "text",
           "analyzer": "etsin_ngram_analyzer",
@@ -46,7 +46,7 @@
     {
       "object_with_identifier_and_label": {
         "match_pattern": "regex",
-        "match": "^(access_rights|access_rights\\.access_type|access_rights\\.license|field_of_science|infrastructure|file_type|other_identifier\\.type)\\..*(pref_label|title|identifier|description|definition).*",
+        "match": "^(access_rights|access_rights\\.access_type|access_rights\\.license|field_of_science|infrastructure|file_type|other_identifier\\.type|is_output_of\\..*funder_type)\\..*(pref_label|title|identifier|description|definition).*",
         "mapping": {
           "type": "text",
           "analyzer": "standard",
