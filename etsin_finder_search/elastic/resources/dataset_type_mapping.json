@@ -5,7 +5,7 @@
         "path_match":   "title.*",
         "mapping": {
           "type": "text",
-          "analyzer": "etsin_long_ngram_analyzer"
+          "analyzer": "standard"
         }
       }
     },
@@ -14,7 +14,7 @@
         "path_match":   "description.*",
         "mapping": {
           "type": "text",
-          "analyzer": "etsin_ngram_analyzer"
+          "analyzer": "standard"
         }
       }
     },
@@ -24,7 +24,7 @@
         "match": "^(creator|contributor|publisher|rights_holder|curator|is_output_of(\\..*source_organization|\\..*has_funding_agency))\\..*(name|identifier).*",
         "mapping": {
           "type": "text",
-          "analyzer": "etsin_ngram_analyzer",
+          "analyzer": "standard",
           "fields": {
             "keyword": {
               "type": "keyword"
