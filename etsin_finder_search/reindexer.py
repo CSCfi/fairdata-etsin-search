@@ -49,6 +49,7 @@ def _start_rabbitmq_service_if_not_running():
 def create_search_index_and_doc_type_mapping_if_not_exist():
     es_client = ElasticSearchService.get_elasticsearch_service(es_config)
     if es_client is None:
+        log.error("Unable to initialize Elasticsearch client")
         return False
 
     if not es_client.ensure_index_existence():
@@ -60,6 +61,7 @@ def create_search_index_and_doc_type_mapping_if_not_exist():
 def delete_search_index():
     es_client = ElasticSearchService.get_elasticsearch_service(es_config)
     if es_client is None:
+        log.error("Unable to initialize Elasticsearch client")
         return
 
     es_client.delete_index()
@@ -69,10 +71,13 @@ def load_test_data_into_es(dataset_amt):
     log.info("Loading test data into Elasticsearch..")
 
     es_client = ElasticSearchService.get_elasticsearch_service(es_config)
-    metax_api = MetaxAPIService.get_metax_api_service(metax_api_config)
+    if es_client is None:
+        log.error("Unable to initialize Elastisearch client")
+        return False
 
-    if es_client is None or metax_api is None:
-        log.error("Unable to initialize Elastisearch client or Metax API client")
+    metax_api = MetaxAPIService.get_metax_api_service(metax_api_config)
+    if metax_api is None:
+        log.error("Unable to initialize Metax API client")
         return False
 
     if not es_client.ensure_index_existence():
@@ -137,24 +142,17 @@ def convert_identifiers_to_es_data_models(metax_api, identifiers_to_convert, ide
 class ReindexScheduledTask:
 
     def __init__(self):
-        if metax_api_config:
-            self.metax_api = MetaxAPIService.get_metax_api_service(metax_api_config)
-
-        if es_config:
-            self.es_client = ElasticSearchService.get_elasticsearch_service(es_config)
-
-    @classmethod
-    def get_reindex_scheduled_task(cls):
-        instance = cls()
-        if instance.metax_api is None or instance.es_client is None:
-            log.error("Unable to initialize Elasticsearch client or Metax API client")
-            return None
-        return instance
+        self.metax_api = MetaxAPIService.get_metax_api_service(metax_api_config)
+        self.es_client = ElasticSearchService.get_elasticsearch_service(es_config)
 
     def run_task(self, delete_index_first):
         # 1a. Check elasticsearch client ok
         if self.es_client is None:
-            log.error("Unable to create Elasticsearch client. Aborting reindexing operation")
+            log.error("Unable to create Elasticsearch client")
+            return
+
+        if self.metax_api is None:
+            log.error("Unable to create Metax API client")
             return
 
         # 1b. Stop RabbitMQ consumer
