@@ -37,7 +37,6 @@ class MetaxAPIService:
             log.error("Unable to get Metax API config")
             return None
 
-
     @staticmethod
     def _do_request(request_func, arg=None):
         sleep_time = 4
