@@ -17,24 +17,36 @@ def get_config_from_file():
 
 
 def get_elasticsearch_config():
-    es_conf = get_config_from_file().get('ELASTICSEARCH', None)
+    es_conf = get_config_from_file().get('ELASTICSEARCH', False)
     if not es_conf or not isinstance(es_conf, dict):
+        return None
+
+    if 'HOSTS' not in es_conf or 'PORT' not in es_conf or 'USE_SSL' not in es_conf:
         return None
 
     return es_conf
 
 
 def get_metax_api_config():
-    metax_api_conf = get_config_from_file().get('METAX_API')
+    metax_api_conf = get_config_from_file().get('METAX_API', False)
     if not metax_api_conf or not isinstance(metax_api_conf, dict):
+        return None
+
+    if 'HOST' not in metax_api_conf or 'USER' not in metax_api_conf \
+            or 'PASSWORD' not in metax_api_conf or 'VERIFY_SSL' not in metax_api_conf:
         return None
 
     return metax_api_conf
 
 
 def get_metax_rabbit_mq_config():
-    metax_rabbitmq_conf = get_config_from_file().get('METAX_RABBITMQ')
+    metax_rabbitmq_conf = get_config_from_file().get('METAX_RABBITMQ', False)
     if not metax_rabbitmq_conf or not isinstance(metax_rabbitmq_conf, dict):
+        return None
+
+    if 'HOSTS' not in metax_rabbitmq_conf or 'PORT' not in metax_rabbitmq_conf \
+            or 'VHOST' not in metax_rabbitmq_conf or 'EXCHANGE' not in metax_rabbitmq_conf \
+            or 'USER' not in metax_rabbitmq_conf or 'PASSWORD' not in metax_rabbitmq_conf:
         return None
 
     return metax_rabbitmq_conf

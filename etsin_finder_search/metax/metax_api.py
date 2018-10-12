@@ -31,9 +31,12 @@ class MetaxAPIService:
 
     @classmethod
     def get_metax_api_service(cls, metax_api_config):
-        if 'HOST' not in metax_api_config or 'USER' not in metax_api_config or 'PASSWORD' not in metax_api_config:
+        if metax_api_config:
+            return cls(metax_api_config)
+        else:
+            log.error("Unable to get Metax API config")
             return None
-        return cls(metax_api_config)
+
 
     @staticmethod
     def _do_request(request_func, arg=None):
