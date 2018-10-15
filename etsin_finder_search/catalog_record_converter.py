@@ -133,6 +133,12 @@ class CRConverter:
 
                 self._convert_metax_langstring_name_to_es_model(m_rd.get('is_output_of'), es_dataset, 'project_name')
 
+                if 'is_output_of' not in es_dataset:
+                    es_dataset['is_output_of'] = []
+
+                for project in m_rd.get('is_output_of'):
+                    es_dataset['is_output_of'].append({'name': project['name']})
+
             if 'file_type' not in es_dataset and (m_rd.get('files', False) or m_rd.get('remote_resources', False)):
                 es_dataset['file_type'] = []
 

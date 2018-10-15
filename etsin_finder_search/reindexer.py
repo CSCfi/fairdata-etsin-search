@@ -16,7 +16,8 @@ from etsin_finder_search.utils import \
     start_rabbitmq_consumer, \
     stop_rabbitmq_consumer, \
     rabbitmq_consumer_is_running, \
-    catalog_record_is_deprecated
+    catalog_record_is_deprecated, \
+    catalog_record_should_be_indexed
 
 
 log = get_logger(__name__)
@@ -49,6 +50,7 @@ def _start_rabbitmq_service_if_not_running():
 def create_search_index_and_doc_type_mapping_if_not_exist():
     es_client = ElasticSearchService.get_elasticsearch_service(es_config)
     if es_client is None:
+        log.error("Unable to initialize Elasticsearch client")
         return False
 
     if not es_client.ensure_index_existence():
@@ -60,6 +62,7 @@ def create_search_index_and_doc_type_mapping_if_not_exist():
 def delete_search_index():
     es_client = ElasticSearchService.get_elasticsearch_service(es_config)
     if es_client is None:
+        log.error("Unable to initialize Elasticsearch client")
         return
 
     es_client.delete_index()
@@ -69,10 +72,13 @@ def load_test_data_into_es(dataset_amt):
     log.info("Loading test data into Elasticsearch..")
 
     es_client = ElasticSearchService.get_elasticsearch_service(es_config)
-    metax_api = MetaxAPIService.get_metax_api_service(metax_api_config)
+    if es_client is None:
+        log.error("Unable to initialize Elastisearch client")
+        return False
 
-    if es_client is None or metax_api is None:
-        log.error("Unable to initialize Elastisearch client or Metax API client")
+    metax_api = MetaxAPIService.get_metax_api_service(metax_api_config)
+    if metax_api is None:
+        log.error("Unable to initialize Metax API client")
         return False
 
     if not es_client.ensure_index_existence():
@@ -112,6 +118,8 @@ def convert_identifiers_to_es_data_models(metax_api, identifiers_to_convert, ide
             metax_cr_json = metax_crs_dict.get(identifier, None)
         else:
             metax_cr_json = metax_api.get_catalog_record(identifier)
+            if not catalog_record_should_be_indexed(metax_cr_json):
+                continue
 
         if metax_cr_json:
             if catalog_record_is_deprecated(metax_cr_json):
@@ -137,24 +145,17 @@ def convert_identifiers_to_es_data_models(metax_api, identifiers_to_convert, ide
 class ReindexScheduledTask:
 
     def __init__(self):
-        if metax_api_config:
-            self.metax_api = MetaxAPIService.get_metax_api_service(metax_api_config)
-
-        if es_config:
-            self.es_client = ElasticSearchService.get_elasticsearch_service(es_config)
-
-    @classmethod
-    def get_reindex_scheduled_task(cls):
-        instance = cls()
-        if instance.metax_api is None or instance.es_client is None:
-            log.error("Unable to initialize Elasticsearch client or Metax API client")
-            return None
-        return instance
+        self.metax_api = MetaxAPIService.get_metax_api_service(metax_api_config)
+        self.es_client = ElasticSearchService.get_elasticsearch_service(es_config)
 
     def run_task(self, delete_index_first):
         # 1a. Check elasticsearch client ok
         if self.es_client is None:
-            log.error("Unable to create Elasticsearch client. Aborting reindexing operation")
+            log.error("Unable to create Elasticsearch client")
+            return
+
+        if self.metax_api is None:
+            log.error("Unable to create Metax API client")
             return
 
         # 1b. Stop RabbitMQ consumer
@@ -173,14 +174,14 @@ class ReindexScheduledTask:
             return
         log.info("Done")
 
-        # 2b. Change catalog record array to dictionary with catalog record identifier as the key
+        # 2b. Decide whether catalog record is to be indexed, and for those to be indexed, change catalog record array
+        # to dictionary with catalog record identifier as the key
         metax_crs_dict = {}
         for cr_json in metax_crs:
-            metax_crs_dict[cr_json['identifier']] = cr_json
+            if catalog_record_should_be_indexed(cr_json):
+                metax_crs_dict[cr_json['identifier']] = cr_json
 
         # 3. Create a list containing all catalog record identifiers
-        # metax_identifiers = self.metax_api.get_latest_catalog_record_identifiers()
-        # ids_to_create = list(metax_identifiers) if metax_identifiers else []
         metax_identifiers = list(metax_crs_dict.keys())
         ids_to_create = list(metax_identifiers) if metax_crs_dict else []
 

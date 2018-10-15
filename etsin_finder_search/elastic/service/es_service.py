@@ -32,26 +32,26 @@ class ElasticSearchService:
         self.es = Elasticsearch(es_settings.get('HOSTS'), timeout=180, **self._get_connection_parameters(es_settings))
 
     @classmethod
-    def get_elasticsearch_service(cls, es_settings):
-        if 'HOSTS' not in es_settings:
-            log.error("HOSTS missing from es settings")
+    def get_elasticsearch_service(cls, es_config):
+        if es_config:
+            # Set up ElasticSearch client. In case connection cannot be established, try every 2 seconds 30 times
+            log.info("Trying to establish connection with Elasticsearch instance..")
+            i = 0
+            while i < 30:
+                es_client = cls(es_config)
+                if es_client._client_ok():
+                    log.info("Connection established with Elasticsearch instance")
+                    return es_client
+                else:
+                    log.error("Connection not established with Elasticsearch instance, trying again..")
+                    sleep(2)
+                    i += 1
+
+            log.error("Unable to establish connection with Elasticsearch instance, stopped trying")
             return None
-
-        # Set up ElasticSearch client. In case connection cannot be established, try every 2 seconds 30 times
-        log.info("Trying to establish connection with Elasticsearch instance..")
-        i = 0
-        while i < 30:
-            es_client = cls(es_settings)
-            if es_client._client_ok():
-                log.info("Connection established with Elasticsearch instance")
-                return es_client
-            else:
-                log.error("Connection not established with Elasticsearch instance, trying again..")
-                sleep(2)
-                i += 1
-
-        log.error("Unable to establish connection with Elasticsearch instance, stopped trying")
-        return None
+        else:
+            log.error("Unable to get Elasticsearch config")
+            return None
 
     def ensure_index_existence(self):
         if not self._index_exists():

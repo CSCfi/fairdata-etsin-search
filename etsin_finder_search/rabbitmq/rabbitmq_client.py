@@ -40,6 +40,7 @@ from etsin_finder_search.utils import \
     catalog_record_is_deprecated, \
     catalog_record_has_preferred_identifier, \
     catalog_record_has_identifier, \
+    catalog_record_should_be_indexed, \
     get_catalog_record_identifier
 
 
@@ -210,17 +211,21 @@ class MetaxConsumer():
 
     def _delete_from_index(self, ch, method, body_as_json):
         try:
-            cr_id_for_doc_to_delete = get_catalog_record_identifier(body_as_json)
-            if cr_id_for_doc_to_delete:
-                delete_success = self.es_client.delete_dataset_from_index(cr_id_for_doc_to_delete)
-                if delete_success:
-                    ch.basic_ack(delivery_tag=method.delivery_tag)
+            if catalog_record_should_be_indexed(body_as_json):
+                cr_id_for_doc_to_delete = get_catalog_record_identifier(body_as_json)
+                if cr_id_for_doc_to_delete:
+                    delete_success = self.es_client.delete_dataset_from_index(cr_id_for_doc_to_delete)
+                    if delete_success:
+                        ch.basic_ack(delivery_tag=method.delivery_tag)
+                    else:
+                        self.log.error('Failed to delete document from index: %s', cr_id_for_doc_to_delete)
+                        ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
                 else:
-                    self.log.error('Failed to delete document from index: %s', cr_id_for_doc_to_delete)
+                    self.log.error('No identifier found from RabbitMQ message, ignoring')
                     ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
             else:
-                self.log.error('No identifier found from RabbitMQ message, ignoring')
-                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+                self.log.debug("Catalog record deletion ignored since it should not have been indexed originally")
+                ch.basic_ack(delivery_tag=method.delivery_tag)
         except RequestError:
             self.log.error('Request error on trying to delete from index triggered by RabbitMQ')
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
@@ -228,6 +233,12 @@ class MetaxConsumer():
             self.event_processing_completed = True
 
     def _convert_to_es_doc_and_reindex(self, ch, method, body_as_json):
+        if not catalog_record_should_be_indexed(body_as_json):
+            self.log.debug('Catalog record not indexed due to defined rules')
+            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+            self.event_processing_completed = True
+            return
+
         if not catalog_record_has_preferred_identifier(body_as_json) or not catalog_record_has_identifier(body_as_json):
             self.log.error('No preferred_identifier or identifier found from RabbitMQ message, ignoring')
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
