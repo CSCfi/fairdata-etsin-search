@@ -146,8 +146,13 @@ def catalog_record_is_deprecated(cr_json):
     return cr_json.get('deprecated', False)
 
 
-def catalog_record_is_harvested(cr_json):
-    return cr_json.get('data_catalog').get('catalog_json').get('harvested', False)
+def catalog_record_should_be_indexed(cr_json):
+    dc_identifier = cr_json.get('data_catalog', {}).get('identifier', False)
+    if not dc_identifier:
+        return False
+    if dc_identifier == 'urn:nbn:fi:att:data-catalog-legacy':
+        return False
+    return True
 
 
 def get_catalog_record_dataset_version_set(cr_json):
