@@ -122,8 +122,8 @@ class ElasticSearchService:
             self._do_bulk_request(bulk_request_str)
 
     def _do_bulk_request(self, bulk_request_str):
-        log.info("Trying to perform bulk request for data with type " + self.INDEX_DOC_TYPE_NAME +
-                 " into index " + self.INDEX_NAME)
+        log.info("Trying to perform bulk request for data with type {0} into index {1}".format(
+            self.INDEX_DOC_TYPE_NAME, self.INDEX_NAME))
 
         if not self._operation_ok(self.es.bulk(body=bulk_request_str, request_timeout=30)):
             log.error("Something went wrong with the following bulk request: \n{0}".format(bulk_request_str))

@@ -77,7 +77,7 @@ def stop_rabbitmq_consumer():
     try:
         subprocess.check_call("sudo service rabbitmq-consumer stop".split())
         return True
-    except subprocess.CalledProcessError as e:
+    except subprocess.CalledProcessError:
         return False
 
 
@@ -89,7 +89,7 @@ def start_rabbitmq_consumer():
     try:
         subprocess.check_call("sudo service rabbitmq-consumer start".split())
         return True
-    except subprocess.CalledProcessError as e:
+    except subprocess.CalledProcessError:
         return False
 
 
