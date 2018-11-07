@@ -175,6 +175,9 @@
     },
     "preservation_state": {
       "type": "integer"
+    },
+    "data_catalog": {
+      "type": "keyword"
     }
   }
 }
