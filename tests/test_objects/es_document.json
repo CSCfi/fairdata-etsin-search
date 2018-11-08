@@ -105,7 +105,10 @@
     "dataset_version_set": [
         "urn:nbn:fi:att:1955e904-e3dd-4d7e-99f1-3fed446f9613"
     ],
-    "data_catalog": "urn:nbn:fi:att:2955e904-e3dd-4d7e-99f1-3fed446f96d1",
+    "data_catalog": {
+        "en": "Test data catalog name",
+        "fi": "Testidatakatalogin nimi"
+    },
     "date_modified": "2018-08-01T13:00:20+03:00",
     "description": {
         "en": "A descriptive description describing the contents of this dataset. Must be descriptive."

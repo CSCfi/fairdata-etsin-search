@@ -12,7 +12,7 @@ from etsin_finder_search.utils import \
     catalog_record_has_identifier, \
     get_catalog_record_identifier, \
     get_catalog_record_dataset_version_set, \
-    get_catalog_record_data_catalog_identifier
+    get_catalog_record_data_catalog_title
 
 log = get_logger(__name__)
 
@@ -28,7 +28,7 @@ class CRConverter:
             es_dataset['identifier'] = get_catalog_record_identifier(metax_cr_json)
             es_dataset['preferred_identifier'] = get_catalog_record_preferred_identifier(metax_cr_json)
             es_dataset['dataset_version_set'] = get_catalog_record_dataset_version_set(metax_cr_json)
-            es_dataset['data_catalog'] = get_catalog_record_data_catalog_identifier(metax_cr_json)
+            es_dataset['data_catalog'] = get_catalog_record_data_catalog_title(metax_cr_json)
 
             m_rd = metax_cr_json['research_dataset']
 

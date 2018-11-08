@@ -93,6 +93,14 @@
           "copy_to": "all_keywords_en"
         }
       }
+    },
+    {
+      "data_catalog": {
+        "path_match": "data_catalog.*",
+        "mapping": {
+          "type": "keyword"
+        }
+      }
     }
   ],
   "properties": {
@@ -175,9 +183,6 @@
     },
     "preservation_state": {
       "type": "integer"
-    },
-    "data_catalog": {
-      "type": "keyword"
     }
   }
 }

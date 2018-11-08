@@ -165,7 +165,21 @@ def get_catalog_record_dataset_version_set(cr_json):
 
 
 def get_catalog_record_data_catalog_identifier(cr_json):
-    dc_identifier = cr_json.get('data_catalog', {}).get('identifier', False)
+    dc_identifier = cr_json.get('data_catalog', {}).get('catalog_json', {}).get('identifier', False)
     if dc_identifier:
         return dc_identifier
+    return None
+
+
+def get_catalog_record_data_catalog_title(cr_json):
+    dc_title = cr_json.get('data_catalog', {}).get('catalog_json', {}).get('title', False)
+    if dc_title:
+        return dc_title
+
+    # Fallback in case data catalog json was not what was expected
+    dc_identifier = get_catalog_record_data_catalog_identifier(cr_json) or \
+        cr_json.get('data_catalog', {}).get('identifier', False)
+    if dc_identifier:
+        return {'en': dc_identifier, 'fi': dc_identifier}
+
     return None
