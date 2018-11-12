@@ -1,7 +1,134 @@
 {
     "data_catalog": {
         "id": 1,
-        "identifier": "urn:nbn:fi:att:2955e904-e3dd-4d7e-99f1-3fed446f96d1"
+        "catalog_json": {
+            "title": {
+                "en": "Test data catalog name",
+                "fi": "Testidatakatalogin nimi"
+            },
+            "issued": "2014-02-27",
+            "homepage": [
+                {
+                    "title": {
+                        "en": "Test website",
+                        "fi": "Testi-verkkopalvelu"
+                    },
+                    "identifier": "http://testing.com"
+                },
+                {
+                    "title": {
+                        "en": "Another website",
+                        "fi": "Toinen verkkopalvelu"
+                    },
+                    "identifier": "http://www.testing.fi"
+                }
+            ],
+            "language": [
+                {
+                    "title": {
+                        "en": "Finnish language",
+                        "fi": "Suomen kieli",
+                        "sv": "finska",
+                        "und": "Suomen kieli"
+                    },
+                    "identifier": "http://lexvo.org/id/iso639-3/fin"
+                },
+                {
+                    "title": {
+                        "en": "English language",
+                        "fi": "Englannin kieli",
+                        "sv": "engelska",
+                        "und": "Englannin kieli"
+                    },
+                    "identifier": "http://lexvo.org/id/iso639-3/eng"
+                }
+            ],
+            "modified": "2014-01-17T08:19:58Z",
+            "harvested": false,
+            "publisher": {
+                "name": {
+                    "en": "Data catalog publisher organization",
+                    "fi": "Datakatalogin julkaisijaorganisaatio"
+                },
+                "homepage": [
+                    {
+                        "title": {
+                            "en": "Publisher organization website",
+                            "fi": "Julkaisijaorganisaation kotisivu"
+                        },
+                        "identifier": "http://www.publisher.fi/"
+                    }
+                ],
+                "identifier": "http://isni.org/isni/0000000405129137"
+            },
+            "identifier": "urn:nbn:fi:att:2955e904-e3dd-4d7e-99f1-3fed446f96d1",
+            "access_rights": {
+                "license": [
+                    {
+                        "title": {
+                            "en": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+                            "fi": "Creative Commons Nimeä 4.0 Kansainvälinen (CC BY 4.0)",
+                            "und": "Creative Commons Nimeä 4.0 Kansainvälinen (CC BY 4.0)"
+                        },
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/license/code/CC-BY-4.0"
+                    }
+                ],
+                "access_type": [
+                    {
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/access_type/code/open",
+                        "pref_label": {
+                            "en": "Open",
+                            "fi": "Avoin",
+                            "und": "Avoin"
+                        }
+                    }
+                ],
+                "description": {
+                    "fi": "Käyttöehtojen kuvaus"
+                },
+                "has_rights_related_agent": [
+                    {
+                        "name": {
+                            "en": "A rights related organization",
+                            "fi": "Oikeuksiin liittyvä organisaatio"
+                        },
+                        "identifier": "org_id"
+                    },
+                    {
+                        "name": {
+                            "en": "Aalto University",
+                            "fi": "Aalto yliopisto",
+                            "sv": "Aalto universitetet",
+                            "und": "Aalto yliopisto"
+                        },
+                        "email": "wahatever@madeupdomain.com",
+                        "telephone": [
+                            "+12353495823424"
+                        ],
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/10076"
+                    }
+                ]
+            },
+            "field_of_science": [
+                {
+                    "identifier": "http://www.yso.fi/onto/okm-tieteenala/ta1172",
+                    "pref_label": {
+                        "en": "Environmental sciences",
+                        "fi": "Ympäristötiede",
+                        "sv": "Miljövetenskap",
+                        "und": "Ympäristötiede"
+                    }
+                }
+            ],
+            "dataset_versioning": true,
+            "research_dataset_schema": "ida"
+        },
+        "catalog_record_group_edit": "default-record-edit-group",
+        "catalog_record_group_create": "default-record-create-group",
+        "date_modified": "2018-11-05T14:51:07+02:00",
+        "date_created": "2017-05-15T13:07:22+03:00",
+        "service_modified": "metax",
+        "service_created": "metax"
     },
     "dataset_version_set": [
         {
