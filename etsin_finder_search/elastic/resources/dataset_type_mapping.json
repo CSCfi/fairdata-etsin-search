@@ -5,7 +5,16 @@
         "path_match":   "title.*",
         "mapping": {
           "type": "text",
-          "analyzer": "standard"
+          "fields": {
+            "english": {
+              "type":     "text",
+              "analyzer": "english"
+            },
+            "finnish": {
+              "type":     "text",
+              "analyzer": "finnish"
+            }
+          }
         }
       }
     },
@@ -14,7 +23,16 @@
         "path_match":   "description.*",
         "mapping": {
           "type": "text",
-          "analyzer": "standard"
+          "fields": {
+            "english": {
+              "type":     "text",
+              "analyzer": "english"
+            },
+            "finnish": {
+              "type":     "text",
+              "analyzer": "finnish"
+            }
+          }
         }
       }
     },
@@ -73,6 +91,14 @@
         "mapping": {
           "type": "text",
           "copy_to": "all_keywords_en"
+        }
+      }
+    },
+    {
+      "data_catalog": {
+        "path_match": "data_catalog.*",
+        "mapping": {
+          "type": "keyword"
         }
       }
     }
