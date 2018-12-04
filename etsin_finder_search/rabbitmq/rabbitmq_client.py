@@ -211,21 +211,17 @@ class MetaxConsumer():
 
     def _delete_from_index(self, ch, method, body_as_json):
         try:
-            if catalog_record_should_be_indexed(body_as_json):
-                cr_id_for_doc_to_delete = get_catalog_record_identifier(body_as_json)
-                if cr_id_for_doc_to_delete:
-                    delete_success = self.es_client.delete_dataset_from_index(cr_id_for_doc_to_delete)
-                    if delete_success:
-                        ch.basic_ack(delivery_tag=method.delivery_tag)
-                    else:
-                        self.log.error('Failed to delete document from index: %s', cr_id_for_doc_to_delete)
-                        ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+            cr_id_for_doc_to_delete = get_catalog_record_identifier(body_as_json)
+            if cr_id_for_doc_to_delete:
+                delete_success = self.es_client.delete_dataset_from_index(cr_id_for_doc_to_delete)
+                if delete_success:
+                    ch.basic_ack(delivery_tag=method.delivery_tag)
                 else:
-                    self.log.error('No identifier found from RabbitMQ message, ignoring')
+                    self.log.error('Failed to delete document from index: %s', cr_id_for_doc_to_delete)
                     ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
             else:
-                self.log.debug("Catalog record deletion ignored since it should not have been indexed originally")
-                ch.basic_ack(delivery_tag=method.delivery_tag)
+                self.log.error('No identifier found from RabbitMQ message, ignoring')
+                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
         except RequestError:
             self.log.error('Request error on trying to delete from index triggered by RabbitMQ')
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
