@@ -19,10 +19,29 @@
                 "description": {
                     "en": "Free account of the rights"
                 },
-                "identifier": "http://www.opensource.org/licenses/Apache-2.0",
+                "identifier": "http://uri.suomi.fi/codelist/fairdata/license/code/Apache-2.0",
                 "title": {
                     "en": "Apache Software License 2.0",
                     "und": "Apache Software License 2.0"
+                }
+            },
+            {
+                "description": {
+                    "en": "Free account of the rights"
+                },
+                "identifier": "http://uri.suomi.fi/codelist/fairdata/license/code/CC-BY-NC-2.0",
+                "title": {
+                    "en": "Creative Commons Attribution-NonCommercial 2.0 Generic (CC BY-NC 2.0",
+                    "fi": "Creative Commons Nime\u00e4-EiKaupallinen 2.0 Yleinen (CC BY-NC 2.0)",
+                    "und": "Creative Commons Nime\u00e4-EiKaupallinen 2.0 Yleinen (CC BY-NC 2.0)"
+                }
+            },
+            {
+                "identifier": "http://uri.suomi.fi/codelist/fairdata/license/code/other",
+                "title": {
+                    "en": "Other",
+                    "fi": "Muu",
+                    "und": "Muu"
                 }
             }
         ]
@@ -102,14 +121,14 @@
             }
         }
     ],
-    "dataset_version_set": [
-        "urn:nbn:fi:att:1955e904-e3dd-4d7e-99f1-3fed446f9613"
-    ],
     "data_catalog": {
         "en": "Test data catalog name",
         "fi": "Testidatakatalogin nimi"
     },
-    "date_modified": "2018-08-01T13:00:20+03:00",
+    "dataset_version_set": [
+        "urn:nbn:fi:att:1955e904-e3dd-4d7e-99f1-3fed446f9613"
+    ],
+    "date_modified": "2019-01-30T09:40:38+02:00",
     "description": {
         "en": "A descriptive description describing the contents of this dataset. Must be descriptive."
     },
