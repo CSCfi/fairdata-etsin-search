@@ -337,9 +337,9 @@ class CRConverter:
         if not isinstance(m_obj.get('name'), dict):
             return None
 
-        if lang is 'fi':
+        if lang == 'fi':
             preferred_order = ['fi', 'und', 'en']
-        elif lang is 'en':
+        elif lang == 'en':
             preferred_order = ['en', 'und', 'fi']
         else:
             return None

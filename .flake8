@@ -26,6 +26,10 @@ ignore =
     F401
     # invalid syntax
     E999
+    # Missing docstrings
+    D100, D101, D102, D103, D104, D107
+    # Blank lines in comments, etc.
+    D200, D202, D205, D210, D400, D401
 
 # often contains "unused" imports
 # exclude = 
