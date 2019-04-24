@@ -13,7 +13,7 @@ import subprocess
 
 def get_config_from_file():
     with open('/home/etsin-user/app_config') as app_config_file:
-        return yaml.load(app_config_file)
+        return yaml.load(app_config_file, Loader=yaml.FullLoader)
 
 
 def get_elasticsearch_config():
