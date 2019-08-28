@@ -193,11 +193,11 @@ class MetaxConsumer():
         # Set up consumers so that acks are required
         try:
             self.create_consumer_tag = self.channel.basic_consume(
-                callback_create, queue=self.create_queue, no_ack=False)
+                self.create_queue, callback_create, auto_ack=False)
             self.update_consumer_tag = self.channel.basic_consume(
-                callback_update, queue=self.update_queue, no_ack=False)
+                self.update_queue, callback_update, auto_ack=False)
             self.delete_consumer_tag = self.channel.basic_consume(
-                callback_delete, queue=self.delete_queue, no_ack=False)
+                self.delete_queue, callback_delete, auto_ack=False)
         except Exception as e:
             self.log.error(e)
             self.log.error("Unable to setup consumers")
