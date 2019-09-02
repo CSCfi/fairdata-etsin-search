@@ -1,78 +1,7 @@
 {
     "data_catalog": {
-        "id": 1,
         "catalog_json": {
-            "title": {
-                "en": "Test data catalog name",
-                "fi": "Testidatakatalogin nimi"
-            },
-            "issued": "2014-02-27",
-            "homepage": [
-                {
-                    "title": {
-                        "en": "Test website",
-                        "fi": "Testi-verkkopalvelu"
-                    },
-                    "identifier": "http://testing.com"
-                },
-                {
-                    "title": {
-                        "en": "Another website",
-                        "fi": "Toinen verkkopalvelu"
-                    },
-                    "identifier": "http://www.testing.fi"
-                }
-            ],
-            "language": [
-                {
-                    "title": {
-                        "en": "Finnish language",
-                        "fi": "Suomen kieli",
-                        "sv": "finska",
-                        "und": "Suomen kieli"
-                    },
-                    "identifier": "http://lexvo.org/id/iso639-3/fin"
-                },
-                {
-                    "title": {
-                        "en": "English language",
-                        "fi": "Englannin kieli",
-                        "sv": "engelska",
-                        "und": "Englannin kieli"
-                    },
-                    "identifier": "http://lexvo.org/id/iso639-3/eng"
-                }
-            ],
-            "modified": "2014-01-17T08:19:58Z",
-            "harvested": false,
-            "publisher": {
-                "name": {
-                    "en": "Data catalog publisher organization",
-                    "fi": "Datakatalogin julkaisijaorganisaatio"
-                },
-                "homepage": [
-                    {
-                        "title": {
-                            "en": "Publisher organization website",
-                            "fi": "Julkaisijaorganisaation kotisivu"
-                        },
-                        "identifier": "http://www.publisher.fi/"
-                    }
-                ],
-                "identifier": "http://isni.org/isni/0000000405129137"
-            },
-            "identifier": "urn:nbn:fi:att:2955e904-e3dd-4d7e-99f1-3fed446f96d1",
             "access_rights": {
-                "license": [
-                    {
-                        "title": {
-                            "en": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
-                            "fi": "Creative Commons Nimeä 4.0 Kansainvälinen (CC BY 4.0)",
-                            "und": "Creative Commons Nimeä 4.0 Kansainvälinen (CC BY 4.0)"
-                        },
-                        "identifier": "http://uri.suomi.fi/codelist/fairdata/license/code/CC-BY-4.0"
-                    }
-                ],
                 "access_type": [
                     {
                         "identifier": "http://uri.suomi.fi/codelist/fairdata/access_type/code/open",
@@ -84,51 +13,123 @@
                     }
                 ],
                 "description": {
-                    "fi": "Käyttöehtojen kuvaus"
+                    "fi": "K\u00e4ytt\u00f6ehtojen kuvaus"
                 },
                 "has_rights_related_agent": [
                     {
+                        "identifier": "org_id",
                         "name": {
                             "en": "A rights related organization",
-                            "fi": "Oikeuksiin liittyvä organisaatio"
-                        },
-                        "identifier": "org_id"
+                            "fi": "Oikeuksiin liittyv\u00e4 organisaatio"
+                        }
                     },
                     {
+                        "email": "wahatever@madeupdomain.com",
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/10076",
                         "name": {
                             "en": "Aalto University",
                             "fi": "Aalto yliopisto",
                             "sv": "Aalto universitetet",
                             "und": "Aalto yliopisto"
                         },
-                        "email": "wahatever@madeupdomain.com",
                         "telephone": [
                             "+12353495823424"
-                        ],
-                        "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/10076"
+                        ]
+                    }
+                ],
+                "license": [
+                    {
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/license/code/CC-BY-4.0",
+                        "title": {
+                            "en": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+                            "fi": "Creative Commons Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0)",
+                            "und": "Creative Commons Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0)"
+                        }
                     }
                 ]
             },
+            "dataset_versioning": true,
             "field_of_science": [
                 {
                     "identifier": "http://www.yso.fi/onto/okm-tieteenala/ta1172",
                     "pref_label": {
                         "en": "Environmental sciences",
-                        "fi": "Ympäristötiede",
-                        "sv": "Miljövetenskap",
-                        "und": "Ympäristötiede"
+                        "fi": "Ymp\u00e4rist\u00f6tiede",
+                        "sv": "Milj\u00f6vetenskap",
+                        "und": "Ymp\u00e4rist\u00f6tiede"
                     }
                 }
             ],
-            "dataset_versioning": true,
-            "research_dataset_schema": "ida"
+            "harvested": false,
+            "homepage": [
+                {
+                    "identifier": "http://testing.com",
+                    "title": {
+                        "en": "Test website",
+                        "fi": "Testi-verkkopalvelu"
+                    }
+                },
+                {
+                    "identifier": "http://www.testing.fi",
+                    "title": {
+                        "en": "Another website",
+                        "fi": "Toinen verkkopalvelu"
+                    }
+                }
+            ],
+            "identifier": "urn:nbn:fi:att:2955e904-e3dd-4d7e-99f1-3fed446f96d1",
+            "issued": "2014-02-27",
+            "language": [
+                {
+                    "identifier": "http://lexvo.org/id/iso639-3/fin",
+                    "title": {
+                        "en": "Finnish language",
+                        "fi": "Suomen kieli",
+                        "sv": "finska",
+                        "und": "Suomen kieli"
+                    }
+                },
+                {
+                    "identifier": "http://lexvo.org/id/iso639-3/eng",
+                    "title": {
+                        "en": "English language",
+                        "fi": "Englannin kieli",
+                        "sv": "engelska",
+                        "und": "Englannin kieli"
+                    }
+                }
+            ],
+            "modified": "2014-01-17T08:19:58Z",
+            "publisher": {
+                "homepage": [
+                    {
+                        "identifier": "http://www.publisher.fi/",
+                        "title": {
+                            "en": "Publisher organization website",
+                            "fi": "Julkaisijaorganisaation kotisivu"
+                        }
+                    }
+                ],
+                "identifier": "http://isni.org/isni/0000000405129137",
+                "name": {
+                    "en": "Data catalog publisher organization",
+                    "fi": "Datakatalogin julkaisijaorganisaatio"
+                }
+            },
+            "research_dataset_schema": "ida",
+            "title": {
+                "en": "Test data catalog name",
+                "fi": "Testidatakatalogin nimi"
+            }
         },
-        "catalog_record_group_edit": "default-record-edit-group",
         "catalog_record_group_create": "default-record-create-group",
-        "date_modified": "2018-11-05T14:51:07+02:00",
+        "catalog_record_group_edit": "default-record-edit-group",
         "date_created": "2017-05-15T13:07:22+03:00",
-        "service_modified": "metax",
-        "service_created": "metax"
+        "date_modified": "2019-01-30T09:41:10+02:00",
+        "id": 1,
+        "removed": false,
+        "service_created": "metax",
+        "service_modified": "metax"
     },
     "dataset_version_set": [
         {
@@ -139,7 +140,7 @@
         }
     ],
     "date_created": "2017-05-23T13:07:22+03:00",
-    "date_modified": "2018-08-01T13:00:20+03:00",
+    "date_modified": "2019-01-30T09:40:38+02:00",
     "deprecated": false,
     "editor": {
         "creator_id": "05593961536b76fa825281ccaedd4d4f",
@@ -177,7 +178,7 @@
                     "en": "A name given to the document"
                 }
             },
-            "available": "2014-01-15T08:19:58Z",
+            "available": "2014-01-15",
             "description": {
                 "en": "Free account of the rights"
             },
@@ -186,37 +187,63 @@
                     "description": {
                         "en": "Free account of the rights"
                     },
-                    "identifier": "http://www.opensource.org/licenses/Apache-2.0",
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/license/code/Apache-2.0",
                     "license": "https://url.of.license.which.applies.here.org",
                     "title": {
                         "en": "Apache Software License 2.0",
                         "und": "Apache Software License 2.0"
                     }
+                },
+                {
+                    "description": {
+                        "en": "Free account of the rights"
+                    },
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/license/code/CC-BY-NC-2.0",
+                    "license": "https://creativecommons.org/licenses/by-nc/2.0/",
+                    "title": {
+                        "en": "Creative Commons Attribution-NonCommercial 2.0 Generic (CC BY-NC 2.0",
+                        "fi": "Creative Commons Nime\u00e4-EiKaupallinen 2.0 Yleinen (CC BY-NC 2.0)",
+                        "und": "Creative Commons Nime\u00e4-EiKaupallinen 2.0 Yleinen (CC BY-NC 2.0)"
+                    }
+                },
+                {
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/license/code/other",
+                    "title": {
+                        "en": "Other",
+                        "fi": "Muu",
+                        "und": "Muu"
+                    }
                 }
             ],
-            "restriction_grounds": {
-                "identifier": "http://uri.suomi.fi/codelist/fairdata/restriction_grounds/code/other",
-                "in_scheme": "http://uri.suomi.fi/codelist/fairdata/restriction_grounds",
-                "pref_label": {
-                    "fi" : "Saatavuutta rajoitettu muulla perusteella",
-                    "en" : "Restricted access due to other reasons",
-                    "sv" : "Begränsad åtkomst av övriga skäl",
-                    "und" : "Saatavuutta rajoitettu muulla perusteella"
+            "restriction_grounds": [
+                {
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/restriction_grounds/code/other",
+                    "in_scheme": "http://uri.suomi.fi/codelist/fairdata/restriction_grounds",
+                    "pref_label": {
+                        "en": "Restricted access due to other reasons",
+                        "fi": "Saatavuutta rajoitettu muulla perusteella",
+                        "sv": "Begr\u00e4nsad \u00e5tkomst av \u00f6vriga sk\u00e4l",
+                        "und": "Saatavuutta rajoitettu muulla perusteella"
+                    }
                 }
-            }
+            ]
         },
         "bibliographic_citation": "whot",
         "contributor": [
             {
                 "@type": "Person",
-                "contributor_role": {
-                    "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_role/code/funding_acquisition",
-                    "in_scheme": "http://uri.suomi.fi/codelist/fairdata/contributor_role",
-                    "pref_label": {
-                        "en": "Funding acquisition",
-                        "und": "Funding acquisition"
+                "contributor_role": [
+                    {
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_role/code/funding_acquisition",
+                        "in_scheme": "http://uri.suomi.fi/codelist/fairdata/contributor_role",
+                        "pref_label": {
+                            "en": "Funding acquisition",
+                            "fi": "Rahoituksen hankinta",
+                            "sv": "Anskaffande av finansiering",
+                            "und": "Rahoituksen hankinta"
+                        }
                     }
-                },
+                ],
                 "email": "kalle.kontribuuttaaja@csc.fi",
                 "identifier": "contributorid",
                 "member_of": {
@@ -240,14 +267,18 @@
             },
             {
                 "@type": "Person",
-                "contributor_role": {
-                    "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_role/code/project_administration",
-                    "in_scheme": "http://uri.suomi.fi/codelist/fairdata/contributor_role",
-                    "pref_label": {
-                        "en": "Project administration",
-                        "und": "Project administration"
+                "contributor_type": [
+                    {
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_type/code/ProjectLeader",
+                        "in_scheme": "http://uri.suomi.fi/codelist/fairdata/contributor_type",
+                        "pref_label": {
+                            "en": "Project Leader",
+                            "fi": "Projektin johtaja",
+                            "sv": "Projektledare",
+                            "und": "Projektin johtaja"
+                        }
                     }
-                },
+                ],
                 "email": "franzibald.kontribuuttaaja@csc.fi",
                 "identifier": "contributorid2",
                 "member_of": {
@@ -271,14 +302,18 @@
         "creator": [
             {
                 "@type": "Person",
-                "contributor_role": {
-                    "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_role/code/data_curation",
-                    "in_scheme": "http://uri.suomi.fi/codelist/fairdata/contributor_role",
-                    "pref_label": {
-                        "en": "Data curation",
-                        "und": "Data curation"
+                "contributor_role": [
+                    {
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_role/code/conceptualization",
+                        "in_scheme": "http://uri.suomi.fi/codelist/fairdata/contributor_role",
+                        "pref_label": {
+                            "en": "Conceptualization",
+                            "fi": "Tutkimuksen muotoilu",
+                            "sv": "Formulering av forskningen",
+                            "und": "Tutkimuksen muotoilu"
+                        }
                     }
-                },
+                ],
                 "member_of": {
                     "@type": "Organization",
                     "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/10076",
@@ -295,6 +330,28 @@
         "curator": [
             {
                 "@type": "Organization",
+                "contributor_type": [
+                    {
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_type/code/Distributor",
+                        "in_scheme": "http://uri.suomi.fi/codelist/fairdata/contributor_type",
+                        "pref_label": {
+                            "en": "Distributor",
+                            "fi": "Jakelija",
+                            "sv": "Distribut\u00f6r",
+                            "und": "Jakelija"
+                        }
+                    },
+                    {
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_type/code/Sponsor",
+                        "in_scheme": "http://uri.suomi.fi/codelist/fairdata/contributor_type",
+                        "pref_label": {
+                            "en": "Sponsor",
+                            "fi": "Sponsori",
+                            "sv": "Sponsor",
+                            "und": "Sponsori"
+                        }
+                    }
+                ],
                 "identifier": "id:of:curator:default",
                 "is_part_of": {
                     "@type": "Organization",
@@ -322,7 +379,7 @@
                 "title": "Phase 1 of science data C",
                 "use_category": {
                     "identifier": "http://uri.suomi.fi/codelist/fairdata/use_category/code/outcome",
-                    "in_scheme": "http://uri.suomi.fi/codelist/fairdata/use_category/",
+                    "in_scheme": "http://uri.suomi.fi/codelist/fairdata/use_category",
                     "pref_label": {
                         "en": "Outcome material",
                         "fi": "Tulosaineisto",
@@ -378,7 +435,7 @@
                 "title": "Other stuff",
                 "use_category": {
                     "identifier": "http://uri.suomi.fi/codelist/fairdata/use_category/code/method",
-                    "in_scheme": "https://metax.fairdata.fi/es/reference_data/use_category/_search?pretty",
+                    "in_scheme": "http://uri.suomi.fi/codelist/fairdata/use_category",
                     "pref_label": {
                         "en": "Method",
                         "fi": "Metodi",
@@ -482,6 +539,18 @@
                 "has_funding_agency": [
                     {
                         "@type": "Organization",
+                        "contributor_type": [
+                            {
+                                "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_type/code/Editor",
+                                "in_scheme": "http://uri.suomi.fi/codelist/fairdata/contributor_type",
+                                "pref_label": {
+                                    "en": "Editor",
+                                    "fi": "Julkaisutoimittaja",
+                                    "sv": "Redakt\u00f6r",
+                                    "und": "Julkaisutoimittaja"
+                                }
+                            }
+                        ],
                         "email": "rahoitus@rahaorg.fi",
                         "identifier": "fundingagencyidentifier",
                         "name": {
@@ -500,6 +569,18 @@
                 "source_organization": [
                     {
                         "@type": "Organization",
+                        "contributor_type": [
+                            {
+                                "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_type/code/HostingInstitution",
+                                "in_scheme": "http://uri.suomi.fi/codelist/fairdata/contributor_type",
+                                "pref_label": {
+                                    "en": "Hosting Institution",
+                                    "fi": "S\u00e4ilytt\u00e4v\u00e4 organisaatio",
+                                    "sv": "Bevarande organisation",
+                                    "und": "S\u00e4ilytt\u00e4v\u00e4 organisaatio"
+                                }
+                            }
+                        ],
                         "email": "info@csc.fi",
                         "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/01901",
                         "name": {
@@ -515,7 +596,7 @@
                 ]
             }
         ],
-        "issued": "2014-01-17T08:19:58Z",
+        "issued": "2014-01-17",
         "keyword": [
             "keyword",
             "keyword2",
@@ -540,6 +621,18 @@
                 "notation": "doi:10.12345",
                 "provider": {
                     "@type": "Organization",
+                    "contributor_type": [
+                        {
+                            "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_type/code/ContactPerson",
+                            "in_scheme": "http://uri.suomi.fi/codelist/fairdata/contributor_type",
+                            "pref_label": {
+                                "en": "Point of contact",
+                                "fi": "Yhteystiedot",
+                                "sv": "Kontaktuppgifter",
+                                "und": "Yhteystiedot"
+                            }
+                        }
+                    ],
                     "email": "info@csc.fi",
                     "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/01901",
                     "name": {
@@ -569,6 +662,18 @@
                 "notation": "urn:nbn:fi-12345",
                 "provider": {
                     "@type": "Organization",
+                    "contributor_type": [
+                        {
+                            "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_type/code/DataCollector",
+                            "in_scheme": "http://uri.suomi.fi/codelist/fairdata/contributor_type",
+                            "pref_label": {
+                                "en": "Data Collector",
+                                "fi": "Aineiston ker\u00e4\u00e4j\u00e4",
+                                "sv": "Datainsamling",
+                                "und": "Aineiston ker\u00e4\u00e4j\u00e4"
+                            }
+                        }
+                    ],
                     "email": "info@csc.fi",
                     "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/01901",
                     "name": {
@@ -600,6 +705,16 @@
                 "description": {
                     "en": "Description of provenance activity"
                 },
+                "event_outcome": {
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/event_outcome/code/success",
+                    "in_scheme": "http://uri.suomi.fi/codelist/fairdata/event_outcome",
+                    "pref_label": {
+                        "en": "Success",
+                        "fi": "Onnistunut",
+                        "sv": "Framg\u00e5ngsrik",
+                        "und": "Onnistunut"
+                    }
+                },
                 "lifecycle_event": {
                     "definition": {
                         "en": "A statement or formal explanation of the meaning of a concept."
@@ -611,6 +726,10 @@
                         "fi": "Ker\u00e4tty",
                         "und": "Ker\u00e4tty"
                     }
+                },
+                "outcome_description": {
+                    "en": "A grand success",
+                    "fi": "Onnistui hyvin"
                 },
                 "spatial": {
                     "alt": "11.111",
@@ -692,6 +811,18 @@
                 "was_associated_with": [
                     {
                         "@type": "Organization",
+                        "contributor_type": [
+                            {
+                                "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_type/code/DataCurator",
+                                "in_scheme": "http://uri.suomi.fi/codelist/fairdata/contributor_type",
+                                "pref_label": {
+                                    "en": "Data Curator",
+                                    "fi": "Aineiston k\u00e4sittelij\u00e4",
+                                    "sv": "Databehandling",
+                                    "und": "Aineiston k\u00e4sittelij\u00e4"
+                                }
+                            }
+                        ],
                         "email": "info@csc.fi",
                         "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/01901",
                         "name": {
@@ -709,6 +840,20 @@
             {
                 "description": {
                     "en": "Description of other provenance activity"
+                },
+                "event_outcome": {
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/event_outcome/code/failure",
+                    "in_scheme": "http://uri.suomi.fi/codelist/fairdata/event_outcome",
+                    "pref_label": {
+                        "en": "Failure",
+                        "fi": "Ep\u00e4onnistunut",
+                        "sv": "Misslyckad",
+                        "und": "Ep\u00e4onnistunut"
+                    }
+                },
+                "outcome_description": {
+                    "en": "A grand failure",
+                    "fi": "Ep\u00e4onnistui"
                 },
                 "preservation_event": {
                     "identifier": "http://uri.suomi.fi/codelist/fairdata/preservation_event/code/upd",
@@ -748,6 +893,18 @@
         ],
         "publisher": {
             "@type": "Organization",
+            "contributor_type": [
+                {
+                    "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_type/code/Distributor",
+                    "in_scheme": "http://uri.suomi.fi/codelist/fairdata/contributor_type",
+                    "pref_label": {
+                        "en": "Distributor",
+                        "fi": "Jakelija",
+                        "sv": "Distribut\u00f6r",
+                        "und": "Jakelija"
+                    }
+                }
+            ],
             "email": "info@csc.fi",
             "homepage": {
                 "identifier": "http://www.publisher.fi/",
@@ -907,6 +1064,18 @@
         "rights_holder": [
             {
                 "@type": "Organization",
+                "contributor_type": [
+                    {
+                        "identifier": "http://uri.suomi.fi/codelist/fairdata/contributor_type/code/DataManager",
+                        "in_scheme": "http://uri.suomi.fi/codelist/fairdata/contributor_type",
+                        "pref_label": {
+                            "en": "Data Manager",
+                            "fi": "Aineiston hallinnoija",
+                            "sv": "Dataadministration",
+                            "und": "Aineiston hallinnoija"
+                        }
+                    }
+                ],
                 "email": "info@csc.fi",
                 "identifier": "http://uri.suomi.fi/codelist/fairdata/organization/code/01901",
                 "is_part_of": {
@@ -972,6 +1141,9 @@
             {
                 "end_date": "2014-12-31T08:19:58Z",
                 "start_date": "2014-01-01T08:19:58Z"
+            },
+            {
+                "temporal_coverage": "2011"
             }
         ],
         "theme": [
@@ -1003,7 +1175,7 @@
         "title": {
             "en": "Wonderful Title"
         },
-        "total_ida_byte_size": 621100,
+        "total_files_byte_size": 621100,
         "value": 0.111,
         "version_info": "0.1.2",
         "version_notes": [
