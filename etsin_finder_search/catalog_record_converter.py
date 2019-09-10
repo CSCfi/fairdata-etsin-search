@@ -55,6 +55,15 @@ class CRConverter:
             if metax_cr_json.get('preservation_state', False):
                 es_dataset['preservation_state'] = metax_cr_json.get('preservation_state')
 
+            if metax_cr_json.get('preservation_identifier', False):
+                es_dataset['preservation_identifier'] = metax_cr_json.get('preservation_identifier')
+
+            if metax_cr_json.get('preservation_dataset_version', False):
+                es_dataset['preservation_dataset_version'] = metax_cr_json.get('preservation_dataset_version')
+
+            if metax_cr_json.get('preservation_dataset_origin_version', False):
+                es_dataset['preservation_dataset_origin_version'] = metax_cr_json.get('preservation_dataset_origin_version')
+
             for m_other_identifier_item in m_rd.get('other_identifier', []):
                 if 'other_identifier' not in es_dataset:
                     es_dataset['other_identifier'] = []
