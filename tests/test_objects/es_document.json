@@ -128,6 +128,7 @@
     "dataset_version_set": [
         "urn:nbn:fi:att:1955e904-e3dd-4d7e-99f1-3fed446f9613"
     ],
+    "data_catalog_identifier": "urn:nbn:fi:att:data-catalog-att",
     "date_modified": "2019-01-30T09:40:38+02:00",
     "description": {
         "en": "A descriptive description describing the contents of this dataset. Must be descriptive."
