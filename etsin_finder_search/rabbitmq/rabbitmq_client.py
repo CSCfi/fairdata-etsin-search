@@ -38,6 +38,7 @@ from etsin_finder_search.utils import \
     catalog_record_has_next_dataset_version, \
     catalog_record_has_previous_dataset_version, \
     catalog_record_is_deprecated, \
+    catalog_has_preservation_dataset_origin_version, \
     catalog_record_has_preferred_identifier, \
     catalog_record_has_identifier, \
     catalog_record_should_be_indexed, \
@@ -161,8 +162,10 @@ class MetaxConsumer():
             if catalog_record_has_identifier(body_as_json):
                 incoming_cr_id = get_catalog_record_identifier(body_as_json)
 
-                # If catalog record has been deprecated, delete it from index
-                if catalog_record_is_deprecated(body_as_json):
+                # 1. If catalog record has been deprecated, delete it from index
+                # 2. If catalog_has_preservation_dataset_origin_version is found, it means the dataset is stored in PAS and has an original version.
+                # This original version will be displayed in the dataset list instead, so this PAS dataset version should be excluded.
+                if ((catalog_record_is_deprecated(body_as_json)) or (catalog_has_preservation_dataset_origin_version(body_as_json))):
                     self.log.info("Identifier {0} is deprecated. "
                                   "Trying to delete from index if it exists..".format(incoming_cr_id))
                     self._delete_from_index(ch, method, body_as_json)
