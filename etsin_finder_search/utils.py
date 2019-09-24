@@ -145,6 +145,8 @@ def catalog_record_has_next_dataset_version(cr_json):
 def catalog_record_is_deprecated(cr_json):
     return cr_json.get('deprecated', False)
 
+def catalog_has_preservation_dataset_origin_version(cr_json):
+    return cr_json.get('preservation_dataset_origin_version', False)
 
 def catalog_record_should_be_indexed(cr_json):
     dc_identifier = get_catalog_record_data_catalog_identifier(cr_json)
