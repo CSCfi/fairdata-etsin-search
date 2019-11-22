@@ -149,16 +149,6 @@ class MetaxConsumer():
                     "from index...".format(incoming_cr_id, prev_version_cr_id))
                 self.es_client.delete_dataset_from_index(prev_version_cr_id)
 
-            # If catalog_has_preservation_dataset_origin_version is found, it means the dataset is stored in PAS and has an original version.
-            # This original version will be displayed in the dataset list instead, so this PAS dataset version should be excluded.
-            if catalog_has_preservation_dataset_origin_version(body_as_json):
-                self.log.info("Identifier {0} is a PAS dataset, and has a dataset in original version. "
-                              "Trying to delete from index if it exists..".format(incoming_cr_id))
-                self._delete_from_index(ch, method, body_as_json)
-                ch.basic_ack(delivery_tag=method.delivery_tag)
-                self.event_processing_completed = True
-                return
-
             self._convert_to_es_doc_and_reindex(ch, method, body_as_json)
 
         def callback_update(ch, method, properties, body):
@@ -175,17 +165,6 @@ class MetaxConsumer():
                 # If catalog record has been deprecated, delete it from index
                 if catalog_record_is_deprecated(body_as_json):
                     self.log.info("Identifier {0} is deprecated. "
-                                  "Trying to delete from index if it exists..".format(incoming_cr_id))
-                    self._delete_from_index(ch, method, body_as_json)
-                    ch.basic_ack(delivery_tag=method.delivery_tag)
-                    self.event_processing_completed = True
-                    return
-
-                # If catalog_has_preservation_dataset_origin_version is found, it means the dataset is stored in PAS and has an original version.
-                # This original version will be displayed in the dataset list instead, so this PAS dataset version should be excluded.
-                # Dataset must be excluded here in callback_update as well, to prevent it appearning in the list again, after an update of the dataset
-                if catalog_has_preservation_dataset_origin_version(body_as_json):
-                    self.log.info("Identifier {0} is a PAS dataset, and has a dataset in original version. "
                                   "Trying to delete from index if it exists..".format(incoming_cr_id))
                     self._delete_from_index(ch, method, body_as_json)
                     ch.basic_ack(delivery_tag=method.delivery_tag)
