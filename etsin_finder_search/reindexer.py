@@ -17,6 +17,7 @@ from etsin_finder_search.utils import \
     stop_rabbitmq_consumer, \
     rabbitmq_consumer_is_running, \
     catalog_record_is_deprecated, \
+    catalog_has_preservation_dataset_origin_version, \
     catalog_record_should_be_indexed
 
 
@@ -122,7 +123,10 @@ def convert_identifiers_to_es_data_models(metax_api, identifiers_to_convert, ide
                 continue
 
         if metax_cr_json:
-            if catalog_record_is_deprecated(metax_cr_json):
+            # 1. If catalog record has been deprecated, delete its identifier from index
+            # 2. If catalog_has_preservation_dataset_origin_version is found, it means the dataset is stored in PAS and has an original version.
+            #    This original version will be displayed in the dataset list instead, so this PAS dataset version identifier should be excluded.
+            if ((catalog_record_is_deprecated(metax_cr_json)) or (catalog_has_preservation_dataset_origin_version(metax_cr_json))):
                 identifiers_to_delete.append(identifier)
                 continue
 

@@ -38,6 +38,7 @@ from etsin_finder_search.utils import \
     catalog_record_has_next_dataset_version, \
     catalog_record_has_previous_dataset_version, \
     catalog_record_is_deprecated, \
+    catalog_has_preservation_dataset_origin_version, \
     catalog_record_has_preferred_identifier, \
     catalog_record_has_identifier, \
     catalog_record_should_be_indexed, \
