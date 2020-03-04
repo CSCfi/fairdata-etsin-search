@@ -161,7 +161,7 @@ class MetaxConsumer():
                 ch.basic_ack(delivery_tag=method.delivery_tag)
                 self.event_processing_completed = True
                 return
-            
+
             # If catalog is  PAS and the preservation state is NOT 120, then it should not be indexed.
             # Also remove it from the index if it already is there.
             if catalog_record_is_pas_catalog(body_as_json) and get_catalog_preservation_state(body_as_json) != 120:
