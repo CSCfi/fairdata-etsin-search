@@ -1,4 +1,4 @@
-This repository contains code for Etsin Finder Search
+This repository contains code for Etsin Finder Search, which is used for dataset searching functionalities in Etsin. This repository has been develpoed using RabbitMQ and ElasticSearch.
 
 # Build status
 
