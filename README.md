@@ -10,6 +10,6 @@ This repository contains code for Etsin Finder Search
 
 License
 -------
-Copyright (c) 2018 Ministry of Education and Culture, Finland
+Copyright (c) 2018-2020 Ministry of Education and Culture, Finland
 
 Licensed under [MIT License](LICENSE)
