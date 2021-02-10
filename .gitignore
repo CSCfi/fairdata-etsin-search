@@ -7,5 +7,11 @@ __pycache__
 *.egg-info
 .eggs
 .coverage
-*.DS_Store
 data.txt
+
+# Docker-related
+app_config
+all
+
+#macOS
+*.DS_Store
