@@ -29,6 +29,7 @@ class ElasticSearchService:
     BULK_OPERATION_ROW_SIZE = 300
 
     def __init__(self, es_settings):
+        # self.es = Elasticsearch(["0.0.0.0"], timeout=180, port=9200, use_ssl=False, verify_certs=False)
         self.es = Elasticsearch(es_settings.get('HOSTS'), timeout=180, **self._get_connection_parameters(es_settings))
 
     @classmethod

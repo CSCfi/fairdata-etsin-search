@@ -18,7 +18,13 @@ This repository contains code for Etsin Finder Search, which is used for dataset
     - `cd etsin-finder-search`
 3. Retrieve app_config
     - `etsin-finder-search/app_config`
-4. Run docker-compose up
+4. Run:
+    `docker-compose up` 
+    - This will start an elasticsearch instance
+5. Build python image:
+    `docker build -f python.dockerfile  -t etsin-search-python ./`
+6. Run image:
+    `docker run --network=elastic-network etsin-search-python`
 
 # Build status
 

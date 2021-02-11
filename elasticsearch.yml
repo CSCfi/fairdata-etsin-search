@@ -11,6 +11,7 @@ http.cors.allow-methods : "OPTIONS, HEAD, GET, POST, PUT, DELETE"
 http.cors.allow-headers : "X-Requested-With,X-Auth-Token,Content-Type,Content-Length"
 bootstrap.memory_lock: true
 network.host: 0.0.0.0
+network.bind_host: 0.0.0.0
 http.port: 9200
 discovery.zen.ping.unicast.hosts: 0.0.0.0
 transport.tcp.port: 9300
