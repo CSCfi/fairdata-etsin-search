@@ -24,13 +24,16 @@ This repository contains code for Etsin Finder Search, which is used for dataset
     - This will start an elasticsearch instance
 5. Build python image:
     `docker build -f python.dockerfile -t etsin-search-python ./`
-6. Run image, specifying command as follows (command = <PYTHON_COMMAND>):
+6. Run RabbitMQ consumer:
+    `docker run --network=elastic-network etsin-search-python python run_rabbitmq_consumer.py`
+7. Run image, specifying command as follows (command = <PYTHON_COMMAND>):
     `docker run --network=elastic-network etsin-search-python python <PYTHON_COMMAND>`
     - <PYTHON_COMMAND> should be one of:
         - `create_empty_index.py`
         - `load_test_data.py`
+        - `reindex.py reacreate_index=<yes/no>`
         - `delete_index.py`
-7. Elasticsearch status can be inspected with:
+8. Elasticsearch status can be inspected with:
     - `curl -X GET elasticsearch:9200/_cat/indices`
 
 # Build status
