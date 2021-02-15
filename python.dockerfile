@@ -14,4 +14,4 @@ RUN pip install --upgrade pip wheel
 RUN pip install -r requirements.txt
 
 # Define default command
-CMD ["python", "create_empty_index.py"]
+CMD ["python"]
