@@ -15,10 +15,11 @@ This repository functions as part of the Etsin-Qvain setup. See: `https://github
 
 ## 3. How to use the scripts
 
-1. First, the Docker image must be built: `docker build -f python.dockerfile -t etsin-search-python ./`
+1. First, pull the Docker image:
+`docker pull fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-python`
 
 2. Then, you can use the image, to run python script commands, as follows (command = <PYTHON_COMMAND>):
-    `docker run --network=elastic-network etsin-search-python python <PYTHON_COMMAND>`
+    `docker run --network=elastic-network fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-python python <PYTHON_COMMAND>`
     - <PYTHON_COMMAND> should be one of:
         - `create_empty_index.py`
         - `load_test_data.py amount_of_datasets=<AMOUNT>`
