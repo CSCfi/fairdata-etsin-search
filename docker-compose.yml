@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   rabbitmq:
-      image: etsin-search-rabbitmq
+      image: fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq
       configs:
         - source: etsin-qvain-app-config
           target: /home/etsin-user/app_config
