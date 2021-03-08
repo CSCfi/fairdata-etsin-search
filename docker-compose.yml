@@ -10,8 +10,6 @@ services:
         - "15672:15672"
       volumes:
         - ../etsin-finder-search/etsin_finder_search/:/etsin_finder_search/
-      # depends_on:
-      #  - elasticsearch
 configs:
   etsin-qvain-app-config:
     external: True
