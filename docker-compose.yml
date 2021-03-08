@@ -1,0 +1,21 @@
+version: '3.3'
+services:
+  rabbitmq:
+      image: etsin-search-rabbitmq
+      configs:
+        - source: etsin-qvain-app-config
+          target: /home/etsin-user/app_config
+      ports:
+        - "5672:5672"
+        - "15672:15672"
+      volumes:
+        - ../etsin-finder-search/etsin_finder_search/:/etsin_finder_search/
+      # depends_on:
+      #  - elasticsearch
+configs:
+  etsin-qvain-app-config:
+    external: True
+  fairdata-ssl-certificate:
+    external: True
+  fairdata-ssl-certificate-key:
+    external: True

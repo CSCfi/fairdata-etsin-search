@@ -1,6 +1,6 @@
 # etsin-finder-search
 
-This repository contains code for Etsin Finder Search, which is used for dataset searching functionalities in Etsin. This repository has been developed using RabbitMQ and ElasticSearch.
+This repository contains code for Etsin Finder Search, which is used for dataset searching functionalities in Etsin. This repository has been developed using RabbitMQ (consumer, listening to messages from Metax) and ElasticSearch (dataset search index).
 
 ## 1. Development setup prerequisites
 
@@ -16,15 +16,15 @@ This repository functions as part of the Etsin-Qvain setup. See: `https://github
 ## 3. How to use the scripts
 
 1. First, pull the Docker image:
-`docker pull fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-python`
+`docker pull fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq`
 
-2. Then, you can use the image, to run python script commands, as follows (command = <PYTHON_COMMAND>):
-    `docker run --network=elastic-network fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-python python <PYTHON_COMMAND>`
-    - <PYTHON_COMMAND> should be one of:
-        - `create_empty_index.py`
-        - `load_test_data.py amount_of_datasets=<AMOUNT>`
-        - `reindex.py reacreate_index=<yes/no>`
-        - `delete_index.py`
+2. To load test data, you can run:
+    - `docker exec $(docker ps -q -f name=etsin-qvain_rabbitmq) python load_test_data.py amount_of_datasets=1000`
+    - Other scripts than can be run:
+        - `python create_empty_index.py`
+        - `python load_test_data.py amount_of_datasets=<AMOUNT>`
+        - `python reindex.py reacreate_index=<yes/no>`
+        - `python delete_index.py`
 3. Elasticsearch status can be inspected with:
     - `curl -X GET elasticsearch:9200/_cat/indices`
 
