@@ -1,4 +1,3 @@
-# FROM rabbitmq:3.7.15
 FROM python:3.6
 
 RUN apt-get update && apt-get -y install sudo
@@ -14,4 +13,6 @@ RUN pip install --upgrade pip wheel
 RUN pip install -r requirements.txt
 
 # Default command, used as entrypoint for .py script commands 
-CMD python ./run_rabbitmq_consumer.py
+RUN chmod a+x reindex_and_start_rabbitmq_consumer.sh
+
+CMD ["./reindex_and_start_rabbitmq_consumer.sh"]

@@ -13,19 +13,23 @@ This repository contains code for Etsin Finder Search, which is used for dataset
 
 This repository functions as part of the Etsin-Qvain setup. See: `https://github.com/CSCfi/fairdata-docker`
 
-## 3. How to use the scripts
+For instructions, see the link above.
 
-1. First, pull the Docker image:
-`docker pull fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq`
+The default behavior of the Dockerized version of etsin-finder-search within Etsin-Qvain is to:
+    - 1. Reindex all datasets from Metax
+    - 2. Start a rabbitmq-consumer, listening to any changes from Metax
+    - These details are specified in `reindex_and_start_rabbitmq_consumer.sh`
 
-2. To load test data, you can run:
-    - `docker exec $(docker ps -q -f name=etsin-qvain_rabbitmq) python load_test_data.py amount_of_datasets=1000`
-    - Other scripts than can be run:
-        - `python create_empty_index.py`
-        - `python load_test_data.py amount_of_datasets=<AMOUNT>`
-        - `python reindex.py reacreate_index=<yes/no>`
-        - `python delete_index.py`
-3. Elasticsearch status can be inspected with:
+## 3. How to manually use the scripts
+
+When the Etsin-Qvain stack is running, scripts can be run manually as follows:
+    - `docker exec $(docker ps -q -f name=etsin-qvain_rabbitmq) python load_test_data.py amount_of_datasets=<AMOUNT>`
+    - `docker exec $(docker ps -q -f name=etsin-qvain_rabbitmq) python create_empty_index.py`
+    - `docker exec $(docker ps -q -f name=etsin-qvain_rabbitmq) python reindex.py recreate_index=yes`
+    - `docker exec $(docker ps -q -f name=etsin-qvain_rabbitmq) python reindex.py recreate_index=no`
+    - `docker exec $(docker ps -q -f name=etsin-qvain_rabbitmq) python delete_index.py`
+
+Elasticsearch status can be inspected with:
     - `curl -X GET elasticsearch:9200/_cat/indices`
 
 # Build status
