@@ -9,8 +9,8 @@ This repository functions as part of the Etsin-Qvain setup. See: https://github.
 For instructions, see the link above.
 
 The default behavior of the Dockerized version of etsin-finder-search within Etsin-Qvain is to:
-- 1. Reindex all datasets from Metax
-- 2. Start a rabbitmq-consumer, listening to any changes from Metax
+- Reindex all datasets from Metax
+- Start a rabbitmq-consumer, listening to any changes from Metax
 - These details are specified in `reindex_and_start_rabbitmq_consumer.sh`
 
 Elasticsearch status can be inspected with:
