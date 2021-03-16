@@ -4,7 +4,7 @@ This repository contains code for Etsin Finder Search, which is used for dataset
 
 ## Development setup
 
-This repository functions as part of the Etsin-Qvain setup. See: `https://github.com/CSCfi/fairdata-docker`
+This repository functions as part of the Etsin-Qvain setup. See: https://github.com/CSCfi/fairdata-docker
 
 For instructions, see the link above.
 
