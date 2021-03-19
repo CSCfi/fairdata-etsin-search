@@ -16,6 +16,26 @@ The default behavior of the Dockerized version of etsin-finder-search within Ets
 Elasticsearch status can be inspected with:
 - `curl -X GET elasticsearch:9201/_cat/indices`
 
+# Updating docker image
+
+The Docker image (etsin-search-rabbitmq) is built manually (and can thus be edited) 
+
+First, login:
+`docker login fairdata-docker.artifactory.ci.csc.fi`
+
+Then, the service specific images can be pushed (see below)
+
+## Updating etsin-qvain-webpack
+
+1 Build image:
+- `docker build -f rabbitmq.dockerfile -t etsin-search-rabbitmq ./   `
+
+2 Tag image:
+- `docker tag etsin-search-rabbitmq fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq`
+
+3 Push image:
+- `docker push fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq`
+
 # Build status
 
 ## Test branch
