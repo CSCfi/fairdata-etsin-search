@@ -6,8 +6,8 @@ services:
         - source: etsin-qvain-app-config
           target: /home/etsin-user/app_config
       ports:
-        - "5672:5672"
-        - "15672:15672"
+        - "5673:5673"
+        - "15673:15673"
       volumes:
         - ../etsin-finder-search/etsin_finder_search/:/etsin_finder_search/
 configs:
