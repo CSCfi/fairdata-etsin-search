@@ -11,7 +11,7 @@ services:
       volumes:
         - ../etsin-finder-search/etsin_finder_search/:/etsin_finder_search/
 configs:
-  etsin-qvain-app-config-dev:
+  etsin-qvain-app-config:
     external: True
   fairdata-ssl-certificate:
     external: True
