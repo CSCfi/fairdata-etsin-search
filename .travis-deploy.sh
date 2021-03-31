@@ -6,6 +6,7 @@ if [[ "$TRAVIS_BRANCH" == "master" || "$TRAVIS_PULL_REQUEST" != "false" ]]; then
     exit 0
 fi
 
+python -m pip install --upgrade pip
 pip install ansible==2.8.6
 git clone https://github.com/CSCfi/etsin-ops
 cd etsin-ops/ansible/
