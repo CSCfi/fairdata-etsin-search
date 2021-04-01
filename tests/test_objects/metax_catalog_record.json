@@ -1183,5 +1183,6 @@
         ]
     },
     "service_created": "metax",
-    "service_modified": "metax"
+    "service_modified": "metax",
+    "state": "published"
 }
