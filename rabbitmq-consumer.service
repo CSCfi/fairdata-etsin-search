@@ -1,0 +1,12 @@
+[Unit]
+Description=RabbitMQ consumer
+
+[Service]
+Type=simple
+User=etsin-user
+ExecStart=python run_rabbitmq_consumer.py
+Restart=on-failure
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target
