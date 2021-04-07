@@ -28,13 +28,13 @@ Then, the service specific images can be pushed (see below)
 ## Updating etsin-qvain-webpack
 
 1 Build image:
-- `docker build -f rabbitmq.dockerfile -t etsin-search-rabbitmq ./   `
+- `docker build -f rabbitmq-consumer.dockerfile -t etsin-search-rabbitmq-consumer ./   `
 
 2 Tag image:
-- `docker tag etsin-search-rabbitmq fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq`
+- `docker tag etsin-search-rabbitmq-consumer fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq-consumer`
 
 3 Push image:
-- `docker push fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq`
+- `docker push fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq-consumer`
 
 # Build status
 
