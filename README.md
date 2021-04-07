@@ -25,10 +25,10 @@ First, login:
 
 Then, the service specific images can be pushed (see below)
 
-## Updating etsin-qvain-webpack
+## Updating etsin-search-rabbitmq-consumer
 
 1 Build image:
-- `docker build -f rabbitmq-consumer.dockerfile -t etsin-search-rabbitmq-consumer ./   `
+- `docker build -f rabbitmq-consumer.dockerfile -t etsin-search-rabbitmq-consumer ./`
 
 2 Tag image:
 - `docker tag etsin-search-rabbitmq-consumer fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq-consumer`
