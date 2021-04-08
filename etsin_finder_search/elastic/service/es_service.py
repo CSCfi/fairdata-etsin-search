@@ -193,7 +193,7 @@ class ElasticSearchService:
         if settings['HOSTS'][0] != 'localhost':
             conf = {'send_get_body_as': 'GET'}
             if path.isdir(".dockerenv"):
-                conf.update({'port': 9201, 'use_ssl': False, 'verify_certs': False})
+                conf.update({'port': 9200, 'use_ssl': False, 'verify_certs': False})
                 return conf
             if settings.get('USE_SSL', False):
                 conf.update({'port': 443, 'use_ssl': True, 'verify_certs': True})
