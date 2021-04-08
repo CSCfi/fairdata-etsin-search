@@ -192,9 +192,9 @@ class ElasticSearchService:
         """
         if settings['HOSTS'][0] != 'localhost':
             conf = {'send_get_body_as': 'GET'}
-            if settings.get('USE_SSL', False):
-                conf.update({'port': 443, 'use_ssl': True, 'verify_certs': True})
-            if settings.get('PORT', False):
-                conf.update({'port': 9201})
+            # if settings.get('USE_SSL', False):
+            conf.update({'port': 443, 'use_ssl': True, 'verify_certs': True})
+            # if settings.get('PORT', False):
+                # conf.update({'port': 9201, 'use_ssl': False, 'verify_certs': False})
             return conf
         return {}

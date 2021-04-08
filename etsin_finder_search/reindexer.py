@@ -5,6 +5,8 @@
 # :author: CSC - IT Center for Science Ltd., Espoo Finland <servicedesk@csc.fi>
 # :license: MIT
 
+import os
+
 from etsin_finder_search.elastic.domain.es_dataset_data_model import ESDatasetModel
 from etsin_finder_search.elastic.service.es_service import ElasticSearchService
 from etsin_finder_search.metax.metax_api import MetaxAPIService
@@ -32,13 +34,18 @@ es_config = get_elasticsearch_config()
 def reindex_all_without_emptying_index():
     task = ReindexScheduledTask()
     task.run_task(False)
-    _start_rabbitmq_service_if_not_running()
+
+    # Start RabbitMQ consumer as a service, if not in Docker
+    if not os.path.isdir(".dockerenv"):
+        _start_rabbitmq_service_if_not_running()
 
 
 def reindex_all_by_emptying_index():
     task = ReindexScheduledTask()
     task.run_task(True)
-    _start_rabbitmq_service_if_not_running()
+    # Start RabbitMQ consumer as a service, if not in Docker
+    if not os.path.isdir(".dockerenv"):
+        _start_rabbitmq_service_if_not_running()
 
 
 def _start_rabbitmq_service_if_not_running():
@@ -168,13 +175,14 @@ class ReindexScheduledTask:
             log.error("Unable to create Metax API client")
             return
 
-        # 1b. Stop RabbitMQ consumer
-        if rabbitmq_consumer_is_running():
-            log.info("Trying to stop RabbitMQ consumer service for the length of reindexing operation..")
-            if stop_rabbitmq_consumer():
-                log.info("RabbitMQ consumer service stopped")
-            else:
-                log.error("Unable to stop RabbitMQ consumer service, but continuing with reindexing operation..")
+        # 1b. Stop RabbitMQ consumer if running outside Docker
+        if not os.path.isdir(".dockerenv"):
+            if rabbitmq_consumer_is_running():
+                log.info("Trying to stop RabbitMQ consumer service for the length of reindexing operation..")
+                if stop_rabbitmq_consumer():
+                    log.info("RabbitMQ consumer service stopped")
+                else:
+                    log.error("Unable to stop RabbitMQ consumer service, but continuing with reindexing operation..")
 
         # 2a. Get all latest catalog records from Metax
         log.info("Trying to bulk fetch the latest catalog records from Metax..")
