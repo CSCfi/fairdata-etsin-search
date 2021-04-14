@@ -5,8 +5,6 @@ services:
       configs:
         - source: etsin-qvain-app-config
           target: /home/etsin-user/app_config
-      extra_hosts:
-        - "metax.fd-dev.csc.fi:172.17.0.1"
       volumes:
         - ./:/etsin_finder_search/
 
