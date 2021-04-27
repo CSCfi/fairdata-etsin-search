@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   etsin-search-rabbitmq-consumer:
-      image: ci.fd-staging.csc.fi:5000/fairdata-etsin-search-rabbitmq-consumer
+      image: fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq-consumer
       configs:
         - source: etsin-qvain-app-config
           target: /home/etsin-user/app_config
