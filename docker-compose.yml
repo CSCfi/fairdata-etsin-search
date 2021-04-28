@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  etsin-search-rabbitmq-consumer:
+      image: fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq-consumer
+      configs:
+        - source: etsin-qvain-app-config
+          target: /home/etsin-user/app_config
+      volumes:
+        - ./:/etsin_finder_search/
+
+configs:
+  etsin-qvain-app-config:
+    external: True
+  fairdata-ssl-certificate:
+    external: True
+  fairdata-ssl-certificate-key:
+    external: True
