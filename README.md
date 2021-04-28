@@ -21,7 +21,7 @@ Elasticsearch status can be inspected with:
 The Docker image (etsin-search-rabbitmq) is built manually (and can thus be edited) 
 
 First, login:
-`docker login ci.fd-staging.csc.fi:5000`
+`docker login fairdata-docker.artifactory.ci.csc.fi`
 
 Then, the service specific images can be pushed (see below)
 
@@ -31,10 +31,10 @@ Then, the service specific images can be pushed (see below)
 - `docker build -f rabbitmq-consumer.dockerfile -t etsin-search-rabbitmq-consumer ./`
 
 2 Tag image:
-- `docker tag etsin-search-rabbitmq-consumer ci.fd-staging.csc.fi:5000/fairdata-etsin-search-rabbitmq-consumer`
+- `docker tag etsin-search-rabbitmq-consumer fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq-consumer`
 
 3 Push image:
-- `docker push ci.fd-staging.csc.fi:5000/fairdata-etsin-search-rabbitmq-consumer`
+- `docker push fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq-consumer`
 
 # Build status
 
