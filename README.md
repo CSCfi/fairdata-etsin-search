@@ -4,9 +4,11 @@ This repository contains code for Etsin Finder Search, which is used for dataset
 
 ## Development setup
 
-This repository functions as part of the Etsin-Qvain setup, together with Etsin-Finder (github.com/CSCfi/etsin-finder).
+This repository functions as part of the Etsin-Qvain setup, together with `etsin-finder` (github.com/CSCfi/etsin-finder).
 
-The default behavior of the Dockerized version of etsin-finder-search within Etsin-Qvain is to:
+For a development setup of Etsin-Qvain (`etsin-finder` and `etsin-finder-search`) using Docker, see repository https://gitlab.ci.csc.fi/fairdata/fairdata-docker
+
+The default behavior of the Dockerized version of `etsin-finder-search` within Etsin-Qvain is to:
 - Reindex all datasets from Metax
 - Start a rabbitmq-consumer, listening to any changes from Metax
 - These details are specified in `reindex_and_start_rabbitmq_consumer.sh`
