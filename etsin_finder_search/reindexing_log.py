@@ -7,11 +7,11 @@
 
 import logging
 import logging.handlers
-from etsin_finder_search.utils import get_config_from_file, executing_travis
+from etsin_finder_search.utils import get_config_from_file, executing_cicd
 
 
 def get_logger(logger_name):
-    conf = get_config_from_file() if not executing_travis() else {}
+    conf = get_config_from_file() if not executing_cicd() else {}
     logger = logging.getLogger(logger_name if logger_name else 'etsin_finder_search')
     logger.setLevel(conf.get('SEARCH_APP_LOG_LEVEL', 'DEBUG'))
     handler = logging.handlers.RotatingFileHandler(conf.get('SEARCH_APP_LOG_PATH',

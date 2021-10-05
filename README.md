@@ -36,14 +36,6 @@ Then, the service specific images can be pushed (see below)
 3 Push image:
 - `docker push fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq-consumer`
 
-# Build status
-
-## Test branch
-[![Build Status](https://travis-ci.com/CSCfi/etsin-finder-search.svg?branch=test)](https://travis-ci.com/CSCfi/etsin-finder-search)
-
-## Stable branch
-[![Build Status](https://travis-ci.com/CSCfi/etsin-finder-search.svg?branch=stable)](https://travis-ci.com/CSCfi/etsin-finder-search)
-
 License
 -------
 Copyright (c) 2018-2020 Ministry of Education and Culture, Finland

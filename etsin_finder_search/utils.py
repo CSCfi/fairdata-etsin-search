@@ -62,11 +62,11 @@ def write_string_to_file(string, filename):
         print(f"{string}", file=output_file)
 
 
-def executing_travis():
+def executing_cicd():
     """
-    Returns True whenever code is being executed by travis
+    Returns True whenever code is being executed by CICD
     """
-    return True if os.getenv('TRAVIS', False) else False
+    return True if os.getenv('CICD', False) else False
 
 
 def stop_rabbitmq_consumer():

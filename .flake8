@@ -31,5 +31,6 @@ ignore =
     # Blank lines in comments, etc.
     D200, D202, D205, D210, D400, D401
 
-# often contains "unused" imports
-# exclude = 
+# Exclude, i.e. do not test the following folders (if present)
+exclude = 
+    ./venv/
