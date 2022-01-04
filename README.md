@@ -33,17 +33,19 @@ Then, the service specific images can be pushed (see below)
 
 ## Updating etsin-search-rabbitmq-consumer
 
-1 Build image:
-- `docker build -f rabbitmq-consumer.dockerfile -t etsin-search-rabbitmq-consumer ./`
+```
+# Build image:
+docker build -f rabbitmq-consumer.dockerfile -t etsin-search-rabbitmq-consumer ./
 
-2 Tag image:
-- `docker tag etsin-search-rabbitmq-consumer fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq-consumer`
+# Tag image:
+docker tag etsin-search-rabbitmq-consumer fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq-consumer`
 
-3 Push image:
-- `docker push fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq-consumer`
+# Push image:
+docker push fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq-consumer
+```
 
 License
 -------
-Copyright (c) 2018-2020 Ministry of Education and Culture, Finland
+Copyright (c) 2018-2021 Ministry of Education and Culture, Finland
 
 Licensed under [MIT License](LICENSE)
