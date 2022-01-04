@@ -22,18 +22,14 @@ Elasticsearch status can be inspected with:
 docker exec $(docker ps -q -f name=fairdata_etsin-qvain-elasticsearch) curl -X GET etsin-qvain-elasticsearch:9201/_cat/indices
 ```
 
-# Updating docker image
+# Updating the docker image
 
 The Docker image (etsin-search-rabbitmq) is built manually (and can thus be edited) 
 
-First, login:
-`docker login fairdata-docker.artifactory.ci.csc.fi`
-
-Then, the service specific images can be pushed (see below)
-
-## Updating etsin-search-rabbitmq-consumer
-
 ```
+# Login
+docker login fairdata-docker.artifactory.ci.csc.fi
+
 # Build image:
 docker build -f rabbitmq-consumer.dockerfile -t etsin-search-rabbitmq-consumer ./
 
