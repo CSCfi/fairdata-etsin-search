@@ -36,7 +36,7 @@ def reindex_all_without_emptying_index():
     task.run_task(False)
 
     # Start RabbitMQ consumer as a service, if not in Docker
-    if not os.path.isdir(".dockerenv"):
+    if not os.path.isfile("/.dockerenv"):
         _start_rabbitmq_service_if_not_running()
 
 
@@ -44,7 +44,7 @@ def reindex_all_by_emptying_index():
     task = ReindexScheduledTask()
     task.run_task(True)
     # Start RabbitMQ consumer as a service, if not in Docker
-    if not os.path.isdir(".dockerenv"):
+    if not os.path.isfile("/.dockerenv"):
         _start_rabbitmq_service_if_not_running()
 
 
@@ -176,7 +176,7 @@ class ReindexScheduledTask:
             return
 
         # 1b. Stop RabbitMQ consumer if running outside Docker
-        if not os.path.isdir(".dockerenv"):
+        if not os.path.isfile("/.dockerenv"):
             if rabbitmq_consumer_is_running():
                 log.info("Trying to stop RabbitMQ consumer service for the length of reindexing operation..")
                 if stop_rabbitmq_consumer():

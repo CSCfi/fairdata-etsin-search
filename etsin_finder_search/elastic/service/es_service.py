@@ -195,7 +195,7 @@ class ElasticSearchService:
             if settings.get('USE_SSL', False):
                 conf.update({'port': 443, 'use_ssl': True, 'verify_certs': True})
             if settings.get('PORT', False):
-                if path.isdir(".dockerenv"):
+                if path.isfile("/.dockerenv"):
                     conf.update({'port': 9201, 'use_ssl': False, 'verify_certs': False})
                 else:
                     conf.update({'port': 9200})

@@ -59,7 +59,7 @@ class MetaxConsumer():
         self.rabbit_settings = get_metax_rabbit_mq_config()
         es_settings = get_elasticsearch_config()
 
-        self.is_local_dev = True if os.path.isdir(".dockerenv") else False
+        self.is_local_dev = True if os.path.isfile("/.dockerenv") else False
 
         if not self.rabbit_settings or not es_settings:
             self.log.error("Unable to load RabbitMQ configuration or Elasticsearch configuration")
