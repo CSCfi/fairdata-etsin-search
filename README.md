@@ -14,7 +14,13 @@ The default behavior of the Dockerized version of `etsin-finder-search` within E
 - These details are specified in `reindex_and_start_rabbitmq_consumer.sh`
 
 Elasticsearch status can be inspected with:
-- `docker exec $(docker ps -q -f name=metax-etsin-qvain-dev_etsin-qvain-elasticsearch) curl -X GET etsin-qvain-elasticsearch:9201/_cat/indices`
+```
+# Generic
+- `docker exec $(docker ps -q -f name={{docker_stack_name}}_etsin-qvain-elasticsearch) curl -X GET etsin-qvain-elasticsearch:9201/_cat/indices`
+
+# Example:
+docker exec $(docker ps -q -f name=fairdata_etsin-qvain-elasticsearch) curl -X GET etsin-qvain-elasticsearch:9201/_cat/indices
+```
 
 # Updating docker image
 
