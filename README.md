@@ -34,7 +34,7 @@ docker login fairdata-docker.artifactory.ci.csc.fi
 docker build -f rabbitmq-consumer.dockerfile -t etsin-search-rabbitmq-consumer ./
 
 # Tag image:
-docker tag etsin-search-rabbitmq-consumer fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq-consumer`
+docker tag etsin-search-rabbitmq-consumer fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq-consumer
 
 # Push image:
 docker push fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq-consumer
