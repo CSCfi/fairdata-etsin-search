@@ -31,22 +31,11 @@ stages:
 #  - update
   - clean_previous_build
 
-# Deployment of MR to environment test
-deploy:
-  rules:
-  - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME !~ /^(master|release)$/
-  stage: deploy
-  environment: $CI_COMMIT_REF_NAME
-  tags:
-    - shell
-  script:
-    - ansible-playbook -i $ANSIBLE_INVENTORY $DEPLOY_PLAYBOOK -e repo_version=$CI_COMMIT_REF_NAME --vault-id $ANSIBLE_VAULT_FILE
-
 # Deployment of branch master to environment test
-deploy:
+deploy_master:
+  stage: deploy
   rules:
   - if: $CI_COMMIT_REF_NAME =~ /^(master)$/
-  stage: deploy
   environment: test
   tags:
     - shell
@@ -54,15 +43,26 @@ deploy:
     - ansible-playbook -i $ANSIBLE_INVENTORY $DEPLOY_PLAYBOOK --vault-id $ANSIBLE_VAULT_FILE
 
 # Deployment of branch release to environment stable
-deploy:
+deploy_release:
+  stage: deploy
   rules:
   - if: $CI_COMMIT_REF_NAME =~ /^(release)$/
-  stage: deploy
   environment: stable
   tags:
     - shell
   script:
     - ansible-playbook -i $ANSIBLE_INVENTORY $DEPLOY_PLAYBOOK --vault-id $ANSIBLE_VAULT_FILE
+
+# Deployment of MR to environment test
+deploy_feature:
+  stage: deploy
+  rules:
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME !~ /^(master|release)$/
+  environment: $CI_COMMIT_REF_NAME
+  tags:
+    - shell
+  script:
+    - ansible-playbook -i $ANSIBLE_INVENTORY $DEPLOY_PLAYBOOK -e repo_version=$CI_COMMIT_REF_NAME --vault-id $ANSIBLE_VAULT_FILE
 
 # Test of application code
 test:
