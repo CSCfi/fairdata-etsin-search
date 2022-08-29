@@ -51,7 +51,7 @@ deploy:
   tags:
     - shell
   script:
-    - ansible-playbook -i $ANSIBLE_INVENTORY $DEPLOY_PLAYBOOK -e repo_version=master --vault-id $ANSIBLE_VAULT_FILE
+    - ansible-playbook -i $ANSIBLE_INVENTORY $DEPLOY_PLAYBOOK --vault-id $ANSIBLE_VAULT_FILE
 
 # Deployment of branch release to environment stable
 deploy:
@@ -62,7 +62,7 @@ deploy:
   tags:
     - shell
   script:
-    - ansible-playbook -i $ANSIBLE_INVENTORY $DEPLOY_PLAYBOOK -e repo_version=release --vault-id $ANSIBLE_VAULT_FILE
+    - ansible-playbook -i $ANSIBLE_INVENTORY $DEPLOY_PLAYBOOK --vault-id $ANSIBLE_VAULT_FILE
 
 # Test of application code
 test:
