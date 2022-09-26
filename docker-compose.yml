@@ -4,7 +4,7 @@ services:
       image: fairdata-docker.artifactory.ci.csc.fi/fairdata-etsin-search-rabbitmq-consumer
       configs:
         - source: etsin-qvain-app-config
-          target: /home/etsin-user/app_config
+          target: /home/etsin-user/app_config_search
       volumes:
         - ./:/etsin_finder_search/
 
