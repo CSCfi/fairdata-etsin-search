@@ -1,74 +1,66 @@
-# Example connection to fairdata-ci (test)
-
-#variables:
-#  INSTANCE: etsin-qvain-$CI_COMMIT_REF_SLUG
-#  VERSION: $CI_COMMIT_BRANCH
-#
-#include:
-#  - project: fairdata/fairdata-ci
-#    ref: master
-#    file:
-#      - /templates/test.yml
-#
-#stages:
-#  - test
-
 variables:
+  GITLAB_ENV: test
   CICD: $USE_CICD
   USER: $DEPLOY_USER
 
-workflow:
-  rules:
-    - if: $CI_COMMIT_BRANCH =~ /^(master|release)$/
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME !~ /^(master|release)$/
+default:
+  tags:
+    - shell
 
 stages:
-  - deploy
-  - sonarqube-check
   - test
-  - clean_test
-  - clean_gitlab_env
-#  - update
-  - clean_previous_build
+  - deploy
+  - clean
 
-# Deployment of branch master to environment test
-deploy_master:
+# ~~~~~~~~~~~~~~~~~~~~~~~~
+
+include:
+  - project: fairdata/fairdata-ci
+    ref: master
+    file:
+      - /templates/deploy.yml
+    rules:
+    - if: $CI_COMMIT_BRANCH =~ /^(master)$/
+    - if: $CI_PIPELINE_SOURCE =~ /^(web)$/
+
+deploy-feature-to-staging:
   stage: deploy
-  rules:
-  - if: $CI_COMMIT_REF_NAME =~ /^(master)$/
-  environment: test
-  tags:
-    - shell
+  environment: staging
   script:
-    - ansible-playbook -i $ANSIBLE_INVENTORY $DEPLOY_PLAYBOOK --vault-id $ANSIBLE_VAULT_FILE
-
-# Deployment of branch release to environment stable
-deploy_release:
-  stage: deploy
+    - ansible-playbook -i $ANSIBLE_INVENTORY $DEPLOY_PLAYBOOK -e repo_version=${CI_COMMIT_REF_NAME} --vault-id $ANSIBLE_VAULT_FILE
   rules:
-  - if: $CI_COMMIT_REF_NAME =~ /^(release)$/
-  environment: stable
-  tags:
-    - shell
-  script:
-    - ansible-playbook -i $ANSIBLE_INVENTORY $DEPLOY_PLAYBOOK --vault-id $ANSIBLE_VAULT_FILE
+    - if: $CI_PIPELINE_SOURCE == "push"
+      when: never
+    - if: $CI_PIPELINE_SOURCE !~ /^(web)$/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME !~ /^(master|release)$/
 
-# Deployment of MR to environment test
-deploy_feature:
-  stage: deploy
+# ~~~~~~~~~~~~~~~~~~~~~~~~
+
+sonarqube:
+  tags:
+    - docker
+  stage: test
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    GIT_DEPTH: "0"
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - sonar-scanner
   rules:
-  - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME !~ /^(master|release)$/
-  environment: $CI_COMMIT_REF_NAME
-  tags:
-    - shell
-  script:
-    - ansible-playbook -i $ANSIBLE_INVENTORY $DEPLOY_PLAYBOOK -e repo_version=$CI_COMMIT_REF_NAME --vault-id $ANSIBLE_VAULT_FILE
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      allow_failure: true
+    - if: $CI_COMMIT_BRANCH =~ /^(master)$/ && $CI_PIPELINE_SOURCE !~ /^(web)$/
+      allow_failure: true
+    - if: $CI_COMMIT_BRANCH =~ /^(release)$/
 
-# Test of application code
 test:
   stage: test
-  tags:
-    - shell
   script:
       - python3.8 -m virtualenv venv
       - source venv/bin/activate
@@ -77,71 +69,27 @@ test:
       - sudo chown -R $USER:$USER /var/log/etsin_finder_search
       - flake8 .
       - pytest --cov=etsin_finder_search tests/
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH =~ /^(master)$/ && $CI_PIPELINE_SOURCE !~ /^(web)$/
 
-# ...
-clean_test:
-  stage: clean_test
+# ~~~~~~~~~~~~~~~~~~~~~~~~
+
+clean-feature:
+  stage: clean
   environment:
-    name: $CI_COMMIT_REF_NAME
-    on_stop: clean_gitlab_env
-  tags:
-    - shell
+    name: staging
   script:
     - ansible-playbook -i $ANSIBLE_INVENTORY $DELETE_PLAYBOOK -e repo_version=$CI_COMMIT_REF_NAME --vault-id $ANSIBLE_VAULT_FILE
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: always
-    - when: never
-
-# Clean deleted branches from environments
-clean_gitlab_env:
-  stage: clean_gitlab_env
-  variables:
-    GIT_STRATEGY: none
-  environment:
-    name: $CI_COMMIT_REF_NAME
-    action: stop
-  tags:
-    - shell
-  script:
-    - echo "Cleaning deleted branches from environments"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME !~ /^(master|release)$/
       when: manual
-    - when: never
 
-# Clean previous build of appication code from target environment
-clean_previous_build:
-  stage: clean_previous_build
-  environment: $CI_COMMIT_REF_NAME
-  tags:
-    - shell
+clean:
+  stage: clean
+  environment: $GITLAB_ENV
   script:
     - ansible-playbook -i $ANSIBLE_INVENTORY $DELETE_PLAYBOOK -e "build_id=${CI_COMMIT_BEFORE_SHA:0:8}" --vault-id $ANSIBLE_VAULT_FILE
   rules:
-    - if: $CI_COMMIT_BRANCH =~ /^(demo|stable|staging|test)$/
-      when: always
-    - when: never
-
-sonarqube-check:
-  stage: test
-  tags: 
-    - docker
-  image: 
-    name: sonarsource/sonar-scanner-cli:latest
-    entrypoint: [""]
-  variables:
-    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
-    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
-  cache:
-    key: "${CI_JOB_NAME}"
-    paths:
-      - .sonar/cache
-  script: 
-    - sonar-scanner
-  allow_failure: true
-  only:
-    - merge_requests
-    - master
-    - test
-    - staging
+    - if: $CI_COMMIT_BRANCH =~ /^(master)$/
+      when: manual
